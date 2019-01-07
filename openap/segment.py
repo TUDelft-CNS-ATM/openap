@@ -12,27 +12,27 @@ STATE_DIFF_MARGIN = 0.2
 alt_range = np.arange(0, 40000, 1)
 roc_range = np.arange(-4000, 4000, 0.1)
 spd_range = np.arange(0, 600, 1)
-states = np.arange(0, 5, 0.01)
+states = np.arange(0, 6, 0.01)
 
 alt_gnd = fuzz.zmf(alt_range, 0, 200)
 alt_lo = fuzz.gaussmf(alt_range, 10000, 10000)
-# alt_hi = fuzz.gaussmf(alt_range, 35000, 5000)
-alt_hi = fuzz.gaussmf(alt_range, 30000, 20000)
+alt_hi = fuzz.gaussmf(alt_range, 35000, 20000)
 
 roc_zero = fuzz.gaussmf(roc_range, 0, 100)
 roc_plus = fuzz.smf(roc_range, 10, 1000)
 roc_minus = fuzz.zmf(roc_range, -1000, -10)
 
-spd_hi = fuzz.gaussmf(spd_range, 600, 200)
-spd_md = fuzz.gaussmf(spd_range, 100, 100)
+spd_hi = fuzz.gaussmf(spd_range, 600, 100)
+spd_md = fuzz.gaussmf(spd_range, 300, 100)
 spd_lo = fuzz.gaussmf(spd_range, 0, 50)
 
 state_ground = fuzz.gaussmf(states, 1, 0.1)
 state_climb = fuzz.gaussmf(states, 2, 0.1)
-state_descend = fuzz.gaussmf(states, 3, 0.1)
+state_descent = fuzz.gaussmf(states, 3, 0.1)
 state_cruise = fuzz.gaussmf(states, 4, 0.1)
+state_level = fuzz.gaussmf(states, 5, 0.1)
 
-state_lable_map = {1: 'GND', 2: 'CL', 3: 'DE', 4: 'CR'}
+state_lable_map = {1: 'GND', 2: 'CL', 3: 'DE', 4: 'CR', 5:'LVL'}
 
 
 # Visualize these universes and membership functions
@@ -40,48 +40,49 @@ def plot_logics():
     plt.figure(figsize=(10, 8))
 
     plt.subplot(411)
-    plt.plot(alt_range, alt_gnd, color='black', lw=2, label='Ground')
-    plt.plot(alt_range, alt_lo, color='green', lw=2, label='Low')
-    plt.plot(alt_range, alt_hi, color='blue', lw=2, label='High')
+    plt.plot(alt_range, alt_gnd, lw=2, label='Ground')
+    plt.plot(alt_range, alt_lo, lw=2, label='Low')
+    plt.plot(alt_range, alt_hi, lw=2, label='High')
     plt.ylim([-0.05, 1.05])
     plt.ylabel('Altitude (ft)')
     plt.yticks([0, 1])
-    plt.legend(prop={'size': 11})
+    plt.legend()
 
     plt.subplot(412)
-    plt.plot(roc_range, roc_zero, color='steelblue', lw=2, label='Zero')
-    plt.plot(roc_range, roc_plus, color='green', lw=2, label='Positive')
-    plt.plot(roc_range, roc_minus, color='orange', lw=2, label='Negative')
+    plt.plot(roc_range, roc_zero, lw=2, label='Zero')
+    plt.plot(roc_range, roc_plus, lw=2, label='Positive')
+    plt.plot(roc_range, roc_minus, lw=2, label='Negative')
     plt.ylim([-0.05, 1.05])
     plt.ylabel('RoC (ft/m)')
     plt.yticks([0, 1])
-    plt.legend(prop={'size': 11})
+    plt.legend()
 
     plt.subplot(413)
-    plt.plot(spd_range, spd_hi, color='blue', lw=2, label='High')
-    plt.plot(spd_range, spd_md, color='maroon', lw=2, label='Midium')
-    plt.plot(spd_range, spd_lo, color='black', lw=2, label='Low')
+    plt.plot(spd_range, spd_hi, lw=2, label='High')
+    plt.plot(spd_range, spd_md, lw=2, label='Midium')
+    plt.plot(spd_range, spd_lo, lw=2, label='Low')
     plt.ylim([-0.05, 1.05])
     plt.ylabel('Speed (kt)')
     plt.yticks([0, 1])
-    plt.legend(prop={'size': 11})
+    plt.legend()
 
     plt.subplot(414)
-    plt.plot(states, state_ground, color='black', lw=2, label='Ground')
-    plt.plot(states, state_climb, color='green', lw=2, label='Climb')
-    plt.plot(states, state_descend, color='orange', lw=2, label='Descend')
-    plt.plot(states, state_cruise, color='blue', lw=2, label='Cruise')
+    plt.plot(states, state_ground, lw=2, label='ground')
+    plt.plot(states, state_climb, lw=2, label='climb')
+    plt.plot(states, state_descent, lw=2, label='descent')
+    plt.plot(states, state_cruise, lw=2, label='cruise')
+    plt.plot(states, state_level, lw=2, label='level flight')
     plt.ylim([-0.05, 1.05])
     plt.ylabel('Flight Phases')
     plt.yticks([0, 1])
-    plt.legend(prop={'size': 11})
+    plt.legend(prop={'size': 7})
     plt.show()
 
 
 def fuzzylabels(ts, alts, spds, rocs, twindow=60):
     '''
     Fuzzy logic to determine the segments of the flight data
-    segments are: ground [GND], climb [CL], descend [DE], cruise [CR].
+    segments are: ground [GND], climb [CL], descent [DE], cruise [CR].
 
     Default time window is 60 second.
     '''
@@ -122,6 +123,13 @@ def fuzzylabels(ts, alts, spds, rocs, twindow=60):
         spd = max(min(np.mean(spdchk), spd_range[-1]), spd_range[0])
         roc = max(min(np.mean(rocchk), roc_range[-1]), roc_range[0])
 
+    # for i, (alt, spd, roc) in enumerate(zip(alts, spds, rocs)):
+
+        # make sure values are within the boundaries
+        alt = max(min(alt, alt_range[-1]), alt_range[0])
+        spd = max(min(spd, spd_range[-1]), spd_range[0])
+        roc = max(min(roc, roc_range[-1]), roc_range[0])
+
         alt_level_gnd = fuzz.interp_membership(alt_range, alt_gnd, alt)
         alt_level_lo = fuzz.interp_membership(alt_range, alt_lo, alt)
         alt_level_hi = fuzz.interp_membership(alt_range, alt_hi, alt)
@@ -138,34 +146,40 @@ def fuzzylabels(ts, alts, spds, rocs, twindow=60):
         # print roc_level_zero, roc_level_plus, roc_level_minus
         # print spd_level_hi, spd_level_md, spd_level_lo
 
-        rule_ground = min(alt_level_gnd, spd_level_lo)
+        rule_ground = min(alt_level_gnd, roc_level_zero, spd_level_lo)
         state_activate_ground = np.fmin(rule_ground, state_ground)
 
         rule_climb = min(alt_level_lo, roc_level_plus, spd_level_md)
         state_activate_climb = np.fmin(rule_climb, state_climb)
 
-        rule_descend = min(alt_level_lo, roc_level_minus, spd_level_md)
-        state_activate_descend = np.fmin(rule_descend, state_descend)
+        rule_descent = min(alt_level_lo, roc_level_minus, spd_level_md)
+        state_activate_descent = np.fmin(rule_descent, state_descent)
 
         rule_cruise = min(alt_level_hi, roc_level_zero, spd_level_hi)
         state_activate_cruise = np.fmin(rule_cruise, state_cruise)
 
+        rule_level = min(alt_level_lo, roc_level_zero, spd_level_md)
+        state_activate_level = np.fmin(rule_level, state_level)
+
         aggregated = np.max(
-            np.vstack([state_activate_ground,
-                       state_activate_climb,
-                       state_activate_descend,
-                       state_activate_cruise]),
-            axis=0
-            )
+            np.vstack([
+                state_activate_ground,
+                state_activate_climb,
+                state_activate_descent,
+                state_activate_cruise,
+                state_activate_level,
+            ]), axis=0
+        )
 
         state_raw = fuzz.defuzz(states, aggregated, 'lom')
         state = int(round(state_raw))
-        if state > 4:
-            state = 4
+        if state > 6:
+            state = 6
         if state < 1:
             state = 1
         label = state_lable_map[state]
         labels[idxchk[0]:idxchk[-1]] = [label] * len(idxchk)
+        # labels[i] = label
 
     return labels
 
@@ -176,7 +190,8 @@ def test_run():
 
     # get a sample data
     datadir = os.path.dirname(os.path.realpath(__file__))
-    dataset = pickle.load(open(datadir+'/test/test_segment.pkl', 'rb'))
+    f = datadir+'/../test/data/test_segment.pkl'
+    dataset = pickle.load(open(f, 'rb'))
 
     for data in dataset:
         times = np.array(data['ts'])
@@ -189,10 +204,16 @@ def test_run():
 
         labels = fuzzylabels(times, alts, spds, rocs)
 
-        colormap = {'GND': 'black', 'CL': 'green', 'CR': 'blue',
-                    'DE': 'orange', 'NA': 'red'}
+        phasecolors = {
+            'GND': 'black',
+            'CL': 'green',
+            'DE': 'blue',
+            'LVL': 'purple',
+            'CR': 'yellow',
+            'NA': 'red'
+        }
 
-        colors = [colormap[l] for l in labels]
+        colors = [phasecolors[lbl] for lbl in labels]
 
         fltr = Spline(k=2)
         _, altspl = fltr.filter(times, alts)

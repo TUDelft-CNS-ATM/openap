@@ -5,7 +5,8 @@ class FuelFlow(object):
     """Fuel flow model based on ICAO emmision databank"""
 
     def __init__(self, engine):
-        eng = utils.get_engine(engine)
+        engines = utils.get_engines(engine)
+        eng = engines[next(iter(engines))]
 
         # fuel flow model
         self.y = [eng['ff_idl'], eng['ff_app'], eng['ff_co'], eng['ff_to']]

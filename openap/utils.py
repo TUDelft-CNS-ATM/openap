@@ -9,7 +9,13 @@ curr_path = os.path.dirname(os.path.realpath(__file__))
 db_airport = curr_path + "/data/5_navigation/airports.csv"
 db_aircraft = curr_path + "/data/1_aircraft_and_engines/aircraft.json"
 db_engine = curr_path + "/data/1_aircraft_and_engines/engines.csv"
+db_engine_cr_perf = curr_path + "/data/1_aircraft_and_engines/engine_cruise_performance.csv"
 
+with open(db_aircraft) as f:
+    ACS = json.load(f)
+
+ENGINES = pd.read_csv(db_engine, encoding='utf-8')
+ENGINES_CR_PERF = pd.read_csv(db_engine_cr_perf)
 
 def get_airport_data(name):
     df = pd.read_csv(db_airport)
@@ -41,32 +47,34 @@ def get_closest_airport(lat, lon, type='icao'):
 
 def get_aircraft(mdl):
     mdl = mdl.upper()
-    with open(db_aircraft) as f:
-        acs = json.load(f)
 
-    if mdl in acs:
-        return acs[mdl]
-    else:
+    if mdl not in ACS:
         raise RuntimeError('Aircraft data not found')
 
-def get_engine(eng):
+    ac = ACS[mdl].copy()
+    eng_options = ac['engine']['options']
+    ac['engines'] = {}
+
+    for eng in eng_options:
+        ac['engines'].update(get_engines(eng))
+
+    return ac
+
+
+def get_engines(eng):
     eng = eng.strip().upper()
-    allengines = pd.read_csv(db_engine, encoding='utf-8')
-    selengine = allengines[allengines['name'].str.startswith(eng)]
+    selengs = ENGINES[ENGINES['name'].str.upper().str.startswith(eng)]
+    selengs = selengs.merge(ENGINES_CR_PERF, left_on='name', right_on='engine', how='left')
+    selengs = selengs.drop('engine', axis=1)
 
-    if selengine.shape[0] == 0:
-        raise RuntimeError('Engine data not found')
+    if selengs.shape[0] == 0:
+        engines = {}
 
-    if selengine.shape[0] > 1:
-        warnings.warn('Multiple engines found, first one used')
+    if selengs.shape[0] > 0:
+        selengs.index = selengs.uid
+        engines = selengs.to_dict(orient='index')
 
-    return json.loads(selengine.iloc[0, :].to_json())
-
-def get_ac_default_engine(mdl):
-    ac = get_aircraft(mdl)
-    eng = ac['engines'][0]
-    return get_engine(eng)
-
+    return engines
 
 def interp(ts, data):
     ts = np.asarray(ts)
