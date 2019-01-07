@@ -22,7 +22,7 @@ engine:
   type: turbofan
   number: 2
   options:
-    A319-111:	CFM56-5B5
+    A319-111: CFM56-5B5
     A319-112: CFM56-5B6
     A319-113: CFM56-5A4
     A319-114: CFM56-5A5
