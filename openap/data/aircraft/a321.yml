@@ -1,0 +1,32 @@
+name: Airbus A321
+
+dimensions:
+  length:     44.51
+  height:     11.76
+  wing_area:  128
+  wing_span:  35.8
+
+limits:
+  MTOW:     93500
+  MLW:      77800
+  OEW:      48500
+  MFC:      30030
+  MMO:      0.82
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.78
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    A321-111: CFM56-5B1
+    A321-112: CFM56-5B2
+    A321-131: V2530-A5
+    A321-211: CFM56-5B3
+    A321-212: CFM56-5B1
+    A321-213: CFM56-5B2
+    A321-231: V2533-A5
+    A321-232: V2530-A5

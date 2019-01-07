@@ -1,0 +1,26 @@
+name: Embraer E170
+
+dimensions:
+  length:     29.90
+  height:     9.85
+  wing_area:  72.72
+  wing_span:  26.00
+
+limits:
+  MTOW:     34200
+  MLW:      32800
+  OEW:      21140
+  MFC:      9335
+  MMO:      0.82
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.75
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - CF34-8E5
+    - CF34-8E6

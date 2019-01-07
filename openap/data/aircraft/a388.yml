@@ -1,0 +1,27 @@
+name: Airbus A380-800
+
+dimensions:
+  length:     72.72
+  height:     24.09
+  wing_area:  845
+  wing_span:  79.75
+
+limits:
+  MTOW:     560000
+  MLW:      386000
+  OEW:      277000
+  MFC:      320000
+  MMO:      0.89
+  ceiling:  13100
+
+cruise:
+  height:   11000
+  mach:     0.85
+
+engine:
+  type: turbofan
+  number: 4
+  options:
+    A380-841: Trent 970-84
+    A380-842: Trent 972-84
+    A380-861:	GP7270

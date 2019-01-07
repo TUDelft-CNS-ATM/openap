@@ -1,0 +1,27 @@
+name: Boeing 777-300
+
+dimensions:
+  length:     73.86
+  height:     18.5
+  wing_area:  427.8
+  wing_span:  60.93
+
+limits:
+  MTOW:     299300
+  MLW:      237600
+  OEW:      160500
+  MFC:      171200
+  MMO:      0.89
+  ceiling:  13100
+
+cruise:
+  height:   11000
+  mach:     0.84
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - GE90-110B1
+    - PW4090
+    - Trent 892

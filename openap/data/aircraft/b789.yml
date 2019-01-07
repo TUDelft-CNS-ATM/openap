@@ -1,0 +1,29 @@
+name: Boeing 787-9
+
+dimensions:
+  length:     62.81
+  height:     16.92
+  wing_area:  377
+  wing_span:  60.12
+
+limits:
+  MTOW:     254000
+  MLW:      193000
+  OEW:      128000
+  MFC:      126400
+  MMO:      0.90
+  ceiling:  13100
+
+cruise:
+  height:   11000
+  mach:     0.85
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - GEnx-1B75
+    - GEnx-1B74
+    - Trent 1000-K2
+    - Trent 1000-J2
+    - Trent 1000-A2

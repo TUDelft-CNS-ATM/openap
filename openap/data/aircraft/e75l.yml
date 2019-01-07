@@ -1,0 +1,26 @@
+name: Embraer E175 (LR)
+
+dimensions:
+  length:     29.90
+  height:     9.85
+  wing_area:  72.72
+  wing_span:  26.00
+
+limits:
+  MTOW:     38790
+  MLW:      34000
+  OEW:      21890
+  MFC:      11625
+  MMO:      0.82
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.75
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - CF34-8E5
+    - CF34-8E6

@@ -1,0 +1,27 @@
+name: Boeing 767-300
+
+dimensions:
+  length:     54.94
+  height:     16.8
+  wing_area:  283.3
+  wing_span:  47.57
+
+limits:
+  MTOW:     158700
+  MLW:      136000
+  OEW:      90000
+  MFC:      63200
+  MMO:      0.86
+  ceiling:  13100
+
+cruise:
+  height:   11000
+  mach:     0.8
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - JT9D-7R4D
+    - PW4056
+    - CF6-80C2B2

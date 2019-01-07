@@ -1,0 +1,27 @@
+name: Airbus A340-300
+
+dimensions:
+  length:     63.69
+  height:     16.99
+  wing_area:  363.1
+  wing_span:  60.3
+
+limits:
+  MTOW:     276000
+  MLW:      190000
+  OEW:      130000
+  MFC:      147850
+  MMO:      0.86
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.82
+
+engine:
+  type: turbofan
+  number: 4
+  options:
+    A340-311: CFM56-5C2
+    A340-312: CFM56-5C3
+    A340-313: CFM56-5C4

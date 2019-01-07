@@ -1,0 +1,25 @@
+name: Cessna Citation II
+
+dimensions:
+  length:     14.39
+  height:     4.57
+  wing_area:  31.83
+  wing_span:  15.90
+
+limits:
+  MTOW:     6849
+  MLW:      6804
+  OEW:      3655
+  MFC:      2204
+  MMO:      0.7
+  ceiling:  13100
+
+cruise:
+  height:   11000
+  mach:     0.67
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - JT15D-4

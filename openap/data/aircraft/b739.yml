@@ -1,0 +1,27 @@
+name: Boeing 737-900
+
+dimensions:
+  length:     42.11
+  height:     12.55
+  wing_area:  124.6
+  wing_span:  34.32
+
+limits:
+  MTOW:     85100
+  MLW:      71300
+  OEW:      44600
+  MFC:      26000
+  MMO:      0.82
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.79
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - CFM56-7B24
+    - CFM56-7B26
+    - CFM56-7B27

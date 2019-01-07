@@ -1,0 +1,32 @@
+name: Airbus A319
+
+dimensions:
+  length:     33.84
+  height:     11.76
+  wing_area:  124
+  wing_span:  35.8
+
+limits:
+  MTOW:     75500
+  MLW:      62500
+  OEW:      40800
+  MFC:      30190
+  MMO:      0.82
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.78
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    A319-111:	CFM56-5B5
+    A319-112: CFM56-5B6
+    A319-113: CFM56-5A4
+    A319-114: CFM56-5A5
+    A319-115: CFM56-5B7
+    A319-131: V2522-A5
+    A319-132: V2524-A5
+    A319-133: V2527M-A5

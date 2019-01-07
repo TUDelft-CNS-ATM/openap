@@ -1,0 +1,25 @@
+name: Embraer ERJ145 (LR)
+
+dimensions:
+  length:     29.87
+  height:     6.76
+  wing_area:  51.2
+  wing_span:  20.04
+
+limits:
+  MTOW:     22000
+  MLW:      19300
+  OEW:      12110
+  MFC:      5136
+  MMO:      0.78
+  ceiling:  11300
+
+cruise:
+  height:   11000
+  mach:     0.72
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - AE3007A1

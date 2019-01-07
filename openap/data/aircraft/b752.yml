@@ -1,0 +1,26 @@
+name: Boeing 757-200
+
+dimensions:
+  length:     47.3
+  height:     13.6
+  wing_area:  182.3
+  wing_span:  38.0
+
+limits:
+  MTOW:     115600
+  MLW:      92200
+  OEW:      58400
+  MFC:      43500
+  MMO:      0.86
+  ceiling:  12800
+
+cruise:
+  height:   11000
+  mach:     0.8
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - PW2037
+    - RB211-535E4

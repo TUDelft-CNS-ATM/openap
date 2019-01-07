@@ -1,0 +1,25 @@
+name: Embraer E195 (LR)
+
+dimensions:
+  length:     38.65
+  height:     10.55
+  wing_area:  92.5
+  wing_span:  28.72
+
+limits:
+  MTOW:     50790
+  MLW:      45000
+  OEW:      28583
+  MFC:      16153
+  MMO:      0.82
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.78
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - CF34-10E5

@@ -1,0 +1,30 @@
+name: Boeing 787-8
+
+dimensions:
+  length:     56.72
+  height:     16.92
+  wing_area:  377
+  wing_span:  60.12
+
+limits:
+  MTOW:     228000
+  MLW:      172000
+  OEW:      119000
+  MFC:      126200
+  MMO:      0.90
+  ceiling:  13100
+
+cruise:
+  height:   11000
+  mach:     0.85
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - GEnx-1B70
+    - GEnx-1B67
+    - GEnx-1B64
+    - Trent 1000-E
+    - Trent 1000-C
+    - Trent 1000-A

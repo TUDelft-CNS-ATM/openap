@@ -1,0 +1,25 @@
+name: Boeing 747-8
+
+dimensions:
+  length:     76.3
+  height:     19.4
+  wing_area:  554
+  wing_span:  68.4
+
+limits:
+  MTOW:     447700
+  MLW:      312100
+  OEW:      220100
+  MFC:      238600
+  MMO:      0.92
+  ceiling:  13100
+
+cruise:
+  height:   11000
+  mach:     0.85
+
+engine:
+  type: turbofan
+  number: 4
+  options:
+    - GEnx-2B67

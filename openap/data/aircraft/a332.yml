@@ -1,0 +1,30 @@
+name: Airbus A330-200
+
+dimensions:
+  length:     58.82
+  height:     17.39
+  wing_area:  361.6
+  wing_span:  60.3
+
+limits:
+  MTOW:     230000
+  MLW:      182000
+  OEW:      120200
+  MFC:      139000
+  MMO:      0.86
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.82
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    A330-201: CF6-80E1A2
+    A330-202: CF6-80E1A4
+    A330-203: CF6-80E1A3
+    A330-223: PW4168A
+    A330-223F: PW4170
+    A330-243: Trent 772

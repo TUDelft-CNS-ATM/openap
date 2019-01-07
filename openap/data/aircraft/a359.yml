@@ -1,0 +1,25 @@
+name: Airbus A350-900
+
+dimensions:
+  length:     66.8
+  height:     17.05
+  wing_area:  442
+  wing_span:  64.75
+
+limits:
+  MTOW:     280000
+  MLW:      205000
+  OEW:      142400
+  MFC:      140795
+  MMO:      0.89
+  ceiling:  13100
+
+cruise:
+  height:   11000
+  mach:     0.85
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    A350-941: Trent XWB-84

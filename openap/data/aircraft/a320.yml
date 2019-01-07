@@ -1,0 +1,33 @@
+name: Airbus A320
+
+dimensions:
+  length:     37.57
+  height:     11.76
+  wing_area:  124
+  wing_span:  35.8
+
+limits:
+  MTOW:     78000
+  MLW:      66000
+  OEW:      42600
+  MFC:      24210
+  MMO:      0.82
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.78
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    A320-111: CFM56-5-A1
+    A320-211: CFM56-5-A1
+    A320-212: CFM56-5A3
+    A320-214: CFM56-5B4
+    A320-215: CFM56-5B5
+    A320-216: CFM56-5B6
+    A320-231: V2500-A1
+    A320-232: V2527-A5
+    A320-233: V2527E-A5

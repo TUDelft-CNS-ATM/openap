@@ -1,0 +1,27 @@
+name: Boeing 777-200
+
+dimensions:
+  length:     63.73
+  height:     18.5
+  wing_area:  427.8
+  wing_span:  60.93
+
+limits:
+  MTOW:     297000
+  MLW:      213000
+  OEW:      138000
+  MFC:      171000
+  MMO:      0.89
+  ceiling:  13100
+
+cruise:
+  height:   11000
+  mach:     0.84
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - GE90-94B
+    - PW4077
+    - Trent 895

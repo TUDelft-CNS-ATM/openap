@@ -1,0 +1,26 @@
+name: Boeing 737-400
+
+dimensions:
+  length:     33.4
+  height:     11.1
+  wing_area:  91.04
+  wing_span:  28.88
+
+limits:
+  MTOW:     68000
+  MLW:      56200
+  OEW:      33700
+  MFC:      20000
+  MMO:      0.82
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.78
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - CFM56-3B-2
+    - CFM56-3C-1

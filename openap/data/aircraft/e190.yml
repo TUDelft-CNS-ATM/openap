@@ -1,0 +1,25 @@
+name: Embraer E190 (LR)
+
+dimensions:
+  length:     36.24
+  height:     10.57
+  wing_area:  92.5
+  wing_span:  28.72
+
+limits:
+  MTOW:     50300
+  MLW:      43000
+  OEW:      27753
+  MFC:      16153
+  MMO:      0.82
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.78
+
+engine:
+  type: turbofan
+  number: 2
+  options:
+    - CF34-10E5
