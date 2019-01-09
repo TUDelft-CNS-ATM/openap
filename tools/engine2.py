@@ -14,9 +14,11 @@ df.columns = df.iloc[0, :] + df.iloc[1, :].fillna('') + df.iloc[2, :].fillna('')
 df = df.iloc[4:, :]
 df.dropna(subset=['Model'], inplace=True)
 
-df1 = df[pd.notnull(df['Thrust(cruise)[lbf]'])][['Thrust(dry)[lbf]', 'OPR(static)', 'BPR(static)', 'Thrust(cruise)[lbf]']]
+df1 = df[pd.notnull(df['Thrust(cruise)[lbf]'])][['Thrust(dry)[lbf]', 'OPR(static)', 'BPR(static)', 'CruiseAltitude[ft]', 'Thrust(cruise)[lbf]']]
 
-df1.columns = ['thr', 'opr', 'bpr', 'thr_cr']
+df1.columns = ['thr', 'opr', 'bpr', 'cr_alt', 'cr_thr']
 
-plt.scatter(df1['thr'], df1['thr_cr'])
+df1 = df1.dropna()
+
+plt.scatter(df1['thr'], df1['cr_thr'])
 plt.show()

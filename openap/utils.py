@@ -1,21 +1,17 @@
 import os
-import json
+import glob
+import yaml
 import numpy as np
 import pandas as pd
 from scipy import interpolate
 import warnings
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
-db_airport = curr_path + "/data/5_navigation/airports.csv"
-db_aircraft = curr_path + "/data/1_aircraft_and_engines/aircraft.json"
-db_engine = curr_path + "/data/1_aircraft_and_engines/engines.csv"
-db_engine_cr_perf = curr_path + "/data/1_aircraft_and_engines/engine_cruise_performance.csv"
+dir_aircraft = curr_path + "/data/aircraft/"
+dir_dragpolar = curr_path + "/data/dragpolar/"
+db_airport = curr_path + "/data/nav/airports.csv"
+db_engine = curr_path + "/data/engine/engines.txt"
 
-with open(db_aircraft) as f:
-    ACS = json.load(f)
-
-ENGINES = pd.read_csv(db_engine, encoding='utf-8')
-ENGINES_CR_PERF = pd.read_csv(db_engine_cr_perf)
 
 def get_airport_data(name):
     df = pd.read_csv(db_airport)
@@ -45,36 +41,65 @@ def get_closest_airport(lat, lon, type='icao'):
         return ap.iata
 
 
-def get_aircraft(mdl):
-    mdl = mdl.upper()
+def get_aircraft(acmdl):
+    acmdl = acmdl.lower()
 
-    if mdl not in ACS:
-        raise RuntimeError('Aircraft data not found')
+    files = glob.glob(dir_aircraft + acmdl + '.yml')
 
-    ac = ACS[mdl].copy()
-    eng_options = ac['engine']['options']
-    ac['engines'] = {}
+    if len(files) == 0:
+        raise RuntimeError('Aircraft data not found.')
 
-    for eng in eng_options:
-        ac['engines'].update(get_engines(eng))
+    f = files[0]
+    ac = yaml.load(open(f))
 
     return ac
 
 
-def get_engines(eng):
-    eng = eng.strip().upper()
-    selengs = ENGINES[ENGINES['name'].str.upper().str.startswith(eng)]
-    selengs = selengs.merge(ENGINES_CR_PERF, left_on='name', right_on='engine', how='left')
-    selengs = selengs.drop('engine', axis=1)
+def get_dragpolar(acmdl):
+    acmdl = acmdl.lower()
+
+    files = glob.glob(dir_dragpolar + acmdl + '.yml')
+
+    if len(files) == 0:
+        raise RuntimeError('Dragpolar data not found.')
+
+    f = files[0]
+    dragpolar = yaml.load(open(f))
+
+    return dragpolar
+
+
+def search_engine(eng):
+    ENG = eng.strip().upper()
+    engines = pd.read_fwf(db_engine)
+
+    selengs = engines[engines['name'].str.upper().str.startswith(ENG)]
 
     if selengs.shape[0] == 0:
-        engines = {}
+        print('Engine not found.')
+        result = None
+    else:
+        print('Engines found:')
+        result = selengs.name.tolist()
+        print(result)
 
-    if selengs.shape[0] > 0:
-        selengs.index = selengs.uid
-        engines = selengs.to_dict(orient='index')
+    return result
 
-    return engines
+
+def get_engine(eng):
+    ENG = eng.strip().upper()
+    engines = pd.read_fwf(db_engine)
+
+    # try to look for the unique engine
+    selengs = engines[engines['name'].str.upper() == ENG]
+    if selengs.shape[0] == 1:
+        selengs.index = selengs.name
+        result = selengs.to_dict(orient='records')[0]
+    else:
+        raise RuntimeError('Engine data not found.')
+
+    return result
+
 
 def interp(ts, data):
     ts = np.asarray(ts)

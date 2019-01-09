@@ -1,4 +1,6 @@
 """
+@BlueSky
+
 Functions for aeronautics in this module
     - physical quantities always in SI units
     - lat,lon,course and heading in degrees
@@ -23,7 +25,7 @@ Speed conversion at altitude H[m] in ISA:
 
 import numpy as np
 
-"""Aero and geo Constants """
+"""Aero and Geo Constants """
 kts = 0.514444      # knot -> m/s
 ft = 0.3048         # ft -> m
 fpm = 0.00508       # ft/min -> m/s
@@ -117,9 +119,7 @@ def bearing(lat1, lon1, lat2, lon2):
     return bearing
 
 
-# -----------------------------------------------------
-# Speed conversions, altitude H all in meters
-# -----------------------------------------------------
+
 def tas2mach(Vtas, H):
     """True Airspeed to Mach number"""
     a = vsound(H)

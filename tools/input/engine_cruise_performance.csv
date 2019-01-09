@@ -1,4 +1,4 @@
-engine,mach_cr,alt_cr,thr_cr,sfc_cr
+engine,cruise_mach,cruise_alt,cruise_thrust,cruise_sfc
 ALF502L,0.75,30000,9600,20.68
 ALF502R-5,0.7,25000,10000,20.39
 CFE738-1-1B,0.8,40000,6500,18.27

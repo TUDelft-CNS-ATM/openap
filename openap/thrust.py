@@ -1,8 +1,8 @@
+import yaml
 import numpy as np
-from openap import aero
+from openap import aero, utils
 
-
-class TF2S(object):
+class Thrust(object):
     """
     Turbonfan two shaft, simplified model
 
@@ -15,10 +15,45 @@ class TF2S(object):
         the model derived from REF2
     """
 
-    def __init__(self, thr0, bpr):
-        super(TF2S, self).__init__()
-        self.bpr = bpr
-        self.thr0 = thr0
+    def __init__(self, acmdl, engtype):
+        super(Thrust, self).__init__()
+
+        ac = utils.get_aircraft(acmdl)
+        eng = utils.get_engine(engtype)
+
+        if type(ac['engine']['options']) == dict:
+            eng_options = list(ac['engine']['options'].values())
+        elif type(ac['engine']['options']) == list:
+            eng_options = list(ac['engine']['options'])
+        if eng['name'] not in eng_options:
+            raise RuntimeError('Engine and aircraft mismatch. Avaiable engines are %s' % eng_options)
+
+
+        self.eng_bpr = eng['bpr']
+        self.eng_max_thrust = eng['max_thrust']
+        self.eng_number = ac['engine']['number']
+
+        if eng['cruise_mach']:
+            self.cruise_mach = eng['cruise_mach']
+            self.eng_cruise_thrust = eng['cruise_thrust']
+        else:
+            self.cruise_mach = ac['cruise']['mach']
+            self.eng_cruise_thrust = 0.2 * self.eng_max_thrust + 890
+
+
+    def dfunc(self, mratio):
+        d = -0.4204 * mratio + 1.0824
+        return d
+
+
+    def nfunc(self, roc):
+        n = np.where(roc<1500, 0.89, np.where(roc<2500, 0.93, 0.97))
+        return n
+
+
+    def mfunc(self, vratio, roc):
+        m = -1.2043e-1 * vratio - 8.8889e-9 * roc**2 + 2.4444e-5 * roc + 4.7379e-1
+        return m
 
 
     def takeoff(self, tas, alt=None):
@@ -27,13 +62,13 @@ class TF2S(object):
 
         mach = aero.tas2mach(tas*aero.kts, 0)
 
-        bpr = self.bpr
-        G0 = 0.0606 * self.bpr + 0.6337
+        eng_bpr = self.eng_bpr
+        G0 = 0.0606 * self.eng_bpr + 0.6337
 
         if alt is None:
             # at sea level
-            ratio = 1 - 0.377 * (1+bpr) / np.sqrt((1+0.82*bpr)*G0) * mach \
-                       + (0.23 + 0.19 * np.sqrt(bpr)) * mach**2
+            ratio = 1 - 0.377 * (1+eng_bpr) / np.sqrt((1+0.82*eng_bpr)*G0) * mach \
+                       + (0.23 + 0.19 * np.sqrt(eng_bpr)) * mach**2
 
         else:
             # at certain altitude
@@ -44,10 +79,10 @@ class TF2S(object):
             Z = 0.9106 * pp**3 - 1.7736 * pp**2 + 1.8697 * pp
             X = 0.1377 * pp**3 - 0.4374 * pp**2 + 1.3003 * pp
 
-            ratio = A - 0.377 * (1+bpr) / np.sqrt((1+0.82*bpr)*G0) * Z * mach \
-                  + (0.23 + 0.19 * np.sqrt(bpr)) * X * mach**2
+            ratio = A - 0.377 * (1+eng_bpr) / np.sqrt((1+0.82*eng_bpr)*G0) * Z * mach \
+                  + (0.23 + 0.19 * np.sqrt(eng_bpr)) * X * mach**2
 
-        F = ratio * self.thr0
+        F = ratio * self.eng_max_thrust * self.eng_number
         return F
 
 
@@ -64,92 +99,33 @@ class TF2S(object):
 
         p = aero.pressure(h)
         p10 = aero.pressure(10000*aero.ft)
-        p35 = aero.pressure(35000*aero.ft)
+        p30 = aero.pressure(30000*aero.ft)
 
         # approximate thrust at top of climb (REF 2)
-        F35 = (200 + 0.2 * self.thr0/4.448) * 4.448
-        mach_ref = 0.8
-        vcas_ref = aero.mach2cas(mach_ref, 35000*aero.ft)
+        F30 = self.eng_cruise_thrust * self.eng_number
+        vcas_ref = aero.mach2cas(self.cruise_mach, 30000*aero.ft)
 
-        # segment 3: alt > 35000:
-        d = self.dfunc(mach/mach_ref)
-        b = (mach / mach_ref) ** (-0.11)
-        ratio_seg3 = d * np.log(p/p35) + b
+        # segment 3: alt > 30000:
+        d = self.dfunc(mach/self.cruise_mach)
+        b = (mach / self.cruise_mach) ** (-0.11)
+        ratio_seg3 = d * np.log(p/p30) + b
 
-        # segment 2: 10000 < alt <= 35000:
+        # segment 2: 10000 < alt <= 30000:
         a = (vcas / vcas_ref) ** (-0.1)
         n = self.nfunc(roc)
-        ratio_seg2 = a * (p/p35) ** (-0.355 * (vcas/vcas_ref) + n)
+        ratio_seg2 = a * (p/p30) ** (-0.355 * (vcas/vcas_ref) + n)
 
         # segment 1: alt <= 10000:
-        F10 = F35 * a * (p10/p35) ** (-0.355 * (vcas/vcas_ref) + n)
+        F10 = F30 * a * (p10/p30) ** (-0.355 * (vcas/vcas_ref) + n)
         m = self.mfunc(vcas/vcas_ref, roc)
-        ratio_seg1 = m * (p/p35) + (F10/F35 - m * (p10/p35))
+        ratio_seg1 = m * (p/p30) + (F10/F30 - m * (p10/p30))
 
-        ratio = np.where(alt>35000, ratio_seg3, np.where(alt>10000, ratio_seg2, ratio_seg1))
+        ratio = np.where(alt>30000, ratio_seg3, np.where(alt>10000, ratio_seg2, ratio_seg1))
 
-        F = ratio * F35
+        F = ratio * F30
         return F
 
 
     def descent(self, tas, alt, roc):
         F = 0.15 * self.inflight(tas, alt, roc)
         return F
-
-
-    def dfunc(self, mratio):
-        d = np.where(
-            mratio<0.85, 0.73, np.where(
-                mratio<0.92, 0.73+(0.69-0.73)/(0.92-0.85)*(mratio-0.85), np.where(
-                    mratio<1.08, 0.66+(0.63-0.66)/(1.08-1.00)*(mratio-1.00), np.where(
-                        mratio<1.15, 0.63+(0.60-0.63)/(1.15-1.08)*(mratio-1.08), 0.60
-                    )
-                )
-            )
-        )
-        return d
-
-
-    def nfunc(self, roc):
-        n = np.where(roc<1500, 0.89, np.where(roc<2500, 0.93, 0.97))
-        return n
-
-
-    def mfunc(self, vratio, roc):
-        m = np.where(
-            vratio<0.67, 0.4, np.where(
-                vratio<0.75, 0.39, np.where(
-                    vratio<0.83, 0.38, np.where(
-                        vratio<0.92, 0.37, 0.36
-                    )
-                )
-            )
-        )
-        m = np.where(
-            roc<1500, m-0.06, np.where(
-                roc<2500, m-0.01, m
-            )
-        )
-        return m
-
-
-
-class VSM(object):
-    """
-    Very simple model, for sea-level thrust calculation (take-off)
-    1. http://home.anadolu.edu.tr/~mcavcar/common/Jetengine.pdf
-    2. http://adg.stanford.edu/aa241/AircraftDesign.html
-    """
-
-    COEF = {
-        'takeoff': (0.640, -1.024, 0.967),
-    }
-
-    def __init__(self):
-        super(VSM, self).__init__()
-
-    def takeoff(self, tas):
-        c1, c2, c3 = self.COEF['takeoff']
-        mach = aero.tas2mach(tas*aero.ft, 0)
-        ratio = c1 * mach**2 + c2 * mach + c3
-        return ratio

@@ -1,0 +1,12 @@
+aircraft: Airbus A330-300
+
+cd0:
+  clean:      0.026
+  taxi:       0.051
+  takeoff:    0.075
+  initclimb:  0.046
+  approach:   0.056
+  landing:    0.120
+
+k:        0.0344
+e:        0.9199

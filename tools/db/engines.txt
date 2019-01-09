@@ -1,0 +1,401 @@
+uid      name               type    manufacturer                bpr    pr       max_thrust    fuel_c2      fuel_c1    fuel_c0     cruise_mach    cruise_alt    cruise_thrust    cruise_sfc
+1AS001   TFE731-2-2B        TF      Allied Signal               2.64   13.9     15600         0.0147848    0.177993   0.0117467
+1AS002   TFE731-3           TF      Allied Signal               2.64   14.3     16500         0.0314443    0.177903   0.014227    0.8            40000.0       3600.0           23.2
+4AL003   AE3007A            MTF     Rolls-Royce Corporation     5.23   18.08    33730         0.0803835    0.26691    0.0298427
+6AL007   AE3007A1           MTF     Rolls-Royce Corporation     4.77   17.97    34910         0.0975137    0.258305   0.0272605
+6AL010   AE3007A1/1         MTF     Rolls-Royce Corporation     4.77   17.9     34740         0.0965336    0.257294   0.0271415
+6AL013   AE3007A1/3         MTF     Rolls-Royce Corporation     4.81   17.22    33050         0.0861391    0.246764   0.0267584
+6AL020   AE3007A1E          MTF     Rolls-Royce Corporation     4.72   19.06    37160         0.104926     0.280934   0.0269585
+6AL016   AE3007A1P          MTF     Rolls-Royce Corporation     4.77   17.9     34740         0.0967849    0.256972   0.0272811
+10AL026  AE3007A2           MTF     Rolls-Royce Corporation     4.79   20.2     42230         0.111185     0.323946   0.0314428
+6AL019   AE3007A3           MTF     Rolls-Royce Corporation     4.72   17.2     33000         0.085297     0.247144   0.0266306
+8AL025   AE3007C            MTF     Rolls-Royce Corporation     5.2    15.8     29620         0.0520042    0.227664   0.0214434
+6AL024   AE3007C1           MTF     Rolls-Royce Corporation     5.1    16.58    31460         0.073113     0.223636   0.025663
+13AL027  AE3007C2           MTF     Rolls-Royce Corporation     4.99   17.44    32729         0.102561     0.191961   0.0327126
+1AA001   D-30               MTF     Aviadvigatel                0.85   18.4     66640         0.1678       0.924123   0.0621218
+1AA002   D-30KP-2           MTF     Aviadvigatel                2.2    19.45    117600        0.392005     1.17407    0.117782
+1AA003   D-30KU             MTF     Aviadvigatel                2.35   17.4     112700        0.189417     1.21008    0.126094
+1AA004   D-30KU-154         MTF     Aviadvigatel                2.3    17       107500        0.693929     0.529265   0.177721
+13AA006  PS-90A             MTF     Aviadvigatel                4.48   30.8     154600        0.0562162    1.3872     0.0769371
+13AA007  PS-90A1            MTF     Aviadvigatel                4.36   33.79    169700        0.184794     1.36377    0.0878958
+13AA008  PS-90A2            MTF     Aviadvigatel                4.32   31.23    156950        0.0787736    1.17141    0.103827
+4BR008   BR700-710A1-10     MTF     Rolls-Royce Deutschland     4.2    24.23    65610         0.174705     0.485605   0.0536119
+4BR009   BR700-710A2-20     MTF     Rolls-Royce Deutschland     4.19   24.16    65610         0.175384     0.486135   0.0535092
+6BR010   BR700-710C4-11     MTF     Rolls-Royce Deutschland     4.05   24.95    68770         0.198818     0.501514   0.0468271
+4BR005   BR700-715A1-30     MTF     Rolls-Royce Deutschland     4.68   28.75    83230         0.246935     0.523153   0.0617049
+4BR006   BR700-715B1-30     MTF     Rolls-Royce Deutschland     4.6    30.58    89680         0.274855     0.575395   0.0607754
+4BR007   BR700-715C1-30     MTF     Rolls-Royce Deutschland     4.54   32.15    95330         0.314494     0.608329   0.0609872
+11BR011  BR-700-725A1-12    MTF     Rolls-Royce Deutschland     4.35   26.16    75700         0.231061     0.510947   0.047692
+1CM001   CFM56-2A           TF      CFM International           6      25.2     106760        0.354029     0.677091   0.0816113
+1CM002   CFM56-2B-1         TF      CFM International           6      23.5     97860         0.196723     0.707427   0.0787473
+1CM003   CFM56-2-C5         TF      CFM International           6      23.5     97860         0.196723     0.707427   0.0787473
+1CM004   CFM56-3-B1         TF      CFM International           5.1    22.44    89410         0.180286     0.702688   0.0635954
+1CM005   CFM56-3B-2         TF      CFM International           5.1    24.1     98300         0.228592     0.762839   0.0645137   0.8            35000.0       22400.0          18.89
+1CM006   CFM56-3C-1         TF      CFM International           5.1    21.3     82290         0.158275     0.649875   0.0644071   0.8            35000.0       23900.0          18.89
+1CM008   CFM56-5-A1         TF      CFM International           6      26.6     111200        0.287358     0.71229    0.050393
+1CM009   CFM56-5A3          TF      CFM International           6      27.9     117880        0.326479     0.752864   0.0506746   0.8            35000.0       22200.0          16.88
+4CM035   CFM56-5A4          TF      CFM International           6      23.8     97890         0.211299     0.634073   0.050336    0.8            35000.0       22200.0          16.88
+4CM036   CFM56-5A5          TF      CFM International           6      25.1     104530        0.247784     0.672363   0.0505075   0.8            35000.0       22200.0          16.88
+2CM012   CFM56-5B1          TF      CFM International           5.7    30.2     133450        0.378592     0.929349   0.0504481   0.8            35000.0       26000.0          16.88
+2CM016   CFM56-5B1/2        TF      CFM International           5.7    30.2     133450        0.379064     0.901536   0.0641698
+3CM020   CFM56-5B1/2P       TF      CFM International           5.7    30.5     133500        0.346959     0.907126   0.0589045
+8CM052   CFM56-5B1/3        TF      CFM International           5.5    30.2     133400        0.418258     0.844126   0.0507247
+3CM023   CFM56-5B1/P        TF      CFM International           5.7    30.47    133450        0.369883     0.876463   0.0475066
+2CM013   CFM56-5B2          TF      CFM International           5.6    31.3     137900        0.434169     0.935995   0.0530079   0.8            35000.0       26000.0          15.44
+2CM017   CFM56-5B2/2        TF      CFM International           5.7    31.2     137900        0.475747     0.852353   0.0722886
+4CM037   CFM56-5B2/2P       TF      CFM International           5.6    31.6     137900        0.419242     0.885356   0.0731446
+8CM053   CFM56-5B2/3        TF      CFM International           5.5    31.3     137900        0.480733     0.843246   0.0538275
+3CM024   CFM56-5B2/P        TF      CFM International           5.6    31.57    137900        0.440411     0.863776   0.0527536
+4CM038   CFM56-5B3/2P       TF      CFM International           5.6    32.8     142400        0.530236     0.841979   0.0792885
+8CM054   CFM56-5B3/3        TF      CFM International           5.4    32.6     142300        0.570103     0.821899   0.0590696
+3CM025   CFM56-5B3/P        TF      CFM International           5.6    32.78    142350        0.518681     0.846768   0.0573814
+2CM014   CFM56-5B4          TF      CFM International           5.9    27.1     117900        0.274056     0.843865   0.0471375   0.8            35000.0       22200.0          15.44
+2CM018   CFM56-5B4/2        TF      CFM International           5.7    27.1     117900        0.295982     0.822337   0.0618731
+3CM021   CFM56-5B4/2P       TF      CFM International           5.9    27.7     120100        0.205491     0.875813   0.0580592
+8CM055   CFM56-5B4/3        TF      CFM International           5.7    27.3     120100        0.278052     0.81871    0.0440333
+3CM026   CFM56-5B4/P        TF      CFM International           5.9    27.69    120110        0.281136     0.805842   0.0457738
+8CM056   CFM56-5B5/3        TF      CFM International           6      23.1     97900         0.169911     0.67923    0.0440782
+3CM027   CFM56-5B5/P        TF      CFM International           5.9    23.33    97890         0.187801     0.657189   0.046683
+2CM019   CFM56-5B6/2        TF      CFM International           5.7    24.8     104500        0.137574     0.797636   0.057555
+3CM022   CFM56-5B6/2P       TF      CFM International           6      24.6     104500        0.109136     0.801534   0.055563
+8CM057   CFM56-5B6/3        TF      CFM International           5.9    24.3     104500        0.198655     0.721842   0.0438689
+3CM028   CFM56-5B6/P        TF      CFM International           6      24.64    104530        0.213352     0.702491   0.0461806
+8CM058   CFM56-5B7/3        TF      CFM International           5.7    27.3     120100        0.278052     0.81871    0.0440333
+6CM044   CFM56-5B7/P        TF      CFM International           5.9    27.69    120110        0.281136     0.805842   0.0457738
+8CM059   CFM56-5B8/3        TF      CFM International           6      22.7     96100         0.163303     0.666437   0.0441812
+7CM048   CFM56-5B8/P        TF      CFM International           5.9    22.6     94700         0.160625     0.666983   0.0468448
+7CM050   CFM56-5B9/2P       TF      CFM International           5.9    24.4     102200        0.150911     0.754223   0.0530897
+8CM060   CFM56-5B9/3        TF      CFM International           5.9    24.2     103600        0.191901     0.719208   0.0441489
+7CM049   CFM56-5B9/P        TF      CFM International           5.9    24       102200        0.185352     0.721915   0.0466222
+1CM010   CFM56-5C2          MTF     CFM International           6.8    28.8     138780        0.346585     0.909689   0.0519769   0.8            35000.0       30800.0          15.44
+7CM045   CFM56-5C2/P        MTF     CFM International           6.8    28.2     137610        0.299872     0.910008   0.0431987
+1CM011   CFM56-5C3          MTF     CFM International           6.7    29.9     144570        0.363969     0.959527   0.0506684   0.8            35000.0       30700.0          15.44
+7CM046   CFM56-5C3/P        MTF     CFM International           6.7    29.2     143330        0.332631     0.9403     0.0440028
+2CM015   CFM56-5C4          MTF     CFM International           6.6    31.15    151250        0.411636     0.993315   0.0519334   0.8            35000.0       31600.0          15.44
+7CM047   CFM56-5C4/P        MTF     CFM International           6.6    30.5     149900        0.384397     0.964606   0.0457425
+3CM029   CFM56-7B18         TF      CFM International           5.5    21.59    86740         0.151173     0.652061   0.0506709
+8CM061   CFM56-7B18/3       TF      CFM International           5.5    21.4     86700         0.142033     0.652657   0.0462428
+3CM030   CFM56-7B20         TF      CFM International           5.4    22.61    91630         0.171125     0.690449   0.0510498   0.8            35000.0       24200.0          17.93
+4CM039   CFM56-7B20/2       TF      CFM International           5.4    22.77    91630         0.146666     0.702363   0.0528008
+8CM062   CFM56-7B20/3       TF      CFM International           5.5    22.4     91600         0.158628     0.691061   0.0453881
+11CM067  CFM56-7B20E        TF      CFM International           5.5    22.4     91600         0.158628     0.691061   0.0453881
+3CM031   CFM56-7B22         TF      CFM International           5.3    24.41    100970        0.220585     0.74632    0.0525694
+4CM040   CFM56-7B22/2       TF      CFM International           5.3    24.61    100970        0.174753     0.780282   0.0507942
+8CM063   CFM56-7B22/3       TF      CFM International           5.3    24.2     101000        0.204935     0.752289   0.0458673
+11CM068  CFM56-7B22E        TF      CFM International           5.3    24.2     101000        0.204935     0.752289   0.0458673
+11CM069  CFM56-7B22E/B1     TF      CFM International           5.3    24.2     101000        0.204935     0.752289   0.0458673
+3CM032   CFM56-7B24         TF      CFM International           5.2    25.78    107650        0.252376     0.796401   0.0528302   0.8            35000.0       24400.0          17.76
+4CM041   CFM56-7B24/2       TF      CFM International           5.2    25.95    107650        0.240946     0.79539    0.0523348
+8CM064   CFM56-7B24/3       TF      CFM International           5.3    25.6     107600        0.248649     0.788402   0.0474628
+11CM070  CFM56-7B24E        TF      CFM International           5.3    25.6     107600        0.248649     0.788402   0.0474628
+11CM071  CFM56-7B24E/B1     TF      CFM International           5.3    25.6     107600        0.248649     0.788402   0.0474628
+8CM051   CFM56-7B26         TF      CFM International           5.1    27.61    116990        0.323744     0.840913   0.0539503   0.8            35000.0       24400.0          17.76
+4CM042   CFM56-7B26/2       TF      CFM International           5.1    27.8     116990        0.308957     0.839918   0.0532212
+8CM065   CFM56-7B26/3       TF      CFM International           5.1    27.7     117000        0.34304      0.814609   0.0515319
+11CM072  CFM56-7B26E        TF      CFM International           5.1    27.7     117000        0.34304      0.814609   0.0515319
+11CM073  CFM56-7B26E/B1     TF      CFM International           5.1    27.7     117000        0.34304      0.814609   0.0515319
+11CM074  CFM56-7B26E/B2     TF      CFM International           5.1    27.7     117000        0.34304      0.814609   0.0515319
+11CM076  CFM56-7B26E/B2F    TF      CFM International           5.1    27.7     117000        0.34304      0.814609   0.0515319
+11CM075  CFM56-7B26E/F      TF      CFM International           5.1    27.7     117000        0.34304      0.814609   0.0515319
+3CM034   CFM56-7B27         TF      GE                          5      28.63    121440        0.377157     0.84596    0.0571305
+4CM043   CFM56-7B27/2       TF      GE                          5      28.84    121440        0.329161     0.878324   0.0539757
+8CM066   CFM56-7B27/3       TF      CFM International           5.1    29       121400        0.440112     0.786276   0.057902
+11CM080  CFM56-7B27AE       TF      CFM International           5.1    29       121400        0.440112     0.786276   0.057902
+11CM077  CFM56-7B27E        TF      CFM International           5.1    29       121400        0.440112     0.786276   0.057902
+11CM078  CFM56-7B27E/B1     TF      CFM International           5.1    29       121400        0.440112     0.786276   0.057902
+11CM082  CFM56-7B27E/B1F    TF      CFM International           5.1    29       121400        0.440112     0.786276   0.057902
+11CM079  CFM56-7B27E/B3     TF      CFM International           5.1    29       121400        0.440112     0.786276   0.057902
+11CM081  CFM56-7B27E/F      TF      CFM International           5.1    29       121400        0.440112     0.786276   0.057902
+17CM082  LEAP-1A26/26E1     TF      CFM International           11.1   33.4     120600        0.222559     0.586404   0.0459261
+18CM084  LEAP-1B28          TF      CFM International           8.6    41.5     130400        0.364156     0.646537   0.0507177
+18CM085  LEAP-1B28B2        TF      CFM International           8.6    41.5     130400        0.364156     0.646537   0.0507177
+18CM086  LEAP-1B27          TF      CFM International           8.5    39.92    124700        0.328535     0.624286   0.0495016
+18CM087  LEAP-1B25          TF      CFM International           8.4    38.4     119200        0.303683     0.592347   0.0500188
+9EA001   GP7270             TF      Engine Alliance             8.71   36.62    332390        0.716409     1.81988    0.102218
+11GE140  CF34-10A16         TF      GE Aircraft Engines         5.7    25.1     76900         0.201041     0.518612   0.045577
+11GE141  CF34-10A18         TF      GE Aircraft Engines         5.4    26.5     82100         0.219199     0.563417   0.0447101
+8GE114   CF34-10E2A1        TF      GE Aircraft Engines         5.09   25.1     75440         0.184258     0.541696   0.0443912
+8GE115   CF34-10E5          TF      GE Aircraft Engines         5.09   25.6     77400         0.191711     0.557694   0.0441261
+8GE117   CF34-10E5A1        TF      GE Aircraft Engines         5.09   27.3     83700         0.227169     0.600273   0.0443841
+8GE116   CF34-10E6          TF      GE Aircraft Engines         5.09   25.6     77400         0.191711     0.557694   0.0441261
+8GE118   CF34-10E6A1        TF      GE Aircraft Engines         5.09   27.3     83700         0.227169     0.600273   0.0443841
+8GE119   CF34-10E7          TF      GE Aircraft Engines         5.09   27.3     83700         0.227169     0.600273   0.0443841
+11GE147  CF34-10E7-B        TF      GE Aircraft Engines         5.09   27.2     83700         0.253441     0.571775   0.0460141
+1GE034   CF34-3A            TF      GE Aircraft Engines         6.25   19.7     41010         0.1211       0.254057   0.031452
+1GE035   CF34-3A1           TF      GE Aircraft Engines         6.25   19.7     41010         0.1211       0.254057   0.031452
+5GE084   CF34-3B            TF      GE Aircraft Engines         6.25   19.3     41010         0.120265     0.248068   0.03088
+6GE096   CF34-8C1           TF      GE Aircraft Engines         5.13   22.15    56360         0.251282     0.299598   0.0514283
+8GE110   CF34-8C5           TF      GE Aircraft Engines         5.13   23.09    59420         0.188875     0.424574   0.0337964
+8GE107   CF34-8C5A1         TF      GE Aircraft Engines         5.13   23.49    60620         0.196638     0.433086   0.0342947
+8GE104   CF34-8C5A2         TF      GE Aircraft Engines         5.13   24.12    62490         0.211154     0.444233   0.034513
+8GE103   CF34-8C5A3         TF      GE Aircraft Engines         5.13   24.82    64530         0.2309       0.454278   0.0347163
+8GE112   CF34-8C5B1         TF      GE Aircraft Engines         5.13   22.08    56350         0.169108     0.401694   0.0344755
+8GE113   CF34-8E2           TF      GE Aircraft Engines         5.13   21.71    55190         0.160831     0.395326   0.0340205
+8GE111   CF34-8E2A1         TF      GE Aircraft Engines         5.13   23       59150         0.183645     0.425675   0.0338114
+8GE108   CF34-8E5           TF      GE Aircraft Engines         5.13   23.18    59680         0.189719     0.427778   0.0336342
+8GE105   CF34-8E5A1         TF      GE Aircraft Engines         5.13   24.12    62490         0.211154     0.444233   0.034513
+8GE102   CF34-8E5A2         TF      GE Aircraft Engines         5.13   24.82    64530         0.2309       0.454278   0.0347163
+8GE109   CF34-8E6           TF      GE Aircraft Engines         5.13   23.18    59680         0.189719     0.427778   0.0336342
+8GE106   CF34-8E6A1         TF      GE Aircraft Engines         5.13   24.12    62490         0.211154     0.444233   0.034513
+3GE067   CF6-45A            TF      GE Aircraft Engines         4.3    25.38    202800        0.29947      1.66253    0.0524832   0.8            35000.0       50000.0          17.85
+3GE068   CF6-45A2           TF      GE Aircraft Engines         4.3    25.38    202800        0.29947      1.66253    0.0524832   0.8            35000.0       50000.0          17.85
+3GE069   CF6-50A            TF      GE Aircraft Engines         4.3    26.88    215300        0.293247     1.82458    0.0398728
+3GE070   CF6-50C            TF      GE Aircraft Engines         4.3    27.76    224200        0.362655     1.87283    0.0358065   0.8            35000.0       49400.0          18.61
+3GE073   CF6-50C1           TF      GE Aircraft Engines         4.3    28.44    230400        0.35821      1.96164    0.030289    0.8            35000.0       51400.0          18.61
+1GE007   CF6-50C1, -C2      TF      GE Aircraft Engines         4.3    29.8     230400        0.878313     1.47097    0.1188
+3GE074   CF6-50C2           TF      GE Aircraft Engines         4.3    28.44    230400        0.35821      1.96164    0.030289    0.8            35000.0       51400.0          17.85
+3GE078   CF6-50C2B          TF      GE Aircraft Engines         4.3    29.06    236700        0.35385      2.03059    0.0215003   0.8            35000.0       51400.0          17.85
+3GE072   CF6-50C2R          TF      GE Aircraft Engines         4.3    27.76    224200        0.362655     1.87283    0.0358065
+3GE071   CF6-50CA           TF      GE Aircraft Engines         4.3    27.76    224200        0.362655     1.87283    0.0358065
+3GE075   CF6-50E            TF      GE Aircraft Engines         4.3    28.44    230400        0.35821      1.96164    0.030289    0.8            35000.0       51400.0          18.61
+3GE076   CF6-50E1           TF      GE Aircraft Engines         4.3    28.44    230400        0.35821      1.96164    0.030289    0.8            35000.0       51400.0          18.61
+3GE077   CF6-50E2           TF      GE Aircraft Engines         4.3    28.44    230400        0.35821      1.96164    0.030289    0.8            35000.0       51400.0          17.85
+3GE079   CF6-50E2B          TF      GE Aircraft Engines         4.3    29.06    236700        0.35385      2.03059    0.0215003   0.8            35000.0       52200.0          17.85
+1GE001   CF6-6D             TF      GE Aircraft Engines         5.9    24.7     174800        0.463921     1.18553    0.0871757   0.8            35000.0       40400.0          18.3
+1GE002   CF6-6D1A           TF      GE Aircraft Engines         5.9    25.4     181900        0.495675     1.23771    0.0838612   0.8            35000.0       41000.0          18.3
+1GE003   CF6-6K             TF      GE Aircraft Engines         5.9    24.7     174800        0.463921     1.18553    0.0871757
+1GE004   CF6-6K2            TF      GE Aircraft Engines         5.9    25.4     181900        0.495675     1.23771    0.0838612
+1GE010   CF6-80A            TF      GE Aircraft Engines         5      29       208800        0.195405     1.93204    0.0151879   0.8            35000.0       49100.0          17.65
+1GE011   CF6-80A1           TF      GE Aircraft Engines         5      29       209000        0.195405     1.93204    0.0151879   0.8            35000.0       49100.0          17.65
+1GE012   CF6-80A2           TF      GE Aircraft Engines         5      30.1     216500        0.203168     2.04055    0.00768624  0.8            35000.0       49100.0          17.65
+1GE013   CF6-80A3           TF      GE Aircraft Engines         5      30.1     217800        0.203168     2.04055    0.00768624  0.8            35000.0       49100.0          17.65
+2GE036   CF6-80C2A1         TF      GE Aircraft Engines         5.1    30.53    257399        0.722194     1.63649    0.0871191   0.8            35000.0       52500.0          16.32
+2GE037   CF6-80C2A2         TF      GE Aircraft Engines         5.1    27.79    233350        0.543333     1.52518    0.0829117   0.8            35000.0       50400.0          16.37
+2GE038   CF6-80C2A3         TF      GE Aircraft Engines         5.1    31.09    262220        0.7518       1.67214    0.0858828   0.8            35000.0       50400.0          16.32
+2GE039   CF6-80C2A5         TF      GE Aircraft Engines         5.1    31.66    267340        0.781445     1.71045    0.0838992
+3GE056   CF6-80C2A5F        TF      GE Aircraft Engines         5.1    32.88    271880        0.888185     1.6174     0.110549
+2GE040   CF6-80C2A8         TF      GE Aircraft Engines         5.1    30.45    257370        0.693466     1.66071    0.0844811
+2GE041   CF6-80C2B1         TF      GE Aircraft Engines         5.1    29.53    249010        0.607121     1.65369    0.0786091   0.8            35000.0       57000.0          16.32
+2GE045   CF6-80C2B1F        TF      GE Aircraft Engines         5.1    30.13    254260        0.635293     1.70594    0.0780552   0.8            35000.0       57000.0          15.98
+2GE042   CF6-80C2B2         TF      GE Aircraft Engines         5.1    27.53    231080        0.506164     1.54035    0.0788782   0.8            35000.0       53400.0          16.32
+2GE046   CF6-80C2B2F        TF      GE Aircraft Engines         5.1    27.6     231350        0.48751      1.58752    0.0739235
+2GE043   CF6-80C2B4         TF      GE Aircraft Engines         5.1    30.14    254350        0.685905     1.63453    0.0851937
+2GE047   CF6-80C2B4F        TF      GE Aircraft Engines         5.1    30.22    254790        0.667213     1.67904    0.0809863
+3GE057   CF6-80C2B5F        TF      GE Aircraft Engines         5.1    32.82    272530        0.844836     1.74329    0.086122
+2GE044   CF6-80C2B6         TF      GE Aircraft Engines         5.1    31.66    267200        0.781445     1.71045    0.0838992
+2GE048   CF6-80C2B6F        TF      GE Aircraft Engines         5.1    31.72    267030        0.754767     1.75127    0.080865
+2GE055   CF6-80C2B7F        TF      GE Aircraft Engines         5.1    31.72    267030        0.754767     1.75127    0.080865
+8GE101   CF6-80C2B8F        TF      GE Aircraft Engines         5.1    31.37    267000        0.708887     1.79056    0.0789075
+3GE058   CF6-80C2B8FA       TF      GE Aircraft Engines         5.1    31.71    267020        0.738314     1.77971    0.0805603
+2GE049   CF6-80C2D1F        TF      GE Aircraft Engines         5.1    32.05    269960        0.792306     1.74411    0.0840324
+2GE050   CF6-80E1A1         TF      GE Aircraft Engines         5.1    32.46    281530        0.8057       1.7932     0.098955
+2GE051   CF6-80E1A2         TF      GE Aircraft Engines         5.1    33.1     287040        0.861152     1.79984    0.100827
+5GE085   CF6-80E1A3         TF      GE Aircraft Engines         5.1    35.7     304800        1.07331      1.79813    0.103878
+4GE081   CF6-80E1A4         TF      GE Aircraft Engines         5.1    34.5     297440        0.975868     1.81845    0.100374
+7GE097   GE90-110B1         TF      GE Aircraft Engines         7.34   39.73    492600        1.70529      2.41257    0.196228
+7GE098   GE90-113B          TF      GE Aircraft Engines         7.17   41.21    504900        2.0047       2.2826     0.222323
+7GE099   GE90-115B          TF      GE Aircraft Engines         7.08   42.24    513900        2.20156      2.22805    0.230653
+9GE124   GE90-76B           TF      GE Aircraft Engines         8.53   35.5     363220        0.913047     1.75296    0.130513    0.83           35000.0       77800.0          15.44
+9GE125   GE90-77B           TF      GE Aircraft Engines         8.52   35.8     366750        0.927933     1.77212    0.130865
+9GE126   GE90-85B           TF      GE Aircraft Engines         8.41   38.16    397210        1.05765      1.94889    0.127575    0.83           35000.0       77800.0          14.73
+9GE127   GE90-90B           TF      GE Aircraft Engines         8.36   39.85    419250        1.21799      2.0282     0.132703
+3GE066   GE90-92B           TF      GE Aircraft Engines         8.33   40.6     426720        1.17892      2.17981    0.14956
+9GE128   GE90-94B           TF      GE Aircraft Engines         8.33   40.82    430920        1.31088      2.06351    0.135155
+11GE134  GEnx-1B54          TF      GE Aircraft Engines         9.4    35.2     255300        0.480672     1.31055    0.0887509
+11GE135  GEnx-1B58          TF      GE Aircraft Engines         9.2    37.2     271300        0.530582     1.40277    0.0878921
+11GE136  GEnx-1B64          TF      GE Aircraft Engines         9      40.6     298000        0.642428     1.53742    0.087097
+11GE137  GEnx-1B67          TF      GE Aircraft Engines         8.9    41.9     308700        0.695429     1.58578    0.0879259
+11GE138  GEnx-1B70          TF      GE Aircraft Engines         8.8    43.5     321600        0.76278      1.64261    0.0890326
+11GE139  GEnx-2B67          TF      GE Aircraft Engines         8      42.4     299800        0.494348     1.85869    0.0888201
+12GE148  GEnx-1B54/P1       TF      GE Aircraft Engines         9.4    35.1     255300        0.472106     1.3245     0.0986499
+12GE149  GEnx-1B58/P1       TF      GE Aircraft Engines         9.2    37.1     271300        0.515118     1.42425    0.0962482
+12GE150  GEnx-1B64/P1       TF      GE Aircraft Engines         9      40.5     298000        0.625605     1.55783    0.0966585
+12GE151  GEnx-1B67/P1       TF      GE Aircraft Engines         8.9    41.9     308700        0.677927     1.60566    0.0975901
+12GE152  GEnx-1B70/P1       TF      GE Aircraft Engines         8.8    43.5     321600        0.742087     1.66519    0.0984037
+12GE153  GEnx-1B70/72/P1    TF      GE Aircraft Engines         8.8    43.5     321600        0.742087     1.66519    0.0984037
+12GE154  GEnx-1B70/75/P1    TF      GE Aircraft Engines         8.8    43.5     321600        0.742087     1.66519    0.0984037
+12GE155  GEnx-1B74/75/P1    TF      GE Aircraft Engines         8.8    46       341200        0.868743     1.73666    0.101438
+12GE156  GEnx-1B75/P1       TF      GE Aircraft Engines         8.8    46.5     345200        0.897406     1.75094    0.101741
+13GE157  GEnx-2B67B         TF      GE Aircraft Engines         8      42.4     299800        0.494348     1.85869    0.0888201
+17GE170  GEnx-1B54/P2       TF      GE Aircraft Engines         9.39   35.5     255300        0.537415     1.23374    0.1121
+17GE171  GEnx-1B58/P2       TF      GE Aircraft Engines         9.24   37.5     271300        0.571473     1.34959    0.104328
+17GE172  GEnx-1B64/P2       TF      GE Aircraft Engines         9.01   40.9     298000        0.659542     1.51968    0.0941638
+17GE173  GEnx-1B67/P2       TF      GE Aircraft Engines         8.92   42.2     308700        0.718121     1.56212    0.0959939
+17GE174  GEnx-1B70/72/P2    TF      GE Aircraft Engines         8.81   43.9     321600        0.783125     1.62485    0.0956453
+17GE175  GEnx-1B70/75/P2    TF      GE Aircraft Engines         8.81   43.9     321600        0.783125     1.62485    0.0956453
+17GE176  GEnx-1B70/P2       TF      GE Aircraft Engines         8.81   43.9     321600        0.783125     1.62485    0.0956453
+17GE177  GEnx-1B74/75/P2    TF      GE Aircraft Engines         8.65   46.4     341200        0.893181     1.71192    0.0975691
+17GE178  GEnx-1B75/P2       TF      GE Aircraft Engines         8.62   47       345200        0.912948     1.7348     0.09689
+17GE179  GEnx-1B76/P2       TF      GE Aircraft Engines         8.59   47.5     349200        0.939098     1.75229    0.096797
+17GE180  GEnx-1B76A/P2      TF      GE Aircraft Engines         8.59   47.5     349200        0.939098     1.75229    0.096797
+17GE181  GEnx-2B67/P        TF      GE Aircraft Engines         8.03   43.55    299810        0.778114     1.57512    0.103024
+11HN003  HTF7000            MTF     Honeywell                   4.2    21.95    30620         0.10577      0.209538   0.0323998
+11HN005  HTF7250G           MTF     Honeywell                   4.2    22.58    32860         0.125865     0.214764   0.0326193
+14HN009  HTF7350            MTF     Honeywell                   4.2    22.88    33000         0.122838     0.22013    0.0312667
+14HN008  HTF7500E           MTF     Honeywell                   4.2    23.57    33830         0.134286     0.210973   0.0338973
+18HN010  HTF7700L           MTF     Honeywell                   4.2    23.29    34030         0.130436     0.225968   0.0308245
+1IA001   V2500-A1           MTF     International Aero Engines  5.3    29.8     111200        0.225774     0.819551   0.0663192   0.8            35000.0       22600.0          16.46
+10IA011  V2522-A5           MTF     International Aero Engines  4.9    25.7     102500        0.173884     0.718238   0.078874    0.8            35000.0       23100.0          16.26
+10IA012  V2524-A5           MTF     International Aero Engines  4.8    27       108900        0.204421     0.754433   0.0799106
+1IA002   V2525-D5           MTF     International Aero Engines  4.82   27.2     111200        0.225418     0.755361   0.0733558   0.8            35000.0       25700.0          16.26
+10IA013  V2527-A5           MTF     International Aero Engines  4.8    27.1     110300        0.213008     0.753316   0.0811291
+10IA014  V2527-A5E          MTF     International Aero Engines  4.8    27.1     110300        0.213008     0.753316   0.0811291
+10IA015  V2527-A5M          MTF     International Aero Engines  4.8    27.1     110300        0.213008     0.753316   0.0811291
+8IA010   V2527E-A5          MTF     International Aero Engines  4.82   27.2     111200        0.225418     0.755361   0.0733558
+8IA009   V2527M-A5          MTF     International Aero Engines  4.82   27.2     111200        0.225418     0.755361   0.0733558
+1IA004   V2528-D5           MTF     International Aero Engines  4.66   30       124500        0.305026     0.826578   0.0756605
+10IA016  V2530-A5           MTF     International Aero Engines  4.6    32       133000        0.360918     0.871745   0.0859486
+10IA017  V2533-A5           MTF     International Aero Engines  4.5    33.7     140600        0.473312     0.855097   0.0921222   0.8            35000.0       25500.0          16.26
+14IA018  V2531-E5           MTF     International Aero Engines  4.52   32.3     134800        0.349926     0.88626    0.0848868
+1KK002   NK-8-2U            MTF     KKBM                        1.24   10.8     103000        0.647449     0.878929   0.180526
+1KK003   NK-86              MTF     KKBM                        1.33   13.4     127530        1.87516      0.177053   0.247257
+1KK004   NK-86A             MTF     KKBM                        1.13   13.2     130470        0.511662     1.4061     0.133391
+1KK005   NK-86MA            MTF     KKBM                        1.13   13.2     130470        0.511662     1.4061     0.133391
+11PJ001  SaM146-1S17        MTF     PowerJet S.A.               4.44   21.85    69210         0.243682     0.487341   0.0610591
+11PJ002  SaM146-1S18        MTF     PowerJet S.A.               4.38   22.8     72670         0.275062     0.503738   0.062951
+1PW035   JT15D-1            TF      Pratt & Whitney (Canada)    3.3    9.76     9790          0.0224238    0.109499   0.0155396
+1PW036   JT15D-4            TF      Pratt & Whitney (Canada)    2.68   10.1     11120         0.0203545    0.131757   0.0170767
+1PW037   JT15D-5, -5A, -5B  TF      Pratt & Whitney (Canada)    2.1    12.3     12900         0.0419539    0.144566   0.019129
+1PW038   JT15D-5C           TF      Pratt & Whitney (Canada)    2.1    13.3     14190         0.0387651    0.160042   0.0162388
+1PW001   JT3D-3B            TF      Pratt & Whitney             1.4    13.6     80060         0.388523     0.679658   0.0930148
+1PW003   JT3D-7             TF      Pratt & Whitney             1.4    13.4     84520         0.178103     1.00545    0.0618046
+1PW008   JT8D-11            MTF     Pratt & Whitney             1      17.17    66720         0.357557     0.660138   0.0996672   0.8            30000.0       21100.0          22.83
+1PW010   JT8D-15            MTF     Pratt & Whitney             1.03   16.81    68940         0.441125     0.624382   0.105768    0.8            30000.0       21900.0          22.94
+1PW011   JT8D-15A           MTF     Pratt & Whitney             1.08   16.45    68940         0.449162     0.563832   0.0979215   0.8            30000.0       21900.0          22.94
+1PW013   JT8D-17            MTF     Pratt & Whitney             1.02   17.01    71170         0.462697     0.672444   0.102417    0.8            30000.0       22900.0          23.06
+1PW014   JT8D-17A           MTF     Pratt & Whitney             1.05   16.87    71170         0.46661      0.598252   0.100441    0.8            30000.0       22900.0          21.9
+1PW015   JT8D-17AR          MTF     Pratt & Whitney             0.96   17.28    77420         0.706296     0.523777   0.117673    0.8            30000.0       22900.0          22.09
+1PW016   JT8D-17R           MTF     Pratt & Whitney             0.97   18.24    77420         0.679247     0.606847   0.117209    0.8            30000.0       22900.0          23.23
+1PW017   JT8D-209           MTF     Pratt & Whitney             1.8    18.3     85600         0.239838     0.877084   0.0700729   0.8            35000.0       22000.0          20.51
+1PW018   JT8D-217           MTF     Pratt & Whitney             1.73   19.66    92740         0.332277     0.906985   0.0752786   0.8            35000.0       23300.0          21.33
+4PW069   JT8D-217A          MTF     Pratt & Whitney             1.73   19.66    92740         0.332277     0.906985   0.0752786   0.8            35000.0       23300.0          21.33
+4PW070   JT8D-217C          MTF     Pratt & Whitney             1.7    19.05    92740         0.382181     0.816516   0.0799398   0.8            35000.0       23300.0          20.85
+4PW071   JT8D-219           MTF     Pratt & Whitney             1.7    20.27    96520         0.419853     0.844695   0.0792091   0.8            35000.0       23400.0          20.88
+8PW085   JT8D-7             MTF     Pratt & Whitney             1.05   15.82    62270         0.342744     0.558801   0.0880646   0.8            30000.0       19000.0          22.55
+1PW007   JT8D-9             MTF     Pratt & Whitney             1.04   15.88    64500         0.380453     0.566085   0.091789    0.8            30000.0       20200.0          22.66
+1PW032   JT9D-20J           TF      Pratt & Whitney             5.1    23.5     222400        0.514647     1.66926    0.123233    0.85           35000.0       47500.0          17.68
+1PW033   JT9D-59A           TF      Pratt & Whitney             4.9    24.5     235800        0.664618     1.653      0.120339    0.85           35000.0       53200.0          17.87
+1PW034   JT9D-70A           TF      Pratt & Whitney             4.9    24.5     235800        0.664618     1.653      0.120339    0.85           35000.0       53200.0          17.87
+1PW023   JT9D-7F            TF      Pratt & Whitney             5.1    22.8     213500        0.551101     1.4797     0.127375    0.85           35000.0       49200.0          17.87
+1PW024   JT9D-7J            TF      Pratt & Whitney             5.1    23.5     222400        0.514647     1.66926    0.123233    0.85           35000.0       49200.0          17.87
+1PW025   JT9D-7Q            TF      Pratt & Whitney             4.9    24.5     235750        0.664618     1.653      0.120339    0.85           35000.0       53200.0          17.87
+1PW026   JT9D-7R4D, -7R4D1  TF      Pratt & Whitney             5      23.4     213500        0.213162     1.72023    0.0978448
+1PW027   JT9D-7R4E, -7R4E1  TF      Pratt & Whitney             5      24.2     222400        0.384548     1.59588    0.118542
+1PW028   JT9D-7R4E4, -E1    TF      Pratt & Whitney             5      24.2     222410        0.494624     1.61185    0.107563
+1PW029   JT9D-7R4G2         TF      Pratt & Whitney             4.8    26.3     243500        0.969255     1.27373    0.150675    0.85           35000.0       54500.0          18.1
+1PW030   JT9D-7R4H1         TF      Pratt & Whitney             4.8    26.7     249100        0.735516     1.60395    0.145398    0.85           35000.0       54500.0          17.79
+19PW127  PW814GA            TF      Pratt & Whitney Canada      5.66   33.87    68630         0.158238     0.470212   0.0371368
+19PW128  PW815GA            TF      Pratt & Whitney Canada      5.6    35       71220         0.173085     0.486708   0.0372361
+18PW117  PW1122G-JM         TF      Pratt & Whitney             12.72  28.78    107820        0.13424      0.539298   0.0396974
+18PW118  PW1124G1-JM        TF      Pratt & Whitney             12.72  28.78    107820        0.13424      0.539298   0.0396974
+18PW119  PW1124G-JM         TF      Pratt & Whitney             12.72  28.78    107820        0.13424      0.539298   0.0396974
+18PW120  PW1127G1-JM        TF      Pratt & Whitney             12.28  31.66    120430        0.148274     0.618161   0.0351024
+18PW121  PW1127GA-JM        TF      Pratt & Whitney             12.28  31.66    120430        0.148274     0.618161   0.0351024
+18PW122  PW1127G-JM         TF      Pratt & Whitney             12.28  31.66    120430        0.148274     0.618161   0.0351024
+18PW123  PW1129G-JM         TF      Pratt & Whitney             12     34.02    130080        0.154639     0.692585   0.0315053
+18PW124  PW1130G-JM         TF      Pratt & Whitney             11.58  38.07    147280        0.304025     0.668559   0.0504761
+18PW125  PW1133GA-JM        TF      Pratt & Whitney             11.58  38.07    147280        0.304025     0.668559   0.0504761
+18PW126  PW1133G-JM         TF      Pratt & Whitney             11.58  38.07    147280        0.304025     0.668559   0.0504761
+16PW110  PW1525G            TF      Pratt & Whitney             11.05  38.67    108530        0.176256     0.571183   0.0404117
+16PW111  PW1524G            TF      Pratt & Whitney             11.05  38.67    108530        0.176256     0.571183   0.0404117
+16PW112  PW1521G            TF      Pratt & Whitney             11.37  35.11    97720         0.0835961    0.577054   0.0292534
+16PW113  PW1519G            TF      Pratt & Whitney             11.64  32.28    87960         0.0986264    0.486055   0.0354284
+4PW072   PW2037             TF      Pratt & Whitney             5.71   26.7     166350        0.285319     1.2192     0.06571     0.85           35000.0       28900.0          16.49
+4PW073   PW2040             TF      Pratt & Whitney             5.54   29.4     182020        0.375611     1.30639    0.0672955   0.85           35000.0       28900.0          16.49
+7PW077   PW306A             MTF     Pratt & Whitney Canada      4.5    20       26870         0.0778322    0.212646   0.0268182
+7PW078   PW306B             MTF     Pratt & Whitney Canada      4.5    20       26910         0.0778322    0.212646   0.0268182
+8PW091   PW307A             MTF     Pratt & Whitney Canada      4.2    20.21    28490         0.0778758    0.221899   0.0287633
+15PW109  PW307D             MTF     Pratt & Whitney Canada      4.2    21.44    29910         0.11804      0.194603   0.0356386
+7PW079   PW308A             MTF     Pratt & Whitney Canada      4.1    20.4     30710         0.0221687    0.310113   0.0246902
+14PW103  PW308C             MTF     Pratt & Whitney Canada      4.1    21.07    31150         0.0825267    0.255674   0.0311047
+1PW042   PW4056             TF      Pratt & Whitney             4.7    29.3     249100        0.511384     1.74143    0.0856575
+2PW060   PW4074             TF      Pratt and Whitney           6.8    32.2     333200        0.662077     2.14649    0.0803835
+3PW063   PW4074D            TF      Pratt & Whitney             6.7    31.76    333200        0.676052     2.17794    0.0875804
+2PW061   PW4077             TF      Pratt and Whitney           6.7    33.2     343000        0.756777     2.16521    0.084216
+10PW097  PW4077D            TF      Pratt & Whitney             6.6    33.3     355700        0.924535     2.05786    0.171827
+8PW089   PW4084             TF      Pratt and Whitney           6.4    36.2     369600        1.19084      2.07941    0.109119
+10PW098  PW4084D            TF      Pratt & Whitney             6.2    36.3     385900        1.30538      2.02635    0.192778
+10PW099  PW4090             TF      Pratt & Whitney             6      38.9     408300        1.963        1.666      0.243233
+1PW045   PW4152             TF      Pratt & Whitney             4.9    26.9     231270        0.379673     1.67155    0.0817848
+1PW047   PW4156             TF      Pratt & Whitney             4.7    29.3     249100        0.511384     1.74143    0.0856575
+1PW048   PW4158             TF      Pratt & Whitney             4.6    30.7     258000        0.674996     1.69458    0.0973261
+7PW081   PW4164             TF      Pratt & Whitney             5.2    30.1     284680        0.518516     2.04409    0.0984408
+9PW092   PW4164-1D          TF      Pratt & Whitney             5.06   31.3     286900        0.561344     2.05133    0.100963
+5PW075   PW4168             TF      Pratt and Whitney           5.1    31.84    302500        0.6469       2.12465    0.103403
+9PW093   PW4168-1D          TF      Pratt & Whitney             4.92   33.1     305100        0.696073     2.12384    0.106259
+7PW082   PW4168A            TF      Pratt & Whitney             5.1    31.84    302500        0.6469       2.12465    0.103403
+9PW094   PW4168A-1D         TF      Pratt & Whitney             4.92   33.1     305100        0.696073     2.12384    0.106259
+12PW101  PW4060             TF      Pratt & Whitney             4.7    29.7     266900        0.789173     1.65069    0.101557
+12PW102  PW4062             TF      Pratt & Whitney             4.6    31       275800        0.988217     1.58757    0.114402
+9PW095   PW4170             TF      Pratt & Whitney             4.86   33.8     311400        0.772491     2.12075    0.111253
+1PW051   PW4256             TF      Pratt & Whitney             4.7    29.3     252400        0.698891     1.66713    0.0734537
+1PW052   PW4460             TF      Pratt & Whitney             4.5    32.4     266900        0.91665      1.58953    0.113329
+1PW053   PW4x50             TF      Pratt & Whitney             5      25.39    222400        0.417402     1.52591    0.083975
+1PW054   PW4x52             TF      Pratt & Whitney             5      26.32    231300        0.477096     1.5614     0.0871536
+1PW055   PW4x56             TF      Pratt & Whitney             4.8    28.37    249100        0.651117     1.59466    0.0976273
+1PW056   PW4x58             TF      Pratt & Whitney             4.8    29.49    258000        0.787787     1.57359    0.106974
+5PW074   PW4X58             TF      Pratt and Whitney           4.8    28.41    258000        0.822463     1.55147    0.107747
+1PW057   PW4x60             TF      Pratt & Whitney             4.7    30.68    266900        0.958249     1.52453    0.119003
+1PW059   PW4x62             TF      Pratt & Whitney             4.6    31.91    275800        1.11129      1.50069    0.128202
+7PW083   PW6122A            MTF     Pratt & Whitney             4.8    25.7     98310         0.251885     0.734383   0.0579734
+7PW084   PW6124A            MTF     Pratt & Whitney             4.8    28       105870        0.369238     0.726785   0.0656212
+1RR001   M45H-01            TF      Rolls Royce plc             3      16.5     32400         0.100478     0.372136   0.0260622
+1RR003   RB211-22B          TF      Rolls Royce plc             4.7    25       182500        0.45845      1.27758    0.136146    0.85           35000.0       42200.0          17.79
+1RR005   RB211-524B         TF      Rolls Royce plc             4.5    28.4     218500        0.683202     1.37043    0.146499    0.85           35000.0       48900.0          17.17
+1RR006   RB211-524C2        TF      Rolls Royce plc             4.5    29.1     224800        0.70709      1.56816    0.193403    0.85           35000.0       51100.0          18.18
+1RR008   RB211-524D4        TF      Rolls Royce plc             4.3    30.22    231300        0.783045     1.39652    0.159157    0.85           35000.0       50000.0          17.48
+1RR010   RB211-524G         MTF     Rolls Royce plc             4.25   32.1     253000        1.03037      1.4059     0.166579    0.85           35000.0       52500.0          16.15
+4RR036   RB211-524G-T       MTF     Rolls Royce plc             4.25   32.1     253000        0.804706     1.64253    0.152777    0.85           35000.0       52500.0          16.15
+1RR011   RB211-524H         MTF     Rolls Royce plc             4.2    34       264400        1.11149      1.44283    0.161725    0.85           35000.0       52500.0          16.15
+4RR037   RB211-524H-T       MTF     Rolls Royce plc             4.2    34       264000        0.978093     1.64694    0.156554    0.85           35000.0       52500.0          16.15
+1RR012   RB211-535C         TF      Rolls Royce plc             4.5    21.5     163300        0.425002     1.24894    0.116239
+5RR038   RB211-535E4        MTF     Rolls Royce plc             4.1    26       178400        0.522802     1.22162    0.0969649   0.8            35000.0       38700.0          16.94
+5RR039   RB211-535E4B       MTF     Rolls Royce plc             4.1    27.9     191700        0.778753     1.16136    0.114116
+4RR035   Spey 555           MTF     Rolls Royce plc             1      15.9     44000         0.244168     0.417545   0.068675
+8RR043   SPEY Mk511         MTF     Rolls Royce plc             0.64   19.9     50700         0.23095      0.571958   0.0808809
+1RR018   SPEY Mk555         MTF     Rolls Royce plc             1      15.9     44000         0.245198     0.416258   0.0685709
+11RR048  TAY611-8C          MTF     Rolls Royce plc             3.26   15.88    61600         0.250825     0.410824   0.0710304
+3RR031   TAY 650            MTF     Rolls Royce plc             3      15.9     67200         0.309464     0.468764   0.0842308
+3RR033   TAY 651            MTF     Rolls Royce plc             3      16.4     68500         0.272404     0.517119   0.0817323
+1RR019   TAY Mk611-8        MTF     Rolls Royce plc             3      16.1     61600         0.241931     0.442429   0.0770308
+1RR020   TAY Mk620-15       MTF     Rolls Royce plc             3      16.1     61600         0.241931     0.442429   0.0770308
+1RR021   TAY Mk650-15       MTF     Rolls Royce plc             3      16.4     67200         0.320341     0.469255   0.0845167
+8RR044   Trent 553-61       TF      Rolls Royce plc             7.5    35.19    251900        0.609267     1.36545    0.132854
+8RR045   Trent 556-61       TF      Rolls Royce plc             7.5    36.63    263900        0.685244     1.42383    0.128432
+14RR070  Trent 768          MTF     Rolls Royce plc             5.15   34.48    304200        0.846301     1.93733    0.120763
+14RR071  Trent 772          MTF     Rolls Royce plc             5.03   36.3303  320300        1.06272      1.93132    0.135273    0.82           35000.0       51200.0          16.0
+2RR024   Trent 875          TF      Rolls Royce plc             6.08   35.42    351850        0.616059     2.37075    0.111826
+2RR025   Trent 877          TF      Rolls Royce plc             6.02   36.3     361640        0.653325     2.45074    0.105501
+2RR026   Trent 884          TF      Rolls Royce plc             5.87   38.96    390100        0.996796     2.40606    0.144243
+2RR027   Trent 892          TF      Rolls Royce plc             5.7    41.38    411480        1.41769      2.31816    0.146793
+5RR040   Trent 895          TF      Rolls Royce plc             5.7    41.52    413050        1.4665       2.35535    0.17648
+12RR061  Trent 1000-A2      TF      Rolls Royce plc             9.32   41.3     310900        0.733078     1.41761    0.138904
+12RR062  Trent 1000-C2      TF      Rolls Royce plc             9.16   44.1     334700        0.825674     1.55023    0.131728
+12RR063  Trent 1000-D2      TF      Rolls Royce plc             9.16   44.1     334700        0.825674     1.55023    0.131728
+12RR064  Trent 1000-E2      TF      Rolls Royce plc             9.62   36.32    268000        0.546847     1.23583    0.132156
+12RR065  Trent 1000-G2      TF      Rolls Royce plc             9.23   42.81    323700        0.772799     1.50188    0.131586
+12RR066  Trent 1000-H2      TF      Rolls Royce plc             9.49   38.52    287100        0.625291     1.31931    0.13493
+12RR067  Trent 1000-J2      TF      Rolls Royce plc             9.04   46.08    350900        0.929245     1.60151    0.13546
+12RR068  Trent 1000-K2      TF      Rolls Royce plc             9.04   46.08    350900        0.929245     1.60151    0.13546
+12RR069  Trent 1000-L2      TF      Rolls Royce plc             9.16   44.1     334700        0.825674     1.55023    0.131728
+19RR085  Trent 1000-AE3     TF      Rolls Royce plc             9.2    43       310900        0.719369     1.43       0.133253
+19RR086  Trent 1000-CE3     TF      Rolls Royce plc             9      45.8     334700        0.827138     1.53846    0.135092
+19RR087  Trent 1000 -D3     TF      Rolls Royce plc             9      45.8     334700        0.827138     1.53846    0.135092
+19RR088  Trent 1000-G3      TF      Rolls Royce plc             9.1    44.5     323700        0.775456     1.4885     0.134805
+19RR089  Trent 1000-H3      TF      Rolls Royce plc             9.3    40.1     287100        0.623894     1.31559    0.131883
+19RR090  Trent 1000-J3      TF      Rolls Royce plc             8.9    47.8     350900        0.891378     1.62632    0.135394
+19RR091  Trent 1000 -K3     TF      Rolls Royce plc             8.9    47.8     350900        0.891378     1.62632    0.135394
+19RR092  Trent 1000 -L3     TF      Rolls Royce plc             9      45.8     334700        0.827138     1.53846    0.135092
+19RR093  Trent 1000-M3      TF      Rolls Royce plc             8.9    48.7     358100        0.943328     1.64313    0.138209
+19RR094  Trent 1000 -N3     TF      Rolls Royce plc             8.9    48.7     358100        0.943328     1.64313    0.138209
+19RR095  Trent 1000 -P3     TF      Rolls Royce plc             9      45.8     334700        0.827138     1.53846    0.135092
+19RR096  Trent 1000-Q3      TF      Rolls Royce plc             8.9    47.8     350900        0.891378     1.62632    0.135394
+19RR097  Trent 1000-R3      TF      Rolls Royce plc             8.9    49.4     363900        0.989844     1.65571    0.139846
+19RR098  Trent7000-72       TF      Rolls Royce plc             9      45.4     327900        0.766404     1.58644    0.125812
+19RR099  Trent7000-72C      TF      Rolls Royce plc             9      45.4     327900        0.766404     1.58644    0.125812
+18RR076  Trent XWB-75       (TF)    Rolls Royce plc             9.3    36.8     334000        0.585805     1.66242    0.155195
+18RR077  Trent XWB-79B      (TF)    Rolls Royce plc             9.15   38.8     355200        0.679533     1.75493    0.158519
+18RR078  Trent XWB-79       (TF)    Rolls Royce plc             9.15   38.8     355200        0.679533     1.75493    0.158519
+18RR079  Trent XWB-84       (TF)    Rolls Royce plc             9.01   41.1     379000        0.769673     1.88327    0.159335
+18RR080  Trent XWB-97       (TF)    Rolls Royce plc             8.04   48.57    436700        1.37306      1.93114    0.190371
+18RR081  Trent 970-84       (TF)    Rolls Royce plc             8.45   38       338700        0.682778     1.80454    0.122512
+18RR082  Trent 970B-84      (TF)    Rolls Royce plc             8.38   39.35    352900        0.738537     1.88069    0.123165
+18RR083  Trent 972-84       (TF)    Rolls Royce plc             8.41   38.68    345900        0.708805     1.84503    0.122713
+18RR084  Trent 972E-84      (TF)    Rolls Royce plc             8.41   38.68    345900        0.708805     1.84503    0.122713
+1TL001   ALF 502L-2         TF      Textron Lycoming            5.1    13.15    33400         0.126175     0.240137   0.0314964
+1TL002   ALF 502R-3         TF      Textron Lycoming            5.7    11.4     29800         0.0955972    0.225537   0.0267676
+1TL003   ALF 502R-5         TF      Textron Lycoming            5.6    12       31000         0.0983033    0.236058   0.0237739
+1TL004   LF507-1F, -1H      TF      Textron Lycoming            5.1    13       31000         0.0910275    0.238135   0.0283518
+13ZM002  D-36 ser. 4A       TF      IVCHENKO PROGRESS ZMBK      5      19.9     63770         0.10009      0.47429    0.0587932
+13ZM003  D-436-148 F1       TF      IVCHENKO PROGRESS ZMBK      4.9    19.8     64430         -0.0380809   0.521652   0.0595351
+13ZM004  D-436-148 F2       TF      IVCHENKO PROGRESS ZMBK      4.9    20.73    68720         -0.00402515  0.514501   0.065781
