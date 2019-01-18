@@ -1,10 +1,12 @@
 aircraft: Boeing 757-200
 
 dimensions:
-  length:     47.3
-  height:     13.6
-  wing_area:  182.3
-  wing_span:  38.0
+  length:   47.3
+  height:   13.6
+
+wing:
+  area:     182.3
+  span:     38.0
 
 limits:
   MTOW:     115600

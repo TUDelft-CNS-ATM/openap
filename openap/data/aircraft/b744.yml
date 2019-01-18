@@ -1,10 +1,12 @@
 aircraft: Boeing 747-400
 
 dimensions:
-  length:     70.66
-  height:     19.4
-  wing_area:  525.6
-  wing_span:  64.4
+  length:   70.66
+  height:   19.4
+
+wing:
+  area:     525.6
+  span:     64.4
 
 limits:
   MTOW:     396800

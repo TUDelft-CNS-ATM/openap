@@ -1,10 +1,12 @@
 aircraft: Airbus A330-300
 
 dimensions:
-  length:     63.67
-  height:     16.79
-  wing_area:  361.6
-  wing_span:  60.3
+  length:   63.67
+  height:   16.79
+
+wing:
+  area:     361.6
+  span:     60.3
 
 limits:
   MTOW:     242000

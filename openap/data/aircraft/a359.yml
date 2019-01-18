@@ -1,10 +1,12 @@
 aircraft: Airbus A350-900
 
 dimensions:
-  length:     66.8
-  height:     17.05
-  wing_area:  442
-  wing_span:  64.75
+  length:   66.8
+  height:   17.05
+
+wing:
+  area:     442
+  span:     64.75
 
 limits:
   MTOW:     280000

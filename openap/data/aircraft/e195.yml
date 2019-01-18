@@ -1,10 +1,12 @@
 aircraft: Embraer E195 (LR)
 
 dimensions:
-  length:     38.65
-  height:     10.55
-  wing_area:  92.5
-  wing_span:  28.72
+  length:   38.65
+  height:   10.55
+
+wing:
+  area:     92.5
+  span:     28.72
 
 limits:
   MTOW:     50790

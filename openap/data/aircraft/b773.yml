@@ -1,10 +1,12 @@
 aircraft: Boeing 777-300
 
 dimensions:
-  length:     73.86
-  height:     18.5
-  wing_area:  427.8
-  wing_span:  60.93
+  length:   73.86
+  height:   18.5
+
+wing:
+  area:     427.8
+  span:     60.93
 
 limits:
   MTOW:     299300

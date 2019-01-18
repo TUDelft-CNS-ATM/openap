@@ -1,10 +1,12 @@
 aircraft: Boeing 737-900
 
 dimensions:
-  length:     42.11
-  height:     12.55
-  wing_area:  124.6
-  wing_span:  34.32
+  length:   42.11
+  height:   12.55
+
+wing:
+  area:     124.6
+  span:     34.32
 
 limits:
   MTOW:     85100

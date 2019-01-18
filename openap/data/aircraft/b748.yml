@@ -1,10 +1,12 @@
 aircraft: Boeing 747-8
 
 dimensions:
-  length:     76.3
-  height:     19.4
-  wing_area:  554
-  wing_span:  68.4
+  length:   76.3
+  height:   19.4
+
+wing:
+  area:     554
+  span:     68.4
 
 limits:
   MTOW:     447700

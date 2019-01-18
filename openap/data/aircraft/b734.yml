@@ -1,10 +1,12 @@
 aircraft: Boeing 737-400
 
 dimensions:
-  length:     33.4
-  height:     11.1
-  wing_area:  91.04
-  wing_span:  28.88
+  length:   33.4
+  height:   11.1
+
+wing:
+  area:     91.04
+  span:     28.88
 
 limits:
   MTOW:     68000
