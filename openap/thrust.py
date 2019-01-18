@@ -1,6 +1,6 @@
 import yaml
 import numpy as np
-from openap import aero, utils
+from openap import aero, prop
 
 class Thrust(object):
     """
@@ -15,29 +15,30 @@ class Thrust(object):
         the model derived from REF2
     """
 
-    def __init__(self, acmdl, engtype):
+    def __init__(self, ac, eng):
         super(Thrust, self).__init__()
 
-        ac = utils.get_aircraft(acmdl)
-        eng = utils.get_engine(engtype)
+        aircraft = prop.aircraft(ac)
+        engine = prop.engine(eng)
 
-        if type(ac['engine']['options']) == dict:
-            eng_options = list(ac['engine']['options'].values())
-        elif type(ac['engine']['options']) == list:
-            eng_options = list(ac['engine']['options'])
-        if eng['name'] not in eng_options:
+        if type(aircraft['engine']['options']) == dict:
+            eng_options = list(aircraft['engine']['options'].values())
+        elif type(aircraft['engine']['options']) == list:
+            eng_options = list(aircraft['engine']['options'])
+        if engine['name'] not in eng_options:
             raise RuntimeError('Engine and aircraft mismatch. Avaiable engines are %s' % eng_options)
 
 
-        self.eng_bpr = eng['bpr']
-        self.eng_max_thrust = eng['max_thrust']
-        self.eng_number = ac['engine']['number']
+        self.cruise_alt = aircraft['cruise']['height'] / aero.kts
+        self.eng_bpr = engine['bpr']
+        self.eng_max_thrust = engine['max_thrust']
+        self.eng_number = aircraft['engine']['number']
 
-        if eng['cruise_mach']:
-            self.cruise_mach = eng['cruise_mach']
-            self.eng_cruise_thrust = eng['cruise_thrust']
+        if engine['cruise_mach']:
+            self.cruise_mach = engine['cruise_mach']
+            self.eng_cruise_thrust = engine['cruise_thrust']
         else:
-            self.cruise_mach = ac['cruise']['mach']
+            self.cruise_mach = aircraft['cruise']['mach']
             self.eng_cruise_thrust = 0.2 * self.eng_max_thrust + 890
 
 
@@ -47,7 +48,8 @@ class Thrust(object):
 
 
     def nfunc(self, roc):
-        n = np.where(roc<1500, 0.89, np.where(roc<2500, 0.93, 0.97))
+        # n = np.where(roc<1500, 0.89, np.where(roc<2500, 0.93, 0.97))
+        n = 2.667e-05 * roc + 0.8633
         return n
 
 
@@ -72,12 +74,12 @@ class Thrust(object):
 
         else:
             # at certain altitude
-            p = aero.pressure(alt * aero.ft)
-            pp = p / aero.p0
+            P = aero.pressure(alt * aero.ft)
+            dP = P / aero.p0
 
-            A = -0.4327 * pp**2 + 1.3855 * pp + 0.0472
-            Z = 0.9106 * pp**3 - 1.7736 * pp**2 + 1.8697 * pp
-            X = 0.1377 * pp**3 - 0.4374 * pp**2 + 1.3003 * pp
+            A = -0.4327 * dP**2 + 1.3855 * dP + 0.0472
+            Z = 0.9106 * dP**3 - 1.7736 * dP**2 + 1.8697 * dP
+            X = 0.1377 * dP**3 - 0.4374 * dP**2 + 1.3003 * dP
 
             ratio = A - 0.377 * (1+eng_bpr) / np.sqrt((1+0.82*eng_bpr)*G0) * Z * mach \
                   + (0.23 + 0.19 * np.sqrt(eng_bpr)) * X * mach**2
@@ -86,7 +88,11 @@ class Thrust(object):
         return F
 
 
-    def inflight(self, tas, alt, roc):
+    def cruise(self, tas, alt):
+        return self.climb(tas, alt, roc=0)
+
+
+    def climb(self, tas, alt, roc):
         tas = np.asarray(tas)
         alt = np.asarray(alt)
         roc = np.abs(np.asarray(roc))
@@ -97,32 +103,32 @@ class Thrust(object):
         mach = aero.tas2mach(tas*aero.kts, h)
         vcas = aero.tas2cas(tas*aero.kts, h)
 
-        p = aero.pressure(h)
-        p10 = aero.pressure(10000*aero.ft)
-        p30 = aero.pressure(30000*aero.ft)
+        P = aero.pressure(h)
+        P10 = aero.pressure(10000*aero.ft)
+        Pcr = aero.pressure(self.cruise_alt*aero.ft)
 
         # approximate thrust at top of climb (REF 2)
-        F30 = self.eng_cruise_thrust * self.eng_number
-        vcas_ref = aero.mach2cas(self.cruise_mach, 30000*aero.ft)
+        Fcr = self.eng_cruise_thrust * self.eng_number
+        vcas_ref = aero.mach2cas(self.cruise_mach, self.cruise_alt*aero.ft)
 
         # segment 3: alt > 30000:
         d = self.dfunc(mach/self.cruise_mach)
         b = (mach / self.cruise_mach) ** (-0.11)
-        ratio_seg3 = d * np.log(p/p30) + b
+        ratio_seg3 = d * np.log(P/Pcr) + b
 
         # segment 2: 10000 < alt <= 30000:
         a = (vcas / vcas_ref) ** (-0.1)
         n = self.nfunc(roc)
-        ratio_seg2 = a * (p/p30) ** (-0.355 * (vcas/vcas_ref) + n)
+        ratio_seg2 = a * (P/Pcr) ** (-0.355 * (vcas/vcas_ref) + n)
 
         # segment 1: alt <= 10000:
-        F10 = F30 * a * (p10/p30) ** (-0.355 * (vcas/vcas_ref) + n)
+        F10 = Fcr * a * (P10/Pcr) ** (-0.355 * (vcas/vcas_ref) + n)
         m = self.mfunc(vcas/vcas_ref, roc)
-        ratio_seg1 = m * (p/p30) + (F10/F30 - m * (p10/p30))
+        ratio_seg1 = m * (P/Pcr) + (F10/Fcr - m * (P10/Pcr))
 
         ratio = np.where(alt>30000, ratio_seg3, np.where(alt>10000, ratio_seg2, ratio_seg1))
 
-        F = ratio * F30
+        F = ratio * Fcr
         return F
 
 
