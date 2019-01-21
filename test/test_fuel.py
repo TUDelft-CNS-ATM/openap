@@ -1,4 +1,4 @@
-from openap.fuel import FuelFlow
+from openap import FuelFlow
 
 ff = FuelFlow('JT15D-4')
 

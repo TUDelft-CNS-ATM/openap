@@ -17,14 +17,13 @@ class Drag(object):
     def __init__(self, ac):
         super(Drag, self).__init__()
 
+        self.ac = ac.lower()
         self.aircraft = prop.aircraft(ac)
-        self.polar = self.dragpolar(ac)
+        self.polar = self.dragpolar()
 
 
-    def dragpolar(self, ac):
-        ac = ac.lower()
-
-        files = glob.glob(dir_dragpolar + ac + '.yml')
+    def dragpolar(self):
+        files = glob.glob(dir_dragpolar + self.ac + '.yml')
 
         if len(files) == 0:
             raise RuntimeError('Dragpolar data not found.')
@@ -33,6 +32,7 @@ class Drag(object):
         dragpolar = yaml.load(open(f))
 
         return dragpolar
+
 
     def _calc_drag(self, mass, tas, alt, path_angle, cd0):
         v = tas * aero.kts

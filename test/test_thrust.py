@@ -1,13 +1,12 @@
 import pandas as pd
 import numpy as np
-from openap import utils
-from openap import thrust
+from openap import Thrust
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 
 
-# Thrust = thrust.Thrust('A320', 'CFM56-5B4')
-Thrust = thrust.Thrust('A320', 'V2500-A1')
+# Thrust = Thrust('A320', 'CFM56-5B4')
+Thrust = Thrust('A320', 'V2500-A1')
 
 fig = plt.figure(figsize=(10,8))
 

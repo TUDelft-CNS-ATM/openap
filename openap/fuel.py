@@ -1,66 +1,65 @@
 import yaml
 import numpy as np
-from openap import aero, utils, thrust
+from openap import aero, prop, Thrust, Drag
 
 class FuelFlow(object):
     """Fuel flow model based on ICAO emmision databank"""
 
-    def __init__(self, acmdl, engtype):
-        self.acmdl = acmdl
-        self.engtype = engtype
-        self.ac = utils.get_aircraft(acmdl)
-        self.eng = utils.get_engine(engtype)
+    def __init__(self, ac, eng):
+        self.ac = ac
+        self.eng = eng
+        self.aircraft = prop.aircraft(ac)
+        self.engine = prop.engine(eng)
+
+        self.thrust = Thrust(self.ac, self.eng)
+        self.drag = Drag(self.ac)
+
+        coef = [self.engine['fuel_c2'], self.engine['fuel_c1'], self.engine['fuel_c0']]
+        self.fuel_flow_model = np.poly1d(coef)
 
 
-        coef = [self.eng['fuel_c2'], self.eng['fuel_c1'], self.eng['fuel_c0']]
-        self.flow = np.poly1d(coef)
-
-
-    def from_thrust(self, thr):
+    def at_thrust(self, thr):
         """compute the fuel flow at given thrust ratio"""
-        ratio = thr / (self.eng['max_thrust'] * self.ac['engine']['number'])
-        fuelflow = self.flow(ratio)
+        ratio = thr / (self.engine['max_thrust'] * self.aircraft['engine']['number'])
+        fuelflow = self.fuel_flow_model(ratio)
         return fuelflow
 
 
-    def enroute(self, mass, tas, alt):
+    def takeoff(self, tas, alt=None, throttle=1):
+        """compute the fuel flow at takeoff"""
+        Tmax = self.thrust.takeoff(tas=tas, alt=alt)
+        fuelflow =  throttle * self.at_thrust(Tmax)
+        return fuelflow
+
+
+    def enroute(self, mass, tas, alt, path_angle=0):
         """compute the fuel flow during the steady cruise"""
         rho = aero.density(alt * aero.ft)
         v = tas * aero.kts
+        gamma = np.radians(path_angle)
 
-        S = self.ac['dimensions']['wing_area']
-        dragpolar = utils.get_dragpolar(self.acmdl)
+        S = self.aircraft['wing']['area']
+        dragpolar = self.drag.dragpolar()
         cd0 = dragpolar['cd0']['clean']
         k = dragpolar['k']
 
-        q = 0.5 * rho * v**2 * S
-        thr = q * cd0 + k * (mass * aero.g0)**2 / q
-        fuelflow =  self.at_thrust(thr)
+        q = 0.5 * rho * v**2
+        L = mass * aero.g0 * np.cos(gamma)
+        cl = L / (q * S)
+        cd = cd0 + k * (cl)**2
+        D = q * S * cd
+        T = D + mass * aero.g0 * np.sin(gamma)
+
+        fuelflow =  self.at_thrust(T)
 
         return fuelflow
 
 
-    def at_takeoff(self, tas, alt=None):
-        """compute the fuel flow at takeoff"""
-        Thrust = thrust.Thrust(self.acmdl, self.engtype)
-        thr = Thrust.takeoff(tas, alt)
-        fuelflow =  self.at_thrust(thr)
-        return fuelflow
-
-
-    def at_max_thrust_climb(self, tas, alt, roc):
-        """compute the fuel flow based on the maximum thrust profile"""
-        Thrust = thrust.Thrust(self.acmdl, self.engtype)
-        thr = Thrust.inflight(tas, alt, roc)
-        fuelflow =  self.at_thrust(thr)
-        return fuelflow
-
-
-    def plot_engine_fuel_flow(self, plot=True):
+    def plot_model(self, plot=True):
         """plot the interpolation model, or return the plot"""
         import matplotlib.pyplot as plt
         xx = np.linspace(0, 1, 50)
-        yy = self.flow(xx)
+        yy = self.fuel_flow_model(xx)
         # plt.scatter(self.x, self.y, color='k')
         plt.plot(xx, yy, '--', color='gray')
         if plot:
