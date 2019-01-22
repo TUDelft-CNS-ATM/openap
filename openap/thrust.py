@@ -34,7 +34,7 @@ class Thrust(object):
         self.eng_max_thrust = engine['max_thrust']
         self.eng_number = aircraft['engine']['number']
 
-        if engine['cruise_mach']:
+        if engine['cruise_mach'] > 0:
             self.cruise_mach = engine['cruise_mach']
             self.eng_cruise_thrust = engine['cruise_thrust']
         else:
