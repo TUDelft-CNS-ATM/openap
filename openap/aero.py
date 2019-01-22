@@ -78,30 +78,19 @@ def vsound(H):
     return a
 
 
-def distance(lat1, lon1, lat2, lon2, H=0):
-    """
-    Compute spherical distance from spherical coordinates.
+def distance(lat1, lon1, lat2, lon2, h=0):
+    # convert decimal degrees to radians
+    lat1 = np.radians(lat1)
+    lon1 = np.radians(lon1)
+    lat2 = np.radians(lat2)
+    lon2 = np.radians(lon2)
 
-    For two locations in spherical coordinates
-    (1, theta, phi) and (1, theta', phi')
-    cosine( arc length ) =
-       sin phi sin phi' cos(theta-theta') + cos phi cos phi'
-    distance = rho * arc length
-    """
-
-    # phi = 90 - latitude
-    phi1 = np.radians(90.0 - lat1)
-    phi2 = np.radians(90.0 - lat2)
-
-    # theta = longitude
-    theta1 = np.radians(lon1)
-    theta2 = np.radians(lon2)
-
-    cos = np.sin(phi1) * np.sin(phi2) * np.cos(theta1 - theta2) + np.cos(phi1) * np.cos(phi2)
-    cos = np.where(cos>1, 1, cos)
-
-    arc = np.arccos(cos)
-    dist = arc * (r_earth + H)   # meters, radius of earth
+    # haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2
+    c = 2 * np.arcsin(np.sqrt(a))
+    dist = c * (r_earth + h)   # meters, radius of earth
     return dist
 
 
