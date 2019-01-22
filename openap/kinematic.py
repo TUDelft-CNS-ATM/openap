@@ -22,12 +22,15 @@ class WRAP(object):
             raise RuntimeError('variable not found')
 
         v = r.values[0]
-        opt = v[3]
-        min = v[4]
-        max = v[5]
-        model = v[6]
-        params = v[7].split('|')
-        return opt, min, max, model, params
+
+        res = {
+            'default': v[3],
+            'minimum': v[4],
+            'maximum': v[5],
+            'statmodel': v[6],
+            'statmodel_params': [float(i) for i in v[7].split('|')]
+        }
+        return res
 
 
     def takeoff_speed(self):
