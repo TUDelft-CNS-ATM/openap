@@ -1,326 +1,423 @@
-"""
-Given any trajectory, return the start and end of each flight phase. If data
-is incomplete in desired flight phase, None will be returned.
-
-Units:
-  ts: second
-  alt: feet
-  spd: knot
-  roc: feet/min
-"""
-
+import pickle
 import numpy as np
-from openap import segment
+import skfuzzy as fuzz
+from matplotlib import pyplot as plt
 
-def getTOIC(ts, alt, spd, roc=None):
-    ts = np.array(ts)
-    alt = np.array(alt)
-    spd = np.array(spd)
 
-    ndata = len(ts)
+class FlightPhase(object):
+    """
+    Compute the drag of aicraft
+    """
 
-    # # skip data starting not on ground
-    # if alt[0] > 0:      # ft
-    #     return None
+    def __init__(self):
+        super(FlightPhase, self).__init__()
 
-    # get the data chunk up to certain ft
-    istart = 0
-    iend = 0
-    for i in range(0, ndata):
-        if alt[i] < 1500:     # ft
-            iend = i
-            continue
+        # logic states
+        self.alt_range = np.arange(0, 40000, 1)
+        self.roc_range = np.arange(-4000, 4000, 0.1)
+        self.spd_range = np.arange(0, 600, 1)
+        self.states = np.arange(0, 6, 0.01)
+
+        self.alt_gnd = fuzz.zmf(self.alt_range, 0, 200)
+        self.alt_lo = fuzz.gaussmf(self.alt_range, 10000, 10000)
+        self.alt_hi = fuzz.gaussmf(self.alt_range, 35000, 20000)
+
+        self.roc_zero = fuzz.gaussmf(self.roc_range, 0, 100)
+        self.roc_plus = fuzz.smf(self.roc_range, 10, 1000)
+        self.roc_minus = fuzz.zmf(self.roc_range, -1000, -10)
+
+        self.spd_hi = fuzz.gaussmf(self.spd_range, 600, 100)
+        self.spd_md = fuzz.gaussmf(self.spd_range, 300, 100)
+        self.spd_lo = fuzz.gaussmf(self.spd_range, 0, 50)
+
+        self.state_ground = fuzz.gaussmf(self.states, 1, 0.1)
+        self.state_climb = fuzz.gaussmf(self.states, 2, 0.1)
+        self.state_descent = fuzz.gaussmf(self.states, 3, 0.1)
+        self.state_cruise = fuzz.gaussmf(self.states, 4, 0.1)
+        self.state_level = fuzz.gaussmf(self.states, 5, 0.1)
+
+        self.state_lable_map = {1: 'GND', 2: 'CL', 3: 'DE', 4: 'CR', 5:'LVL'}
+
+        self.ts = None
+        self.alt = None
+        self.spd = None
+        self.roc = None
+
+
+    def set_trajectory(self, ts, alt, spd, roc):
+        self.ts = ts - ts[0]
+        self.alt = alt
+        self.spd = spd
+        self.roc = roc
+
+        if len(set([len(self.ts), len(self.alt), len(self.spd), len(self.roc)])) > 1:
+            raise RuntimeError('Input lists must have same length.')
+
+        self.ndata = len(self.ts)
+
+        return
+
+
+    def phaselabel(self, twindow=60):
+        '''
+        Fuzzy logic to determine the segments of the flight data
+        segments are: ground [GND], climb [CL], descent [DE], cruise [CR], leveling [LVL].
+
+        Default time window is 60 second.
+        '''
+
+        if self.ts is None:
+            raise RuntimeError('Trajectory data not set, run set_trajectory(ts, alt, spd, roc) first')
+
+        idxs = np.arange(0, self.ndata)
+
+        labels = ['NA'] * self.ndata
+
+        twindows = self.ts // twindow
+
+        for tw in range(0, max(twindows)):
+            if tw not in twindows:
+                continue
+
+            mask = (twindows == tw)
+
+            idxchk = idxs[mask]
+            altchk = self.alt[mask]
+            spdchk = self.spd[mask]
+            rocchk = self.roc[mask]
+
+            # mean value or extream value as range
+            alt = max(min(np.mean(altchk), self.alt_range[-1]), self.alt_range[0])
+            spd = max(min(np.mean(spdchk), self.spd_range[-1]), self.spd_range[0])
+            roc = max(min(np.mean(rocchk), self.roc_range[-1]), self.roc_range[0])
+
+            # make sure values are within the boundaries
+            alt = max(min(alt, self.alt_range[-1]), self.alt_range[0])
+            spd = max(min(spd, self.spd_range[-1]), self.spd_range[0])
+            roc = max(min(roc, self.roc_range[-1]), self.roc_range[0])
+
+            alt_level_gnd = fuzz.interp_membership(self.alt_range, self.alt_gnd, alt)
+            alt_level_lo = fuzz.interp_membership(self.alt_range, self.alt_lo, alt)
+            alt_level_hi = fuzz.interp_membership(self.alt_range, self.alt_hi, alt)
+
+            spd_level_hi = fuzz.interp_membership(self.spd_range, self.spd_hi, spd)
+            spd_level_md = fuzz.interp_membership(self.spd_range, self.spd_md, spd)
+            spd_level_lo = fuzz.interp_membership(self.spd_range, self.spd_lo, spd)
+
+            roc_level_zero = fuzz.interp_membership(self.roc_range, self.roc_zero, roc)
+            roc_level_plus = fuzz.interp_membership(self.roc_range, self.roc_plus, roc)
+            roc_level_minus = fuzz.interp_membership(self.roc_range, self.roc_minus, roc)
+
+            # print alt_level_gnd, alt_level_lo, alt_level_hi
+            # print roc_level_zero, roc_level_plus, roc_level_minus
+            # print spd_level_hi, spd_level_md, spd_level_lo
+
+            rule_ground = min(alt_level_gnd, roc_level_zero, spd_level_lo)
+            state_activate_ground = np.fmin(rule_ground, self.state_ground)
+
+            rule_climb = min(alt_level_lo, roc_level_plus, spd_level_md)
+            state_activate_climb = np.fmin(rule_climb, self.state_climb)
+
+            rule_descent = min(alt_level_lo, roc_level_minus, spd_level_md)
+            state_activate_descent = np.fmin(rule_descent, self.state_descent)
+
+            rule_cruise = min(alt_level_hi, roc_level_zero, spd_level_hi)
+            state_activate_cruise = np.fmin(rule_cruise, self.state_cruise)
+
+            rule_level = min(alt_level_lo, roc_level_zero, spd_level_md)
+            state_activate_level = np.fmin(rule_level, self.state_level)
+
+            aggregated = np.max(
+                np.vstack([
+                    state_activate_ground,
+                    state_activate_climb,
+                    state_activate_descent,
+                    state_activate_cruise,
+                    state_activate_level,
+                ]), axis=0
+            )
+
+            state_raw = fuzz.defuzz(self.states, aggregated, 'lom')
+            state = int(round(state_raw))
+            if state > 6:
+                state = 6
+            if state < 1:
+                state = 1
+            label = self.state_lable_map[state]
+            labels[idxchk[0]:(idxchk[-1]+1)] = [label] * len(idxchk)
+
+        return labels
+
+
+    def plot_logics(self):
+        '''Visualize these the membership functions'''
+        plt.figure(figsize=(10, 8))
+
+        plt.subplot(411)
+        plt.plot(self.alt_range, self.alt_gnd, lw=2, label='Ground')
+        plt.plot(self.alt_range, self.alt_lo, lw=2, label='Low')
+        plt.plot(self.alt_range, self.alt_hi, lw=2, label='High')
+        plt.ylim([-0.05, 1.05])
+        plt.ylabel('Altitude (ft)')
+        plt.yticks([0, 1])
+        plt.legend()
+
+        plt.subplot(412)
+        plt.plot(self.roc_range, self.roc_zero, lw=2, label='Zero')
+        plt.plot(self.roc_range, self.roc_plus, lw=2, label='Positive')
+        plt.plot(self.roc_range, self.roc_minus, lw=2, label='Negative')
+        plt.ylim([-0.05, 1.05])
+        plt.ylabel('RoC (ft/m)')
+        plt.yticks([0, 1])
+        plt.legend()
+
+        plt.subplot(413)
+        plt.plot(self.spd_range, self.spd_hi, lw=2, label='High')
+        plt.plot(self.spd_range, self.spd_md, lw=2, label='Midium')
+        plt.plot(self.spd_range, self.spd_lo, lw=2, label='Low')
+        plt.ylim([-0.05, 1.05])
+        plt.ylabel('Speed (kt)')
+        plt.yticks([0, 1])
+        plt.legend()
+
+        plt.subplot(414)
+        plt.plot(self.states, self.state_ground, lw=2, label='ground')
+        plt.plot(self.states, self.state_climb, lw=2, label='climb')
+        plt.plot(self.states, self.state_descent, lw=2, label='descent')
+        plt.plot(self.states, self.state_cruise, lw=2, label='cruise')
+        plt.plot(self.states, self.state_level, lw=2, label='level flight')
+        plt.ylim([-0.05, 1.05])
+        plt.ylabel('Flight Phases')
+        plt.yticks([0, 1])
+        plt.legend(prop={'size': 7})
+        plt.show()
+
+
+    def getTOIC(self):
+
+        # get the data chunk up to certain ft
+        istart = 0
+        iend = 0
+        for i in range(0, self.ndata):
+            if self.alt[i] < 1500:     # ft
+                iend = i
+                continue
+            else:
+                break
+
+        # keep only the chunk in taking-off states, break at starting point
+        spdtmp = self.spd[iend]
+        for i in reversed(list(range(0, iend))):
+            if self.spd[i] < 30 and self.spd[i] > spdtmp:
+                break
+            elif self.spd[i] < 5:
+                break
+            else:
+                istart = i
+                spdtmp = self.spd[i]
+
+
+        # ignore too long take-off
+        if self.ts[iend] - self.ts[istart] > 300:
+            return None
+
+        # ignore insufficient chunk size
+        if iend - istart < 10:
+            return None
+
+        # ignore no in air data
+        if self.alt[iend] < 200:
+            return None
+
+        # find the liftoff moment
+        ilof = istart
+        for i in range(istart+1, iend):
+            if abs(self.alt[i] - self.alt[i-1]) > 10:
+                ilof = i
+                break
+
+
+        # not sufficient data
+        if ilof - istart < 5:
+            return None
+
+        return (istart, ilof, iend+1)
+
+
+    def getFALD(self):
+
+        # get the approach + landing data chunk (h=0)
+        istart = 0
+        iend = 0
+
+        for i in reversed(list(range(0, self.ndata))):
+            if self.alt[i] < 1500:     # ft
+                istart = i
+            else:
+                break
+
+
+        # keep only the chunk in landing deceleration states, break at taxing point
+        spdtmp = self.spd[istart]
+        for i in range(istart, self.ndata):
+            if self.spd[i] <= 50 and self.spd[i] >= spdtmp:       # kts
+                break
+            elif self.spd[i] < 30:
+                break
+            else:
+                iend = i
+                spdtmp = self.spd[i]
+
+        # ignore insufficient chunk size
+        # if iend - istart < 20:
+        #     return None
+
+        # ignore QNH altitude, or no in-air data
+        if self.alt[istart] < 100:
+            return None
+
+        # # ignore where the end speed too high, ie. not breaked
+        # if spd[iend] > 60: # kts
+        #     return None
+
+        # find the landing moment
+        ild = iend
+        for i in reversed(list(range(istart, iend-1))):
+            if abs(self.alt[i] - self.alt[i+1]) > 10:
+                ild = i
+                break
+
+        # ignore ground or air data sample less than 4
+        if ild - istart < 5 or iend - ild < 5:
+            return None
+
+        return (istart, ild, iend+1)
+
+
+    def getCL(self):
+        labels = np.array(self.phaselabel())
+
+        if 'CL' not in labels:
+            return None
+
+        idx = np.where(np.array(labels)=='CL')[0]
+
+        istart = idx[0]
+        iend = idx[-1]
+
+        return istart, iend
+
+
+    def getDE(self):
+
+        labels = np.array(self.phaselabel())
+
+        if 'DE' not in labels:
+            return None
+
+        idx = np.where(np.array(labels)=='DE')[0]
+
+        istart = idx[0]
+        iend = idx[-1]
+
+        if 'LVL' in labels[istart:iend]:
+            isCDA = False
         else:
-            break
+            isCDA = True
 
-    # keep only the chunk in taking-off states, break at starting point
-    spdtmp = spd[iend]
-    for i in reversed(list(range(0, iend))):
-        if spd[i] < 30 and spd[i] > spdtmp:
-            break
-        elif spd[i] < 5:
-            break
+        return istart, iend, isCDA
+
+
+    def getCR(self):
+        # CR start = CL end, CR end = DE start
+        ttCL = self.getCL()
+
+        if not ttCL:
+            return None
+
+        ttDE = self.getDE()
+
+        if not ttDE:
+            return None
+
+        ttDE = ttDE[0:2]
+
+        istart = ttCL[-1]
+        iend = ttDE[0]
+
+        if iend - istart < 200:
+            # too few samples
+            return None
+
+        return istart, iend
+
+
+    def getAll(self):
+
+        ttTOIC = self.getTOIC()
+        if ttTOIC == None:
+            return None
+
+        ttFALD = self.getFALD()
+        if ttFALD == None:
+            return None
+
+        ttCL = self.getCL()
+        if ttCL == None:
+            return None
+
+        ttDE = self.getDE()
+        if ttDE == None:
+            return None
+
+        ttCR = self.getCR()
+        if ttCR == None:
+            return None
+
+        istart = ttTOIC[0]
+        iend = ttFALD[-1]
+
+        if iend - istart < 600:
+            # too few samples
+            return None
+
+        return istart, iend
+
+
+    def full_phase_idx(self):
+        # Process the data and get the phase index
+        ii_toic = self.getTOIC()
+        ii_cl = self.getCL()
+        ii_de = self.getDE()
+        ii_fald = self.getFALD()
+
+        ito = ii_toic[0] if ii_toic is not None else None
+        iic = ii_toic[1] if ii_toic is not None else None
+
+        if ii_toic is not None:
+            icl = ii_toic[2]
         else:
-            istart = i
-            spdtmp = spd[i]
+            if ii_cl is not None:
+                icl = ii_cl[0]
+            else:
+                icl = None
 
+        icr = ii_cl[1] if ii_cl is not None else None
 
-    # ignore too long take-off
-    if ts[iend] - ts[istart] > 300:
-        return None
+        ide = ii_de[0] if ii_de is not None else None
 
-    # ignore insufficient chunk size
-    if iend - istart < 10:
-        return None
-
-    # ignore no in air data
-    if alt[iend] < 200:
-        return None
-
-    # find the liftoff moment
-    ilof = istart
-    for i in range(istart+1, iend):
-        if abs(alt[i] - alt[i-1]) > 10:
-            ilof = i
-            break
-
-
-    # not sufficient data
-    if ilof - istart < 5:
-        return None
-
-    return (istart, ilof, iend+1)
-
-
-def getFALD(ts, alt, spd, roc=None):
-    ts = np.array(ts)
-    alt = np.array(alt)
-    spd = np.array(spd)
-
-    ndata = len(ts)
-
-    # # skip data not ending on ground
-    # if alt[-1] > 0:     # ft
-    #     return None
-
-    # get the approach + landing data chunk (h=0)
-    istart = 0
-    iend = 0
-
-    for i in reversed(list(range(0, ndata))):
-        if alt[i] < 1500:     # ft
-            istart = i
+        if ii_fald is not None:
+            ifa = ii_fald[0]
+            ild = ii_fald[1]
+            ied = ii_fald[2]
+        elif ii_de is not None:
+            ifa = ii_de[1]
+            ild = None
+            ied = len(self.ts)
         else:
-            break
+            ifa = None
+            ild = None
+            ied = len(self.ts)
 
-
-    # keep only the chunk in landing deceleration states, break at taxing point
-    spdtmp = spd[istart]
-    for i in range(istart, ndata):
-        if spd[i] <= 50 and spd[i] >= spdtmp:       # kts
-            break
-        elif spd[i] < 30:
-            break
-        else:
-            iend = i
-            spdtmp = spd[i]
-
-    # ignore insufficient chunk size
-    # if iend - istart < 20:
-    #     return None
-
-    # ignore QNH altitude, or no in-air data
-    if alt[istart] < 100:
-        return None
-
-    # # ignore where the end speed too high, ie. not breaked
-    # if spd[iend] > 60: # kts
-    #     return None
-
-    # find the landing moment
-    ild = iend
-    for i in reversed(list(range(istart, iend-1))):
-        if abs(alt[i] - alt[i+1]) > 10:
-            ild = i
-            break
-
-    # ignore ground or air data sample less than 4
-    if ild - istart < 5 or iend - ild < 5:
-        return None
-
-    return (istart, ild, iend+1)
-
-
-def getCL(ts, alt, spd, roc):
-    ts = np.array(ts)
-    alt = np.array(alt)
-    spd = np.array(spd)
-    roc = np.array(roc)
-
-    labels = segment.fuzzylabels(ts, alt, spd, roc)
-    n = len(labels)
-
-    if 'CL' not in labels:
-        return None
-
-    istart = labels.index('CL')
-
-    if alt[istart] > 5000:
-        # starting too low, data not good
-        return None
-
-    iend = istart + 1
-    tmp_t = ts[iend]
-    tmp_alt = alt[iend]
-
-    for i in range(istart + 1, n):
-        # stop when altitude has not increase 500 ft for 3 mins
-        if (alt[i] - tmp_alt) > 500:
-            tmp_alt = alt[i]
-            tmp_t = ts[i]
-            iend = i
-        elif abs(tmp_t - ts[i]) > 180 and alt[i] > 6000:
-            break
-
-        # keep searching for CL, stop only when cruise for 5 minutes
-        # if labels[i] == 'CR':
-        #     if ts[i] - tmp_t > 300:
-        #         break
-        # elif labels[i] == 'CL':
-        #     tmp_t = ts[i]
-        #     iend = i
-        # elif labels[i] not in ['CL', 'CR', 'NA']:
-        #     break
-
-    # if iend - istart < 200:
-    #     # too few samples
-    #     return None
-
-    return istart, iend
-
-
-def getDE(ts, alt, spd, roc):
-    ts = np.array(ts)
-    alt = np.array(alt)
-    spd = np.array(spd)
-    roc = np.array(roc)
-
-    labels = segment.fuzzylabels(ts, alt, spd, roc)
-    n = len(labels)
-
-    if 'DE' not in labels:
-        return None
-
-    iend = n - 1 - labels[::-1].index('DE')
-
-    if alt[iend] > 5000:
-        # end too low, data not good
-        return None
-
-    istart = iend - 1
-    tmp_t = ts[istart]
-    tmp_alt = alt[istart]
-    for i in range(0, iend)[::-1]:
-        # stop when altitude has not decressed 1000 ft for 5 mins
-        if (alt[i] - tmp_alt) > 1000:
-            tmp_alt = alt[i]
-            tmp_t = ts[i]
-            istart = i
-        elif abs(tmp_t - ts[i]) > 300 and alt[i] > 6000:
-            break
-
-        # keep searching for DE, stop only when cruise for 5 minutes
-        # if labels[i] == 'CR':
-        #     if abs(tmp_t - ts[i]) > 300 and alt[i] > 10000:
-        #         break
-        # elif labels[i] == 'DE':
-        #     tmp_t = ts[i]
-        #     istart = i
-        # elif labels[i] not in ['DE', 'CR']:
-        #     break
-
-    # if iend - istart < 200:
-    #     # too few samples
-    #     return None
-
-    if 'CR' in labels[istart:iend]:
-        isCDA = False
-    else:
-        isCDA = True
-
-    return istart, iend, isCDA
-
-
-def getCR(ts, alt, spd, roc):
-    ts = np.array(ts)
-    alt = np.array(alt)
-    spd = np.array(spd)
-    roc = np.array(roc)
-
-    # CR start = CL end, CR end = DE start
-    ttCL = getCL(ts, alt, spd, roc)
-
-    if not ttCL:
-        return None
-
-    ttDE = getDE(ts, alt, spd, roc)
-
-    if not ttDE:
-        return None
-
-    ttDE = ttDE[0:2]
-
-    istart = ttCL[-1]
-    iend = ttDE[0]
-
-    if iend - istart < 200:
-        # too few samples
-        return None
-
-    return istart, iend
-
-
-def getAll(ts, alt, spd, roc):
-    ts = np.array(ts)
-    alt = np.array(alt)
-    spd = np.array(spd)
-    roc = np.array(roc)
-
-    ttTOIC = getTOIC(ts, alt, spd, roc)
-    if ttTOIC == None:
-        return None
-
-    ttFALD = getFALD(ts, alt, spd, roc)
-    if ttFALD == None:
-        return None
-
-    ttCL = getCL(ts, alt, spd, roc)
-    if ttCL == None:
-        return None
-
-    ttDE = getDE(ts, alt, spd, roc)
-    if ttDE == None:
-        return None
-
-    ttCR = getCR(ts, alt, spd, roc)
-    if ttCR == None:
-        return None
-
-    istart = ttTOIC[0]
-    iend = ttFALD[-1]
-
-    if iend - istart < 600:
-        # too few samples
-        return None
-
-    return istart, iend
-
-
-def full_phase_idx(ts, alt, spd, roc):
-    # Process the data and get the phase index
-    ii_toic = getTOIC(ts, alt, spd, roc)
-    ii_cl = getCL(ts, alt, spd, roc)
-    ii_de = getDE(ts, alt, spd, roc)
-    ii_fald = getFALD(ts, alt, spd, roc)
-
-    ito = ii_toic[0] if ii_toic is not None else None
-    iic = ii_toic[1] if ii_toic is not None else None
-    icl = ii_toic[2] if ii_toic is not None else None
-    icr = ii_cl[1] if ii_cl is not None else None
-    ide = ii_de[0] if ii_de is not None else None
-
-    if ii_fald is not None:
-        ifa = ii_fald[0]
-        ild = ii_fald[1]
-        ied = ii_fald[2]
-    elif ii_de is not None:
-        ifa = ii_de[1]
-        ild = None
-        ied = len(ts)
-    else:
-        ifa = None
-        ild = None
-        ied = len(ts)
-
-    idx = [ito, iic, icl, icr, ide, ifa, ild, ied]
-    return idx
+        idx = [ito, iic, icl, icr, ide, ifa, ild, ied]
+        return idx
