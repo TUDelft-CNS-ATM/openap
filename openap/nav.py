@@ -4,14 +4,30 @@ import numpy as np
 from openap import aero
 
 fixes = None
+airports = None
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 db_airport = curr_path + "/data/nav/airports.csv"
+db_fix = curr_path + '/data/nav/fix.dat'
 
+def _read_fix():
+    return pd.read_csv(
+        db_fix, skiprows=3, skipfooter=1,
+        engine='python',
+        sep=r'\s+',
+        names=('lat', 'lon', 'fix')
+    )
+
+def _read_airport():
+    return pd.read_csv(db_airport)
 
 def airport(name):
-    df = pd.read_csv(db_airport)
-    df = df[(df['icao']==name) | (df['iata']==name)]
+    NAME = str(name).upper()
+
+    if not isinstance(airport, pd.DataFrame):
+        airports = _read_airport()
+
+    df = airports[(airports['icao']==NAME) | (airports['iata']==NAME)]
     if df.shape[0] == 0:
         return None
     else:
@@ -19,8 +35,12 @@ def airport(name):
 
 
 def closest_airport(lat, lon, type='icao'):
-    df = pd.read_csv(db_airport)
-    df = df[df['lat'].between(lat-2, lat+2) & df['lon'].between(lon-2, lon+2)]
+    global airports
+
+    if not isinstance(airport, pd.DataFrame):
+        airports = _read_airport()
+
+    df = airports[airports['lat'].between(lat-2, lat+2) & airports['lon'].between(lon-2, lon+2)]
 
     if df.shape[0] == 0:
         return None
@@ -37,14 +57,22 @@ def closest_airport(lat, lon, type='icao'):
         return ap.iata
 
 
-
-def cloest_fix(lat, lon):
+def fix(name):
     global fixes
 
     if not isinstance(fixes, pd.DataFrame):
-        fixes = pd.read_csv(curr_path + '/data/5_navigation/fix.dat', skiprows=3,
-                            skipfooter=1, engine='python',
-                            sep=r'\s*', names=('lat', 'lon', 'fix'))
+        fixes = _read_fix()
+
+    NAME = str(name).upper()
+    fix = fixes[fixes['fix']==NAME].iloc[0].tolist()
+    return fix
+
+
+def closest_fix(lat, lon):
+    global fixes
+
+    if not isinstance(fixes, pd.DataFrame):
+        fixes = _read_fix()
 
     mask = (fixes['lat'].between(lat-1, lat+1)) & (fixes['lon'].between(lon-1, lon+1))
     chunk = fixes[mask]
