@@ -34,16 +34,17 @@ class Drag(object):
         return dragpolar
 
 
-    def _calc_drag(self, mass, tas, alt, cd0):
+    def _calc_drag(self, mass, tas, alt, cd0, path_angle):
         v = tas * aero.kts
         h = alt * aero.ft
+        gamma = np.radians(path_angle)
 
         k = self.polar['k']
         S = self.aircraft['wing']['area']
 
         rho = aero.density(h)
         q = 0.5 * rho * v**2
-        L = mass * aero.g0
+        L = mass * aero.g0 * np.cos(gamma)
         cl = L / (q * S)
         cd = cd0 + k * cl**2
         D = q * S * cd
@@ -52,15 +53,15 @@ class Drag(object):
 
     def clean(self, mass, tas, alt, path_angle=0):
         cd0 = self.polar['cd0']['clean']
-        D = self._calc_drag(mass, tas, alt, path_angle, cd0)
+        D = self._calc_drag(mass, tas, alt, cd0, path_angle)
         return D
 
-    def initclimb(self, mass, tas, alt, path_angle):
+    def initclimb(self, mass, tas, alt, path_angle=0):
         cd0 = self.polar['cd0']['initclimb']
-        D = self._calc_drag(mass, tas, alt, path_angle, cd0)
+        D = self._calc_drag(mass, tas, alt, cd0, path_angle)
         return D
 
-    def approach(self, mass, tas, alt, path_angle):
+    def approach(self, mass, tas, alt, path_angle=0):
         cd0 = self.polar['cd0']['approach']
-        D = self._calc_drag(mass, tas, alt, path_angle, cd0)
+        D = self._calc_drag(mass, tas, alt, cd0, path_angle)
         return D

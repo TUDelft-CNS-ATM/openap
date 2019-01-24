@@ -74,7 +74,7 @@ class FlightPhase(object):
 
         twindows = self.ts // twindow
 
-        for tw in range(0, max(twindows)):
+        for tw in range(0, int(max(twindows))):
             if tw not in twindows:
                 continue
 
@@ -327,7 +327,7 @@ class FlightPhase(object):
         return istart, iend, isCDA
 
 
-    def getCR(self):
+    def _get_cr(self):
         # CR start = CL end, CR end = DE start
         ttCL = self._get_cl()
 
@@ -349,39 +349,6 @@ class FlightPhase(object):
             return None
 
         return istart, iend
-
-
-    def getAll(self):
-
-        ttTOIC = self._get_to_ic()
-        if ttTOIC == None:
-            return None
-
-        ttFALD = self._get_fa_ld()
-        if ttFALD == None:
-            return None
-
-        ttCL = self._get_cl()
-        if ttCL == None:
-            return None
-
-        ttDE = self._get_de()
-        if ttDE == None:
-            return None
-
-        ttCR = self.getCR()
-        if ttCR == None:
-            return None
-
-        istart = ttTOIC[0]
-        iend = ttFALD[-1]
-
-        if iend - istart < 600:
-            # too few samples
-            return None
-
-        return istart, iend
-
 
     def flight_phase_indices(self):
         # Process the data and get the phase index

@@ -21,7 +21,7 @@ class FuelFlow(object):
     def at_thrust(self, thr):
         """compute the fuel flow at given thrust ratio"""
         ratio = thr / (self.engine['max_thrust'] * self.aircraft['engine']['number'])
-        fuelflow = self.fuel_flow_model(ratio)
+        fuelflow = self.fuel_flow_model(ratio) * self.aircraft['engine']['number']
         return fuelflow
 
 

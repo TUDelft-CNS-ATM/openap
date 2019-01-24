@@ -9,6 +9,12 @@ dir_aircraft = curr_path + "/data/aircraft/"
 db_engine = curr_path + "/data/engine/engines.txt"
 
 
+def available_aircraft():
+    files = sorted(glob.glob(dir_aircraft + '*.yml'))
+    acs = [f[-8:-4].upper() for f in files]
+    return acs
+
+
 def aircraft(acmdl):
     acmdl = acmdl.lower()
 
