@@ -1,4 +1,3 @@
-import pickle
 import numpy as np
 import skfuzzy as fuzz
 from matplotlib import pyplot as plt
@@ -193,7 +192,7 @@ class FlightPhase(object):
         plt.show()
 
 
-    def getTOIC(self):
+    def _get_to_ic(self):
 
         # get the data chunk up to certain ft
         istart = 0
@@ -244,7 +243,7 @@ class FlightPhase(object):
         return (istart, ilof, iend+1)
 
 
-    def getFALD(self):
+    def _get_fa_ld(self):
 
         # get the approach + landing data chunk (h=0)
         istart = 0
@@ -294,7 +293,7 @@ class FlightPhase(object):
         return (istart, ild, iend+1)
 
 
-    def getCL(self):
+    def _get_cl(self):
         labels = np.array(self.phaselabel())
 
         if 'CL' not in labels:
@@ -308,7 +307,7 @@ class FlightPhase(object):
         return istart, iend
 
 
-    def getDE(self):
+    def _get_de(self):
 
         labels = np.array(self.phaselabel())
 
@@ -330,12 +329,12 @@ class FlightPhase(object):
 
     def getCR(self):
         # CR start = CL end, CR end = DE start
-        ttCL = self.getCL()
+        ttCL = self._get_cl()
 
         if not ttCL:
             return None
 
-        ttDE = self.getDE()
+        ttDE = self._get_de()
 
         if not ttDE:
             return None
@@ -354,19 +353,19 @@ class FlightPhase(object):
 
     def getAll(self):
 
-        ttTOIC = self.getTOIC()
+        ttTOIC = self._get_to_ic()
         if ttTOIC == None:
             return None
 
-        ttFALD = self.getFALD()
+        ttFALD = self._get_fa_ld()
         if ttFALD == None:
             return None
 
-        ttCL = self.getCL()
+        ttCL = self._get_cl()
         if ttCL == None:
             return None
 
-        ttDE = self.getDE()
+        ttDE = self._get_de()
         if ttDE == None:
             return None
 
@@ -384,12 +383,12 @@ class FlightPhase(object):
         return istart, iend
 
 
-    def full_phase_idx(self):
+    def flight_phase_indices(self):
         # Process the data and get the phase index
-        ii_toic = self.getTOIC()
-        ii_cl = self.getCL()
-        ii_de = self.getDE()
-        ii_fald = self.getFALD()
+        ii_toic = self._get_to_ic()
+        ii_cl = self._get_cl()
+        ii_de = self._get_de()
+        ii_fald = self._get_fa_ld()
 
         ito = ii_toic[0] if ii_toic is not None else None
         iic = ii_toic[1] if ii_toic is not None else None
@@ -409,15 +408,25 @@ class FlightPhase(object):
         if ii_fald is not None:
             ifa = ii_fald[0]
             ild = ii_fald[1]
-            ied = ii_fald[2]
+            iend = ii_fald[2]
         elif ii_de is not None:
             ifa = ii_de[1]
             ild = None
-            ied = len(self.ts)
+            iend = len(self.ts)
         else:
             ifa = None
             ild = None
-            ied = len(self.ts)
+            iend = len(self.ts)
 
-        idx = [ito, iic, icl, icr, ide, ifa, ild, ied]
+        idx = {
+            'TO': ito,
+            'IC': iic,
+            'CL': icl,
+            'CR': icr,
+            'DE': ide,
+            'FA': ifa,
+            'LD': ild,
+            'END': iend
+        }
+
         return idx

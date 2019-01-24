@@ -8,11 +8,17 @@ root = os.path.dirname(os.path.realpath(__file__))
 
 df = pd.read_csv(root+'/data/flight_phase_test.csv')
 
-ts = df['ts'].values
-ts = ts - ts[0]
-alt = df['alt'].values
-spd = df['spd'].values
-roc = df['roc'].values
+ts0 = df['ts'].values
+ts0 = ts0 - ts0[0]
+alt0 = df['alt'].values
+spd0 = df['spd'].values
+roc0 = df['roc'].values
+
+ts = np.arange(0, ts0[-1], 1)
+alt = np.interp(ts, ts0, alt0)
+spd = np.interp(ts, ts0, spd0)
+roc = np.interp(ts, ts0, roc0)
+
 
 fp = FlightPhase()
 fp.set_trajectory(ts, alt, spd, roc)
@@ -48,25 +54,21 @@ def test_segment():
 
 
 def test_phase():
-    print('TOIC:\t', fp.getTOIC())
-    print('CL:\t', fp.getCL())
-    print('CR:\t', fp.getCR())
-    print('DE:\t', fp.getDE())
-    print('FALD:\t', fp.getFALD())
-
-    iis = fp.full_phase_idx()
-    plabels = ['TO', 'IC', 'CL', 'CR', 'DE', 'FA', 'LD', 'STOP']
+    idx = fp.flight_phase_indices()
 
     fig = plt.figure()
 
     ax = fig.add_subplot(111)
     plt.plot(ts, alt, color='gray')
     y0, y1 = ax.get_ylim()
-    for i, l in zip(iis, plabels):
-        if i is not None:
-            plt.plot([ts[i], ts[i]], [y0, y1])
-            plt.text(ts[i], 0, l, ha='center')
+    for k, v in idx.items():
+        if v is None:
+            continue
+
+        plt.plot([ts[v], ts[v]], [y0, y1], label=k)
+        # plt.text(lx, ly, k, ha='center')
     plt.title('altitude')
+    plt.legend()
 
     plt.show()
 
