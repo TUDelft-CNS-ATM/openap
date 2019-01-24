@@ -34,17 +34,16 @@ class Drag(object):
         return dragpolar
 
 
-    def _calc_drag(self, mass, tas, alt, path_angle, cd0):
+    def _calc_drag(self, mass, tas, alt, cd0):
         v = tas * aero.kts
         h = alt * aero.ft
 
         k = self.polar['k']
         S = self.aircraft['wing']['area']
 
-        gamma = np.radians(path_angle)
         rho = aero.density(h)
         q = 0.5 * rho * v**2
-        L = mass * aero.g0 * np.cos(gamma)
+        L = mass * aero.g0
         cl = L / (q * S)
         cd = cd0 + k * cl**2
         D = q * S * cd
