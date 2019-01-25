@@ -18,9 +18,9 @@ class FuelFlow(object):
         self.fuel_flow_model = np.poly1d(coef)
 
 
-    def at_thrust(self, thr):
+    def at_thrust(self, acthr):
         """compute the fuel flow at given thrust ratio"""
-        ratio = thr / (self.engine['max_thrust'] * self.aircraft['engine']['number'])
+        ratio = acthr / (self.engine['max_thrust'] * self.aircraft['engine']['number'])
         fuelflow = self.fuel_flow_model(ratio) * self.aircraft['engine']['number']
         return fuelflow
 

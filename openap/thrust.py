@@ -29,7 +29,8 @@ class Thrust(object):
             raise RuntimeError('Engine and aircraft mismatch. Avaiable engines are %s' % eng_options)
 
 
-        self.cruise_alt = aircraft['cruise']['height'] / aero.kts
+        self.cruise_alt = aircraft['cruise']['height'] / aero.ft
+        # self.cruise_alt = 30000
         self.eng_bpr = engine['bpr']
         self.eng_max_thrust = engine['max_thrust']
         self.eng_number = aircraft['engine']['number']
