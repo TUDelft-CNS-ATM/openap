@@ -1,12 +1,12 @@
 aircraft: Cessna Citation II
 
 cd0:
-  clean:      0.022
-  taxi:       0.040
-  takeoff:    0.066
-  initclimb:  0.042
-  approach:   0.052
-  landing:    0.112
+  clean:      0.028
+  taxi:       0.046
+  takeoff:    0.072
+  initclimb:  0.048
+  approach:   0.058
+  landing:    0.118
 
-k:        0.045
-e:        0.85
+k:        0.049
+e:        0.818

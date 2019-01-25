@@ -244,7 +244,7 @@ uid      name               type    manufacturer                bpr    pr       
 11PJ001  SaM146-1S17        MTF     PowerJet S.A.               4.44   21.85    69210         0.243682     0.487341   0.0610591
 11PJ002  SaM146-1S18        MTF     PowerJet S.A.               4.38   22.8     72670         0.275062     0.503738   0.062951
 1PW035   JT15D-1            TF      Pratt & Whitney (Canada)    3.3    9.76     9790          0.0224238    0.109499   0.0155396
-1PW036   JT15D-4            TF      Pratt & Whitney (Canada)    2.68   10.1     11120         0.0203545    0.131757   0.0170767
+1PW036   JT15D-4            TF      Pratt & Whitney (Canada)    2.68   10.1     11120         0.0203545    0.131757   0.0170767   0.67           36000.0       3500.0
 1PW037   JT15D-5, -5A, -5B  TF      Pratt & Whitney (Canada)    2.1    12.3     12900         0.0419539    0.144566   0.019129
 1PW038   JT15D-5C           TF      Pratt & Whitney (Canada)    2.1    13.3     14190         0.0387651    0.160042   0.0162388
 1PW001   JT3D-3B            TF      Pratt & Whitney             1.4    13.6     80060         0.388523     0.679658   0.0930148
