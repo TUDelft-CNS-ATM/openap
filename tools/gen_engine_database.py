@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import argparse
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
 
 def clean_name(name):
     if "SelectOne" in name:
@@ -22,6 +24,8 @@ def clean_bpr(bpr):
         bpr = '-'
     return bpr
 
+def func_fuel(x, c3, c2, c1):
+    return c3 * x**3 + c2 * x**2 + c1 * x
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input', dest="fin", required=True,
@@ -67,13 +71,27 @@ df = df.loc[:, ['uid', 'name', 'type', 'manufacturer', 'bpr', 'pr', 'max_thrust'
 
 
 # compute fuel flow coefficient
-x = [0.07, 0.3, 0.85, 1.0]
+x = [0, 0.07, 0.3, 0.85, 1.0]
 for i, r in df.iterrows():
-    y = [r['ff_idl'], r['ff_app'], r['ff_co'], r['ff_to']]
-    coef = np.polyfit(x, y, 2)
-    df.loc[i, 'fuel_c2'] = coef[0]
-    df.loc[i, 'fuel_c1'] = coef[1]
-    df.loc[i, 'fuel_c0'] = coef[2]
+    y = [0, r['ff_idl'], r['ff_app'], r['ff_co'], r['ff_to']]
+
+    # coef = np.polyfit(x, y, 2)
+    # df.loc[i, 'fuel_c2'] = coef[0]
+    # df.loc[i, 'fuel_c1'] = coef[1]
+    # df.loc[i, 'fuel_c0'] = coef[2]
+
+    coef, cov = curve_fit(func_fuel, x, y)
+    df.loc[i, 'fuel_c3'] = coef[0]
+    df.loc[i, 'fuel_c2'] = coef[1]
+    df.loc[i, 'fuel_c1'] = coef[2]
+
+    # print(r['name'], coef)
+    # xx = np.linspace(0, 1, 100)
+    # plt.plot(xx, func_fuel(xx, *coef))
+    # plt.scatter(x, y)
+    # plt.draw()
+    # plt.waitforbuttonpress(-1)
+    # plt.clf()
 
 df = df.drop(['ff_to', 'ff_co', 'ff_app', 'ff_idl', 'fuel_lto'], axis=1)
 
