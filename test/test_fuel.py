@@ -1,8 +1,8 @@
 from openap import FuelFlow
 
-ff = FuelFlow('JT15D-4')
+ff = FuelFlow('C550', 'JT15D-4')
 
-ff.plot_engine_fuel_flow()
+ff.plot_model()
 
 def test_all():
     assert round(ff.at_thrust_ratio(0.1), 4) == 0.0305
