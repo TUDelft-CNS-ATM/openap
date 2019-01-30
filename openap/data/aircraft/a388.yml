@@ -17,7 +17,7 @@ limits:
   ceiling:  13100
 
 cruise:
-  height:   11000
+  height:   12800
   mach:     0.85
 
 engine:
