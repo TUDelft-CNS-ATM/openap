@@ -1,6 +1,5 @@
 from openap import nav
 
-print(nav.airport('Ams'))
 print(nav.airport('Eham'))
 print(nav.closest_airport(52.011, 4.357))
 

@@ -27,14 +27,14 @@ def airport(name):
     if not isinstance(airport, pd.DataFrame):
         airports = _read_airport()
 
-    df = airports[(airports['icao']==NAME) | (airports['iata']==NAME)]
+    df = airports[airports['icao']==NAME]
     if df.shape[0] == 0:
         return None
     else:
         return df.iloc[0, :].to_dict()
 
 
-def closest_airport(lat, lon, type='icao'):
+def closest_airport(lat, lon):
     global airports
 
     if not isinstance(airport, pd.DataFrame):
@@ -51,10 +51,7 @@ def closest_airport(lat, lon, type='icao'):
 
     ap = df.iloc[idx, :]
 
-    if type.lower() == 'icao':
-        return ap.icao
-    if type.lower() == 'iata':
-        return ap.iata
+    return ap.icao
 
 
 def fix(name):

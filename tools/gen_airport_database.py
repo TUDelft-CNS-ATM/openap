@@ -1,29 +1,78 @@
-import requests
-import json
+import argparse
 import pandas as pd
+import re
+import reverse_geocoder as rg
 
-url_airports = "http://www.flightradar24.com/_json/airports.php"
 
-s = requests.Session()
-s.headers.update({'user-agent': 'Mozilla/5.0'})
+parser = argparse.ArgumentParser()
+parser.add_argument('--input', dest="fin", required=True,
+                    help="path to x-plane apt.dat")
+args = parser.parse_args()
 
-r = s.get(url_airports)
+fin = args.fin
 
-if r.status_code != 200:
-    raise RuntimeError("Can not fetch FR24 source url!")
+curr_ap = None
+prev_ap = None
+skip = False
 
-try:
-    res = r.json()
-except:
-    raise RuntimeError("Source data format unknown")
+aps = []
 
-if not res['rows']:
-    raise RuntimeError("No infomation in the data")
+with open(fin, 'rb') as f:
+    for line in f:
+        try:
+            line = line.strip().decode()
+        except:
+            continue
+        items = re.split('\s+', line)
 
-df = pd.DataFrame(res['rows'])
 
-df = df[['iata', 'icao', 'lat', 'lon', 'alt', 'country', 'name']]
+        if items[0] == '1':
+            icao = items[4]
+            name = ' '.join(items[5:]).title()
+            alt = items[1]
 
-df = df.sort_values('iata')
+            prev_ap = curr_ap
+            curr_ap = icao
 
-df.to_csv('db/airports.csv', index=False, encoding='utf-8')
+            if (not icao.isalpha()) or len(icao)!=4:
+                skip = True
+            elif 'closed' in name.lower() or '[x]' in name.lower():
+                skip = True
+            else:
+                skip = False
+
+        if items[0] == '100':
+            if skip:
+                continue
+
+            if curr_ap == prev_ap:
+                continue
+
+            lat = round(float(items[9]), 5)
+            lon = round(float(items[10]), 5)
+
+            # print(icao, lat, lon, alt, name)
+
+            ap = {
+                'icao': icao,
+                'lat': lat,
+                'lon': lon,
+                'alt': alt,
+                'name': name,
+            }
+
+            aps.append(ap)
+            prev_ap = curr_ap
+
+df = pd.DataFrame(aps)
+latlons = df[['lat','lon']].values.tolist()
+latlons = [tuple(l) for l in latlons]
+geo = rg.search(latlons)
+dfgeo = pd.DataFrame(geo)
+df['country'] = dfgeo['cc']
+df['location'] = dfgeo['name']
+
+df = df[['icao', 'lat', 'lon', 'alt', 'country', 'name', 'location']]
+df = df.sort_values('icao')
+
+df.to_csv('db/airports.csv', index=False)
