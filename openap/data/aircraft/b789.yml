@@ -23,6 +23,7 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: Trent 1000-K2
   options:
     - GEnx-1B75
     - GEnx-1B74

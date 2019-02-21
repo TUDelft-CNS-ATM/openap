@@ -23,6 +23,7 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: V2522-A5
   options:
     A319-111: CFM56-5B5
     A319-112: CFM56-5B6

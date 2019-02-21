@@ -23,5 +23,6 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: GE90-115B
   options:
     - GE90-115B

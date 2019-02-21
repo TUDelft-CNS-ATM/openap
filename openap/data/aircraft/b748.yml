@@ -23,5 +23,6 @@ cruise:
 engine:
   type: turbofan
   number: 4
+  default: GEnx-2B67
   options:
     - GEnx-2B67

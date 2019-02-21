@@ -23,5 +23,6 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: CF34-10E5
   options:
     - CF34-10E5

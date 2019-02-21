@@ -23,6 +23,7 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: CFM56-5A3
   options:
     A320-111: CFM56-5-A1
     A320-211: CFM56-5-A1

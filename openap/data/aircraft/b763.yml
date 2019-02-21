@@ -23,6 +23,7 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: CF6-80C2B2
   options:
     - JT9D-7R4D
     - PW4056

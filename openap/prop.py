@@ -15,18 +15,29 @@ def available_aircraft():
     return acs
 
 
-def aircraft(acmdl):
-    acmdl = acmdl.lower()
+def aircraft(ac):
+    ac = ac.lower()
 
-    files = glob.glob(dir_aircraft + acmdl + '.yml')
+    files = glob.glob(dir_aircraft + ac + '.yml')
 
     if len(files) == 0:
         raise RuntimeError('Aircraft data not found.')
 
     f = files[0]
-    ac = yaml.load(open(f))
+    acdict = yaml.load(open(f))
 
-    return ac
+    return acdict
+
+
+def aircraft_engine_options(ac):
+    acdict = aircraft(ac)
+
+    if type(acdict['engine']['options']) == dict:
+        eng_options = list(acdict['engine']['options'].values())
+    elif type(acdict['engine']['options']) == list:
+        eng_options = list(acdict['engine']['options'])
+
+    return eng_options
 
 
 def search_engine(eng):

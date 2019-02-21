@@ -23,6 +23,7 @@ cruise:
 engine:
   type: turbofan
   number: 4
+  default: CFM56-5C3
   options:
     A340-311: CFM56-5C2
     A340-312: CFM56-5C3

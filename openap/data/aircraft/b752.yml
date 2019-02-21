@@ -23,6 +23,7 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: RB211-535E4
   options:
     - PW2037
     - RB211-535E4

@@ -23,5 +23,6 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: Trent XWB-84
   options:
     A350-941: Trent XWB-84

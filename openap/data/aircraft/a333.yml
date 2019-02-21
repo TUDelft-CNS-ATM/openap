@@ -23,6 +23,7 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: Trent 772
   options:
     A330-301: CF6-80E1A2
     A330-302: CF6-80E1A4

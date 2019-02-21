@@ -23,5 +23,6 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: AE3007A1
   options:
     - AE3007A1

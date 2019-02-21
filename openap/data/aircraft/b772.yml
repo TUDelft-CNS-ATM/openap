@@ -23,6 +23,7 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: Trent 895
   options:
     - GE90-94B
     - PW4077

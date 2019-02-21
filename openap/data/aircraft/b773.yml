@@ -23,6 +23,7 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: Trent 892
   options:
     - GE90-110B1
     - PW4090

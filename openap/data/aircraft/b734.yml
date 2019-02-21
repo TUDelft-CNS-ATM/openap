@@ -23,6 +23,7 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: CFM56-3B-2
   options:
     - CFM56-3B-2
     - CFM56-3C-1

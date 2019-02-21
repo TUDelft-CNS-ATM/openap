@@ -23,5 +23,6 @@ cruise:
 engine:
   type: turbofan
   number: 2
+  default: JT15D-4
   options:
     - JT15D-4
