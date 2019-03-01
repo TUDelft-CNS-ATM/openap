@@ -1,8 +1,9 @@
 aircraft: Embraer ERJ145 (LR)
 
-dimensions:
+fuselage:
   length:   29.87
-  height:   6.76
+  height:   2.28
+  width:    2.28
 
 wing:
   area:     51.2

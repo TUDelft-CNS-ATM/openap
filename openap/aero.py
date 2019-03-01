@@ -165,3 +165,10 @@ def cas2mach(Vcas, H):
     Vtas = cas2tas(Vcas, H)
     Mach = tas2mach(Vtas, H)
     return Mach
+
+
+def crossover_alt(Vcas, mach):
+    """Compute the constant CS/Mach crossover altitude"""
+    delta = ((0.2*(Vcas/a0)**2 + 1)**3.5 - 1) / ((0.2 * mach**2 + 1)**3.5 - 1)
+    h = T0 / beta * (delta ** (-1 * R * beta / g0) -1)
+    return h

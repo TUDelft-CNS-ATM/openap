@@ -1,8 +1,9 @@
 aircraft: Airbus A330-300
 
-dimensions:
+fuselage:
   length:   63.67
-  height:   16.79
+  height:   5.64
+  width:    5.64
 
 wing:
   area:     361.6

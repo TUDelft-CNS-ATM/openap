@@ -1,8 +1,9 @@
 aircraft: Boeing 767-300
 
-dimensions:
+fuselage:
   length:   54.94
-  height:   16.8
+  height:   5.03
+  width:    5.03
 
 wing:
   area:     283.3

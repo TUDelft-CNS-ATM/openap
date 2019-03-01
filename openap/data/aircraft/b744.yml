@@ -1,8 +1,9 @@
 aircraft: Boeing 747-400
 
-dimensions:
+fuselage:
   length:   70.66
-  height:   19.4
+  height:   8.10
+  width:    6.50
 
 wing:
   area:     525.6

@@ -1,8 +1,9 @@
 aircraft: Airbus A330-200
 
-dimensions:
+fuselage:
   length:   58.82
-  height:   17.39
+  height:   5.64
+  width:    5.64
 
 wing:
   area:     361.6

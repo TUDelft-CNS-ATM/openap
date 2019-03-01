@@ -1,8 +1,9 @@
 aircraft: Embraer E175 (LR)
 
-dimensions:
+fuselage:
   length:   29.90
-  height:   9.85
+  height:   3.35
+  width:    3.01
 
 wing:
   area:     72.72

@@ -1,8 +1,9 @@
 aircraft: Airbus A340-300
 
-dimensions:
+fuselage:
   length:   63.69
-  height:   16.99
+  height:   5.64
+  width:    5.64
 
 wing:
   area:     363.1

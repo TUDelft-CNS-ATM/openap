@@ -1,8 +1,9 @@
 aircraft: Cessna Citation II
 
-dimensions:
+fuselage:
   length:   14.39
-  height:   4.57
+  height:   1.46
+  width:    1.46
 
 wing:
   area:     31.83

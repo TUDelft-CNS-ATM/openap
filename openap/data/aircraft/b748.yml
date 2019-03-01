@@ -1,8 +1,9 @@
 aircraft: Boeing 747-8
 
-dimensions:
+fuselage:
   length:   76.3
-  height:   19.4
+  height:   7.10
+  width:    6.50
 
 wing:
   area:     554

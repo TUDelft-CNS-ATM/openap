@@ -1,8 +1,9 @@
 aircraft: Embraer E190 (LR)
 
-dimensions:
+fuselage:
   length:   36.24
-  height:   10.57
+  height:   3.35
+  width:    3.01
 
 wing:
   area:     92.5

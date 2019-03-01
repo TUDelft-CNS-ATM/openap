@@ -1,8 +1,9 @@
 aircraft: Boeing 777-300
 
-dimensions:
+fuselage:
   length:   73.86
-  height:   18.5
+  height:   6.20
+  width:    6.20
 
 wing:
   area:     427.8

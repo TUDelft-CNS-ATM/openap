@@ -1,8 +1,9 @@
 aircraft: Embraer E195 (LR)
 
-dimensions:
+fuselage:
   length:   38.65
-  height:   10.55
+  height:   3.35
+  width:    3.01
 
 wing:
   area:     92.5

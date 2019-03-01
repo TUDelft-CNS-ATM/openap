@@ -1,8 +1,9 @@
 aircraft: Airbus A380-800
 
-dimensions:
+fuselage:
   length:   72.72
-  height:   24.09
+  height:   8.41
+  width:    7.14
 
 wing:
   area:     845

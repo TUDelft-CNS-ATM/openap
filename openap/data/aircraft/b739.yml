@@ -1,8 +1,9 @@
 aircraft: Boeing 737-900
 
-dimensions:
+fuselage:
   length:   42.11
-  height:   12.55
+  height:   3.73
+  width:    3.73
 
 wing:
   area:     124.6

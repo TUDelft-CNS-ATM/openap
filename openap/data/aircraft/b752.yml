@@ -1,8 +1,9 @@
 aircraft: Boeing 757-200
 
-dimensions:
+fuselage:
   length:   47.3
-  height:   13.6
+  height:   4.10
+  width:    4.10
 
 wing:
   area:     182.3

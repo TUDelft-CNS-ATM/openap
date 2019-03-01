@@ -1,8 +1,9 @@
 aircraft: Airbus A321
 
-dimensions:
+fuselage:
   length:   44.51
-  height:   11.76
+  height:   4.14
+  width:    3.95
 
 wing:
   area:     128

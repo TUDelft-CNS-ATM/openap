@@ -1,8 +1,9 @@
 aircraft: Boeing 787-8
 
-dimensions:
+fuselage:
   length:   56.72
-  height:   16.92
+  height:   5.94
+  width:    5.77
 
 wing:
   area:     377
