@@ -142,8 +142,10 @@ class FlightPhase(object):
                 state = 6
             if state < 1:
                 state = 1
-            label = self.state_lable_map[state]
-            labels[idxchk[0]:(idxchk[-1]+1)] = [label] * len(idxchk)
+
+            if len(idxchk) > 0:
+                label = self.state_lable_map[state]
+                labels[idxchk[0]:(idxchk[-1]+1)] = [label] * len(idxchk)
 
         return labels
 
