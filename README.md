@@ -24,6 +24,7 @@ Libraries
   - `nav`: model to access navigation information
   - `segment`: a utility library to determine climb, cruise, descent, level flight
   - `phase`: a wrapper around `segment`, providing identification of all flight phases
+  - `traj`: package contains a set of tools related with trajectory generation
 
 Examples
 --------
