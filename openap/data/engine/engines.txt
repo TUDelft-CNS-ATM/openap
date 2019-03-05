@@ -353,7 +353,7 @@ uid      name               type    manufacturer                bpr    pr       
 8RR044   Trent 553-61       TF      Rolls Royce plc             7.5    35.19    251900        1.15061    -1.46638    2.43371
 8RR045   Trent 556-61       TF      Rolls Royce plc             7.5    36.63    263900        1.11679    -1.32734    2.45821
 14RR070  Trent 768          MTF     Rolls Royce plc             5.15   34.48    304200        1.0582     -1.05703    2.91299
-14RR071  Trent 772          MTF     Rolls Royce plc             5.03   36.3303  320300        1.39581    -1.35308    3.10331    0.82           35000.0       51200.0          16.0
+14RR071  Trent 772          MTF     Rolls Royce plc             5.03   36.3303  320300        1.39581    -1.35308    3.10331
 2RR024   Trent 875          TF      Rolls Royce plc             6.08   35.42    351850        0.94737    -1.10257    3.26199
 2RR025   Trent 877          TF      Rolls Royce plc             6.02   36.3     361640        0.867307   -0.932396   3.28161
 2RR026   Trent 884          TF      Rolls Royce plc             5.87   38.96    390100        1.56813    -1.68673    3.68574
