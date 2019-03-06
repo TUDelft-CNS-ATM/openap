@@ -8,6 +8,14 @@ fuselage:
 wing:
   area:     283.3
   span:     47.57
+  mac:      6.98
+  sweep:    31.5
+  t/c:      0.115
+
+flaps:
+  type:     double-slotted
+  area:     36.88
+  bf/b:     0.75
 
 limits:
   MTOW:     158700
@@ -23,6 +31,7 @@ cruise:
 
 engine:
   type: turbofan
+  mount: wing
   number: 2
   default: CF6-80C2B2
   options:

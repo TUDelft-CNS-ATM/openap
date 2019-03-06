@@ -8,6 +8,14 @@ fuselage:
 wing:
   area:     442
   span:     64.75
+  mac:      null
+  sweep:    31.9
+  t/c:      null
+
+flaps:
+  type:     double-slotted
+  area:     null
+  bf/b:     null
 
 limits:
   MTOW:     280000
@@ -23,6 +31,7 @@ cruise:
 
 engine:
   type: turbofan
+  mount: wing
   number: 2
   default: Trent XWB-84
   options:

@@ -8,6 +8,14 @@ fuselage:
 wing:
   area:     377
   span:     60.12
+  mac:      6.27
+  sweep:    32.2
+  t/c:      0.094
+
+flaps:
+  type:     single-slotted
+  area:     null
+  bf/b:     null
 
 limits:
   MTOW:     228000
@@ -23,6 +31,7 @@ cruise:
 
 engine:
   type: turbofan
+  mount: wing
   number: 2
   default: Trent 1000-C2
   options:

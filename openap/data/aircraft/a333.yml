@@ -8,6 +8,14 @@ fuselage:
 wing:
   area:     361.6
   span:     60.3
+  mac:      7.26
+  sweep:    29.7
+  t/c:      0.11
+
+flaps:
+  type:     double-slotted
+  area:     null
+  bf/b:     0.665
 
 limits:
   MTOW:     242000
@@ -23,6 +31,7 @@ cruise:
 
 engine:
   type: turbofan
+  mount: wing
   number: 2
   default: Trent 772
   options:

@@ -8,6 +8,14 @@ fuselage:
 wing:
   area:     363.1
   span:     60.3
+  mac:      7.26
+  sweep:    29.7
+  t/c:      0.11
+
+flaps:
+  type:     double-slotted
+  area:     null
+  bf/b:     0.665
 
 limits:
   MTOW:     276000
@@ -23,6 +31,7 @@ cruise:
 
 engine:
   type: turbofan
+  mount: wing
   number: 4
   default: CFM56-5C3
   options:

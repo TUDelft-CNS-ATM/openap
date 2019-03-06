@@ -8,6 +8,14 @@ fuselage:
 wing:
   area:     427.8
   span:     60.93
+  mac:      8.75
+  sweep:    31.6
+  t/c:      null
+
+flaps:
+  type:     double-slotted
+  area:     67.13
+  bf/b:     0.758
 
 limits:
   MTOW:     297000
@@ -23,6 +31,7 @@ cruise:
 
 engine:
   type: turbofan
+  mount: wing
   number: 2
   default: Trent 895
   options:

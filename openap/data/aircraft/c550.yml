@@ -8,6 +8,14 @@ fuselage:
 wing:
   area:     31.83
   span:     15.90
+  mac:      2.05
+  sweep:    0
+  t/c:      0.13
+
+flaps:
+  type:     single-slotted
+  area:     null
+  bf/b:     null
 
 limits:
   MTOW:     6849
@@ -23,6 +31,7 @@ cruise:
 
 engine:
   type: turbofan
+  mount: rear
   number: 2
   default: JT15D-4
   options:
