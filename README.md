@@ -3,6 +3,8 @@ Open Aircraft Performance Model (OpenAP) Toolkit
 
 This repository contains all OpenAP databases and a Python implementation which facilitates the data access and aircraft performance computation.
 
+[Download the related research paper](https://www.researchgate.net/publication/332013573_OpenAP_The_open-source_aircraft_performance_model_and_associated_toolkit)
+
 Databases:
 ---------
 
