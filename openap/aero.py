@@ -1,26 +1,25 @@
-"""
-@BlueSky
+"""Aero library inspried by @ProfHoekstra/bluesky.
 
 Functions for aeronautics in this module
     - physical quantities always in SI units
     - lat,lon,course and heading in degrees
 
 International Standard Atmosphere
-    p,rho,T = atmos(H)    # atmos as function of geopotential altitude H [m]
-    a = vsound(H)         # speed of sound [m/s] as function of H[m]
-    p = pressure(H)       # calls atmos but retruns only pressure [Pa]
-    T = temperature(H)    # calculates temperature [K]
-    rho = density(H)      # calls atmos but retruns only pressure [Pa]
+    p,rho,T = atmos(h)    # atmos as function of geopotential altitude h [m]
+    a = vsound(h)         # speed of sound [m/s] as function of h[m]
+    p = pressure(h)       # calls atmos but retruns only pressure [Pa]
+    T = temperature(h)    # calculates temperature [K]
+    rho = density(h)      # calls atmos but retruns only density [kg/m3]
 
-Speed conversion at altitude H[m] in ISA:
-    Mach = tas2mach(Vtas,H)    # true airspeed (Vtas) to mach number conversion
-    Vtas = mach2tas(Mach,H)    # true airspeed (Vtas) to mach number conversion
-    Vtas = eas2tas(Veas,H)     # equivalent airspeed to true airspeed, H in [m]
-    Veas = tas2eas(Vtas,H)     # true airspeed to equivent airspeed, H in [m]
-    Vtas = cas2tas(Vcas,H)     # Vcas  to Vtas conversion both m/s, H in [m]
-    Vcas = tas2cas(Vtas,H)     # Vtas to Vcas conversion both m/s, H in [m]
-    Vcas = mach2cas(Mach,H)    # Mach to Vcas conversion Vcas in m/s, H in [m]
-    Mach   = cas2mach(Vcas,H)  # Vcas to mach copnversion Vcas in m/s, H in [m]
+Speed conversion at altitude h[m] in ISA:
+    mach = tas2mach(v_tas,h)    # true airspeed (v_tas) to mach number conversion
+    v_tas = mach2tas(mach,h)    # true airspeed (v_tas) to mach number conversion
+    v_tas = eas2tas(v_eas,h)     # equivalent airspeed to true airspeed, h in [m]
+    v_eas = tas2eas(v_tas,h)     # true airspeed to equivent airspeed, h in [m]
+    v_tas = cas2tas(v_cas,h)     # v_cas  to v_tas conversion both m/s, h in [m]
+    v_cas = tas2cas(v_tas,h)     # v_tas to v_cas conversion both m/s, h in [m]
+    v_cas = mach2cas(mach,h)    # mach to v_cas conversion v_cas in m/s, h in [m]
+    mach   = cas2mach(v_cas,h)  # v_cas to mach copnversion v_cas in m/s, h in [m]
 """
 
 import numpy as np
@@ -46,39 +45,96 @@ r_earth = 6371000.  # m, average earth radius
 a0 = 340.293988     # m/s, sea level speed of sound ISA, sqrt(gamma*R*T0)
 
 
-def atmos(H):
-    # H in metres
-    T = np.maximum(288.15 - 0.0065 * H, 216.65)
+def atmos(h):
+    """Compute press, density and temperature at a given altitude.
+
+    Args:
+        h (float or ndarray): Altitude (in meters).
+
+    Returns:
+        (float, float, float) or (ndarray, ndarray, ndarray):
+            Air pressure (Pa), density (kg/m3), and temperature (K).
+
+    """
+    T = np.maximum(288.15 - 0.0065 * h, 216.65)
     rhotrop = 1.225 * (T / 288.15)**4.256848030018761
-    dhstrat = np.maximum(0., H - 11000.0)
+    dhstrat = np.maximum(0., h - 11000.0)
     rho = rhotrop * np.exp(-dhstrat / 6341.552161)
     p = rho * R * T
     return p, rho, T
 
 
-def temperature(H):
-    p, r, T = atmos(H)
+def temperature(h):
+    """Compute air temperature at a given altitude.
+
+    Args:
+        h (float or ndarray): Altitude (in meters).
+
+    Returns:
+        float or ndarray: Air temperature (K).
+
+    """
+    p, r, T = atmos(h)
     return T
 
 
-def pressure(H):
-    p, r, T = atmos(H)
+def pressure(h):
+    """Compute air pressure at a given altitude.
+
+    Args:
+        h (float or ndarray): Altitude (in meters).
+
+    Returns:
+        float or ndarray: Air pressure (Pa).
+
+    """
+    p, r, T = atmos(h)
     return p
 
 
-def density(H):
-    p, r, T = atmos(H)
+def density(h):
+    """Compute air density at a given altitude.
+
+    Args:
+        h (float or ndarray): Altitude (in meters).
+
+    Returns:
+        float or ndarray: Air density (kg/m3).
+
+    """
+    p, r, T = atmos(h)
     return r
 
 
-def vsound(H):
-    """Speed of sound"""
-    T = temperature(H)
+def vsound(h):
+    """Compute speed of sound at a given altitude.
+
+    Args:
+        h (float or ndarray): Altitude (in meters).
+
+    Returns:
+        float or ndarray: speed of sound (m/s).
+
+    """
+    T = temperature(h)
     a = np.sqrt(gamma * R * T)
     return a
 
 
 def distance(lat1, lon1, lat2, lon2, h=0):
+    """Compute distance between two (or two series) of coordinates using Harversine formula.
+
+    Args:
+        lat1 (float or ndarray): Starting latitude (in degrees).
+        lon1 (float or ndarray): Starting longitude (in degrees).
+        lat2 (float or ndarray): Ending latitude (in degrees).
+        lon2 (float or ndarray): Ending longitude (in degrees).
+        h (float or ndarray): Altitude (in meters). Defaults to 0.
+
+    Returns:
+        float or ndarray: Distance (in meters).
+
+    """
     # convert decimal degrees to radians
     lat1 = np.radians(lat1)
     lon1 = np.radians(lon1)
@@ -95,6 +151,18 @@ def distance(lat1, lon1, lat2, lon2, h=0):
 
 
 def bearing(lat1, lon1, lat2, lon2):
+    """Compute the bearing between two (or two series) of coordinates.
+
+    Args:
+        lat1 (float or ndarray): Starting latitude (in degrees).
+        lon1 (float or ndarray): Starting longitude (in degrees).
+        lat2 (float or ndarray): Ending latitude (in degrees).
+        lon2 (float or ndarray): Ending longitude (in degrees).
+
+    Returns:
+        float or ndarray: Bearing (in degrees). Between 0 and 360.
+
+    """
     lat1 = np.radians(lat1)
     lon1 = np.radians(lon1)
     lat2 = np.radians(lat2)
@@ -108,67 +176,147 @@ def bearing(lat1, lon1, lat2, lon2):
     return bearing
 
 
+def tas2mach(v_tas, h):
+    """Convert true airspeed to mach number at a given altitude.
 
-def tas2mach(Vtas, H):
-    """True Airspeed to Mach number"""
-    a = vsound(H)
-    Mach = Vtas/a
-    return Mach
+    Args:
+        v_tas (float or ndarray): True airspeed (m/s).
+        h (float or ndarray): Altitude (m).
 
+    Returns:
+        float or ndarray: mach number.
 
-def mach2tas(Mach, H):
-    """Mach number to True Airspeed"""
-    a = vsound(H)
-    Vtas = Mach*a
-    return Vtas
-
-
-def eas2tas(Veas, H):
-    """Equivalent Airspeed to True Airspeed"""
-    rho = density(H)
-    Vtas = Veas * np.sqrt(rho0/rho)
-    return Vtas
+    """
+    a = vsound(h)
+    mach = v_tas/a
+    return mach
 
 
-def tas2eas(Vtas, H):
-    """True Airspeed to Equivalent Airspeed"""
-    rho = density(H)
-    Veas = Vtas * np.sqrt(rho/rho0)
-    return Veas
+def mach2tas(mach, h):
+    """Convert mach number to true airspeed at a given altitude.
+
+    Args:
+        mach (float or ndarray): Mach number.
+        h (float or ndarray): Altitude (m).
+
+    Returns:
+        float or ndarray: True airspeed (m/s).
+
+    """
+    a = vsound(h)
+    v_tas = mach*a
+    return v_tas
 
 
-def cas2tas(Vcas, H):
-    """Calibrated Airspeed to True Airspeed"""
-    p, rho, T = atmos(H)
-    qdyn = p0*((1.+rho0*Vcas*Vcas/(7.*p0))**3.5-1.)
-    Vtas = np.sqrt(7.*p/rho*((1.+qdyn/p)**(2./7.)-1.))
-    return Vtas
+def eas2tas(v_eas, h):
+    """Convert equivalent airspeed to true airspeed at a given altitude.
+
+    Args:
+        v_eas (float or ndarray): Equivalent airspeed (m/s).
+        h (float or ndarray): Altitude (m).
+
+    Returns:
+        float or ndarray: True airspeed (m/s).
+
+    """
+    rho = density(h)
+    v_tas = v_eas * np.sqrt(rho0/rho)
+    return v_tas
 
 
-def tas2cas(Vtas, H):
-    """True Airspeed to Calibrated Airspeed"""
-    p, rho, T = atmos(H)
-    qdyn = p*((1.+rho*Vtas*Vtas/(7.*p))**3.5-1.)
-    Vcas = np.sqrt(7.*p0/rho0*((qdyn/p0+1.)**(2./7.)-1.))
-    return Vcas
+def tas2eas(v_tas, h):
+    """Convert true airspeed to equivalent airspeed at a given altitude.
+
+    Args:
+        v_tas (float or ndarray): True airspeed (m/s).
+        h (float or ndarray): Altitude (m).
+
+    Returns:
+        float or ndarray: Equivalent airspeed (m/s).
+
+    """
+    rho = density(h)
+    v_eas = v_tas * np.sqrt(rho/rho0)
+    return v_eas
 
 
-def mach2cas(Mach, H):
-    """Mach number to Calibrated Airspeed"""
-    Vtas = mach2tas(Mach, H)
-    Vcas = tas2cas(Vtas, H)
-    return Vcas
+def cas2tas(v_cas, h):
+    """Convert calibrated airspeed to true airspeed at a given altitude.
+
+    Args:
+        v_cas (float or ndarray): Equivalent airspeed (m/s).
+        h (float or ndarray): Altitude (m).
+
+    Returns:
+        float or ndarray: True airspeed (m/s).
+
+    """
+    p, rho, T = atmos(h)
+    qdyn = p0*((1.+rho0*v_cas*v_cas/(7.*p0))**3.5-1.)
+    v_tas = np.sqrt(7.*p/rho*((1.+qdyn/p)**(2./7.)-1.))
+    return v_tas
 
 
-def cas2mach(Vcas, H):
-    """Calibrated Airspeed to Mach number"""
-    Vtas = cas2tas(Vcas, H)
-    Mach = tas2mach(Vtas, H)
-    return Mach
+def tas2cas(v_tas, h):
+    """Convert true airspeed to calibrated airspeed at a given altitude.
+
+    Args:
+        v_tas (float or ndarray): True airspeed (m/s).
+        h (float or ndarray): Altitude (m).
+
+    Returns:
+        float or ndarray: Calibrated airspeed (m/s).
+
+    """
+    p, rho, T = atmos(h)
+    qdyn = p*((1.+rho*v_tas*v_tas/(7.*p))**3.5-1.)
+    v_cas = np.sqrt(7.*p0/rho0*((qdyn/p0+1.)**(2./7.)-1.))
+    return v_cas
 
 
-def crossover_alt(Vcas, mach):
-    """Compute the constant CS/Mach crossover altitude"""
-    delta = ((0.2*(Vcas/a0)**2 + 1)**3.5 - 1) / ((0.2 * mach**2 + 1)**3.5 - 1)
+def mach2cas(mach, h):
+    """Convert mach number to calibrated airspeed at a given altitude.
+
+    Args:
+        mach (float or ndarray): Mach number.
+        h (float or ndarray): Altitude (m).
+
+    Returns:
+        float or ndarray: Calibrated airspeed (m/s).
+
+    """
+    v_tas = mach2tas(mach, h)
+    v_cas = tas2cas(v_tas, h)
+    return v_cas
+
+
+def cas2mach(v_cas, h):
+    """Convert calibrated airspeed to mach number  at a given altitude.
+
+    Args:
+        v_cas (float or ndarray): Calibrated airspeed (m/s).
+        h (float or ndarray): Altitude (m).
+
+    Returns:
+        float or ndarray: Mach number.
+
+    """
+    v_tas = cas2tas(v_cas, h)
+    mach = tas2mach(v_tas, h)
+    return mach
+
+
+def crossover_alt(v_cas, mach):
+    """Conver the crossover altitude given constant CAS and Mach.
+
+    Args:
+        v_cas (float or ndarray): Calibrated airspeed (m/s).
+        mach (float or ndarray): Mach number.
+
+    Returns:
+        float or ndarray: Altitude (m).
+
+    """
+    delta = ((0.2*(v_cas/a0)**2 + 1)**3.5 - 1) / ((0.2 * mach**2 + 1)**3.5 - 1)
     h = T0 / beta * (delta ** (-1 * R * beta / g0) -1)
     return h
