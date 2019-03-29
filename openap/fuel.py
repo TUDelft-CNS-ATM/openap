@@ -38,7 +38,7 @@ class FuelFlow(object):
         """Compute the fuel flow at a given total thrust.
 
         Args:
-            acthr (int): The total net thrust of the aircraft (unit: kN).
+            acthr (int or ndarray): The total net thrust of the aircraft (unit: kN).
 
         Returns:
             float: Fuel flow (unit: kg/s).
@@ -56,9 +56,9 @@ class FuelFlow(object):
         the thrust.
 
         Args:
-            tas (int): Aircraft true airspeed (unit: kt).
-            alt (int): Altitude of airport (unit: ft). Defaults to sea-level.
-            throttle (float): The throttle setting, between 0 and 1.
+            tas (int or ndarray): Aircraft true airspeed (unit: kt).
+            alt (int or ndarray): Altitude of airport (unit: ft). Defaults to sea-level.
+            throttle (float or ndarray): The throttle setting, between 0 and 1.
                 Defaults to 1, which is at full thrust.
 
         Returns:
@@ -76,9 +76,9 @@ class FuelFlow(object):
         Then FuelFlow.at_thrust() is called to compted the thrust.
 
         Args:
-            tas (int): Aircraft true airspeed (unit: kt).
-            alt (int): Altitude of airport, default at sea-level (unit: ft).
-            throttle (float): The throttle setting, between 0 and 1.
+            tas (int or ndarray): Aircraft true airspeed (unit: kt).
+            alt (int or ndarray): Altitude of airport, default at sea-level (unit: ft).
+            throttle (float or ndarray): The throttle setting, between 0 and 1.
 
         Returns:
             float: Fuel flow (unit: kg/s).
