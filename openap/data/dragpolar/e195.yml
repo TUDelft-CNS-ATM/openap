@@ -1,12 +1,19 @@
 aircraft: Embraer E195 (LR)
 
 cd0:
-  clean:      0.032
-  taxi:       0.062
-  takeoff:    0.085
-  initclimb:  0.052
-  approach:   0.062
-  landing:    0.128
+  clean:      0.028
+  initclimb:  0.029
+  finalapp:   0.034
 
-k:            0.0389
-e:            0.9183
+k:
+  clean:      0.048
+  initclimb:  0.045
+  finalapp:   0.041
+
+e:
+  clean:      0.752
+  initclimb:  0.804
+  finalapp:   0.882
+
+gears:        0.017
+mach_crit:    0.628

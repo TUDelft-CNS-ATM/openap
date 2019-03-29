@@ -1,12 +1,19 @@
 aircraft: Boeing 747-400
 
 cd0:
-  clean:      0.025
-  taxi:       0.052
-  takeoff:    0.076
-  initclimb:  0.045
-  approach:   0.055
-  landing:    0.119
+  clean:      0.028
+  initclimb:  0.030
+  finalapp:   0.034
 
-k:            0.0435
-e:            0.9271
+k:
+  clean:      0.052
+  initclimb:  0.049
+  finalapp:   0.046
+
+e:
+  clean:      0.774
+  initclimb:  0.826
+  finalapp:   0.878
+
+gears:        0.015
+mach_crit:    0.680

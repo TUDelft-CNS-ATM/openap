@@ -1,12 +1,19 @@
 aircraft: Boeing 737-800
 
 cd0:
-  clean:      0.021
-  taxi:       0.053
-  takeoff:    0.076
-  initclimb:  0.041
-  approach:   0.051
-  landing:    0.119
+  clean:      0.023
+  initclimb:  0.024
+  finalapp:   0.029
 
-k:            0.0365
-e:            0.9231
+k:
+  clean:      0.044
+  initclimb:  0.041
+  finalapp:   0.037
+
+e:
+  clean:      0.775
+  initclimb:  0.827
+  finalapp:   0.905
+
+gears:        0.017
+mach_crit:    0.632

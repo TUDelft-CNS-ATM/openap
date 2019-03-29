@@ -1,12 +1,19 @@
 aircraft: Airbus A380-800
 
 cd0:
-  clean:      0.016
-  taxi:       0.038
-  takeoff:    0.063
-  initclimb:  0.036
-  approach:   0.046
-  landing:    0.108
+  clean:      0.028
+  initclimb:  0.030
+  finalapp:   0.033
 
-k:            0.0458
-e:            0.9231
+k:
+  clean:      0.054
+  initclimb:  0.051
+  finalapp:   0.048
+
+e:
+  clean:      0.781
+  initclimb:  0.833
+  finalapp:   0.885
+
+gears:        0.012
+mach_crit:    0.692

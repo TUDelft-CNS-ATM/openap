@@ -1,12 +1,19 @@
-aircraft: Airbus A333-200
+aircraft: Airbus A330-200
 
 cd0:
-  clean:      0.024
-  taxi:       0.049
-  takeoff:    0.074
-  initclimb:  0.044
-  approach:   0.054
-  landing:    0.118
+  clean:      0.029
+  initclimb:  0.030
+  finalapp:   0.035
 
-k:        0.0343
-e:        0.9230
+k:
+  clean:      0.044
+  initclimb:  0.041
+  finalapp:   0.037
+
+e:
+  clean:      0.728
+  initclimb:  0.780
+  finalapp:   0.858
+
+gears:        0.014
+mach_crit:    0.642

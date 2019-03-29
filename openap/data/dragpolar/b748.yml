@@ -1,12 +1,19 @@
-aircraft: Boeing 737-8
+aircraft: Boeing 747-8
 
 cd0:
-  clean:      0.028
-  taxi:       0.056
-  takeoff:    0.079
-  initclimb:  0.048
-  approach:   0.058
-  landing:    0.123
+  clean:      0.027
+  initclimb:  0.029
+  finalapp:   0.032
 
-k:            0.0408
-e:            0.9237
+k:
+  clean:      0.049
+  initclimb:  0.046
+  finalapp:   0.043
+
+e:
+  clean:      0.771
+  initclimb:  0.823
+  finalapp:   0.875
+
+gears:        0.015
+mach_crit:    0.680

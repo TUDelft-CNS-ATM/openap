@@ -1,12 +1,19 @@
 aircraft: Airbus A321
 
 cd0:
-  clean:      0.033
-  taxi:       0.069
-  takeoff:    0.091
-  initclimb:  0.053
-  approach:   0.063
-  landing:    0.133
+  clean:      0.026
+  initclimb:  0.028
+  finalapp:   0.034
 
-k:        0.0344
-e:        0.9244
+k:
+  clean:      0.043
+  initclimb:  0.040
+  finalapp:   0.036
+
+e:
+  clean:      0.746
+  initclimb:  0.798
+  finalapp:   0.876
+
+gears:        0.019
+mach_crit:    0.632

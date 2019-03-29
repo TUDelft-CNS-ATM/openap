@@ -2,11 +2,18 @@ aircraft: Boeing 737-900
 
 cd0:
   clean:      0.024
-  taxi:       0.057
-  takeoff:    0.080
-  initclimb:  0.044
-  approach:   0.054
-  landing:    0.122
+  initclimb:  0.025
+  finalapp:   0.030
 
-k:            0.0365
-e:            0.9233
+k:
+  clean:      0.044
+  initclimb:  0.041
+  finalapp:   0.038
+
+e:
+  clean:      0.769
+  initclimb:  0.821
+  finalapp:   0.899
+
+gears:        0.018
+mach_crit:    0.632

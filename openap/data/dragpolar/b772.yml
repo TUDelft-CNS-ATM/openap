@@ -1,12 +1,19 @@
 aircraft: Boeing 777-200
 
 cd0:
-  clean:      0.033
-  taxi:       0.059
-  takeoff:    0.083
-  initclimb:  0.053
-  approach:   0.063
-  landing:    0.127
+  clean:      0.034
+  initclimb:  0.036
+  finalapp:   0.041
 
-k:            0.0396
-e:            0.9269
+k:
+  clean:      0.051
+  initclimb:  0.047
+  finalapp:   0.043
+
+e:
+  clean:      0.723
+  initclimb:  0.775
+  finalapp:   0.853
+
+gears:        0.014
+mach_crit:    0.646

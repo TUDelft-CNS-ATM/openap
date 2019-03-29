@@ -1,12 +1,19 @@
 aircraft: Boeing 777-300ER
 
 cd0:
-  clean:      0.033
-  taxi:       0.062
-  takeoff:    0.085
-  initclimb:  0.053
-  approach:   0.063
-  landing:    0.129
+  clean:      0.037
+  initclimb:  0.039
+  finalapp:   0.044
 
-k:            0.0396
-e:            0.9269
+k:
+  clean:      0.048
+  initclimb:  0.045
+  finalapp:   0.041
+
+e:
+  clean:      0.687
+  initclimb:  0.739
+  finalapp:   0.817
+
+gears:        0.016
+mach_crit:    0.646
