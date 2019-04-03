@@ -1,8 +1,11 @@
+"""OpenAP drag model."""
+
 import os
 import glob
 import yaml
 import numpy as np
-from openap import prop, aero
+from openap import prop
+from openap.extra import aero
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_dragpolar = curr_path + "/data/dragpolar/"

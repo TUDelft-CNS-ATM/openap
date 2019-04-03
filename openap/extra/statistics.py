@@ -1,12 +1,10 @@
+"""Fit data using different statistical models."""
 
 import numpy as np
 import scipy.stats
 from matplotlib import pyplot as plt
-from matplotlib.patches import Rectangle
 
 def fit(data, models):
-    import scipy.stats
-
     if not isinstance(models, list):
         if isinstance(models, str):
             models = [models]

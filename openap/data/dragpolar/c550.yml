@@ -1,0 +1,19 @@
+aircraft: Cessna Citation II
+
+cd0:
+  clean:      0.028
+  initclimb:  0.030
+  approach:   0.035
+
+k:
+  clean:      0.049
+  initclimb:  0.049
+  approach:   0.049
+
+e:
+  clean:      0.818
+  initclimb:  0.818
+  approach:   0.818
+
+gears:        0.020
+mach_crit:    0.600

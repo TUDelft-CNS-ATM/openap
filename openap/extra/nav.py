@@ -1,14 +1,17 @@
+"""Navigation module helps accessing the navigation databases."""
+
 import os
 import pandas as pd
 import numpy as np
-from openap import aero
+from openap.extra import aero
 
 fixes = None
 airports = None
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
-db_airport = curr_path + "/data/nav/airports.csv"
-db_fix = curr_path + '/data/nav/fix.dat'
+db_airport = curr_path + "/../data/nav/airports.csv"
+db_fix = curr_path + '/../data/nav/fix.dat'
+
 
 def _read_fix():
     return pd.read_csv(
@@ -18,10 +21,22 @@ def _read_fix():
         names=('lat', 'lon', 'fix')
     )
 
+
 def _read_airport():
     return pd.read_csv(db_airport)
 
+
 def airport(name):
+    """Get the airport information.
+
+    Args:
+        name (string): ICAO code of the airport.
+
+    Returns:
+        dict: Information ralted to the airport, including positon,
+            country, and region information.
+
+    """
     NAME = str(name).upper()
 
     if not isinstance(airport, pd.DataFrame):
@@ -35,6 +50,16 @@ def airport(name):
 
 
 def closest_airport(lat, lon):
+    """Get the closest airport of a location.
+
+    Args:
+        lat (float): Latitude.
+        lon (float): Longitude.
+
+    Returns:
+        string or None: ICAO code of the airport
+
+    """
     global airports
 
     if not isinstance(airport, pd.DataFrame):
@@ -55,6 +80,15 @@ def closest_airport(lat, lon):
 
 
 def fix(name):
+    """Get position of a fix or way point.
+
+    Args:
+        name (string): Name of the fix of way point.
+
+    Returns:
+        list: latitude and longitude
+
+    """
     global fixes
 
     if not isinstance(fixes, pd.DataFrame):
@@ -66,6 +100,17 @@ def fix(name):
 
 
 def closest_fix(lat, lon):
+    """Get the closest fix of a location.
+
+    Args:
+        lat (float): Latitude.
+        lon (float): Longitude.
+
+    Returns:
+        string: ICAO code of the airport.
+        int: Distance to the fix.
+
+    """
     global fixes
 
     if not isinstance(fixes, pd.DataFrame):

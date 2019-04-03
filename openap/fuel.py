@@ -1,7 +1,8 @@
-"""The OpenAP FuelFlow model."""
+"""OpenAP FuelFlow model."""
 
 import numpy as np
-from openap import aero, prop, Thrust, Drag
+from openap.extra import aero
+from openap import prop, Thrust, Drag
 
 
 class FuelFlow(object):

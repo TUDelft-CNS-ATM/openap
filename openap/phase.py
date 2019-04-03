@@ -1,14 +1,15 @@
+"""Using fuzzy logic to indentify flight phase in trajectory data."""
+
 import numpy as np
 import skfuzzy as fuzz
 from matplotlib import pyplot as plt
 
 
 class FlightPhase(object):
-    """
-    Compute the drag of aicraft
-    """
+    """Fuzzy logic flight phase identification."""
 
     def __init__(self):
+        """Initialize of the FlightPhase object."""
         super(FlightPhase, self).__init__()
 
         # logic states
@@ -42,8 +43,16 @@ class FlightPhase(object):
         self.spd = None
         self.roc = None
 
-
     def set_trajectory(self, ts, alt, spd, roc):
+        """Set trajectory data.
+
+        Args:
+            ts (list): Time (unit: second).
+            alt (list): Altitude (unit: ft).
+            spd (list): True airspeed (unit: kt).
+            roc (list): Rate of climb (unit: ft/min). Negative for descent.
+
+        """
         self.ts = ts - ts[0]
         self.alt = alt
         self.spd = spd
@@ -56,15 +65,17 @@ class FlightPhase(object):
 
         return
 
-
     def phaselabel(self, twindow=60):
-        '''
-        Fuzzy logic to determine the segments of the flight data
-        segments are: ground [GND], climb [CL], descent [DE], cruise [CR], leveling [LVL].
+        """Fuzzy logic for determining phase label.
 
-        Default time window is 60 second.
-        '''
+        Args:
+            twindow (int): Time window in number of seconds. Default to 60.
 
+        Returns:
+            list: Labels could be: ground [GND], climb [CL], descent [DE],
+                cruise [CR], leveling [LVL].
+
+        """
         if self.ts is None:
             raise RuntimeError('Trajectory data not set, run set_trajectory(ts, alt, spd, roc) first')
 
@@ -149,9 +160,8 @@ class FlightPhase(object):
 
         return labels
 
-
     def plot_logics(self):
-        '''Visualize these the membership functions'''
+        """Visualize fuzzy logic membership functions."""
         plt.figure(figsize=(10, 8))
 
         plt.subplot(411)
@@ -193,9 +203,7 @@ class FlightPhase(object):
         plt.legend(prop={'size': 7})
         plt.show()
 
-
     def _get_to_ic(self):
-
         # get the data chunk up to certain ft
         istart = 0
         iend = 0
@@ -237,13 +245,11 @@ class FlightPhase(object):
                 ilof = i
                 break
 
-
         # not sufficient data
         if ilof - istart < 5:
             return None
 
         return (istart, ilof, iend+1)
-
 
     def _get_fa_ld(self):
 
@@ -256,7 +262,6 @@ class FlightPhase(object):
                 istart = i
             else:
                 break
-
 
         # keep only the chunk in landing deceleration states, break at taxing point
         spdtmp = self.spd[istart]
@@ -294,20 +299,18 @@ class FlightPhase(object):
 
         return (istart, ild, iend+1)
 
-
     def _get_cl(self):
         labels = np.array(self.phaselabel())
 
         if 'CL' not in labels:
             return None
 
-        idx = np.where(np.array(labels)=='CL')[0]
+        idx = np.where(np.array(labels) == 'CL')[0]
 
         istart = idx[0]
         iend = idx[-1]
 
         return istart, iend
-
 
     def _get_de(self):
 
@@ -316,7 +319,7 @@ class FlightPhase(object):
         if 'DE' not in labels:
             return None
 
-        idx = np.where(np.array(labels)=='DE')[0]
+        idx = np.where(np.array(labels) == 'DE')[0]
 
         istart = idx[0]
         iend = idx[-1]
@@ -327,7 +330,6 @@ class FlightPhase(object):
             isCDA = True
 
         return istart, iend, isCDA
-
 
     def _get_cr(self):
         # CR start = CL end, CR end = DE start
@@ -353,6 +355,13 @@ class FlightPhase(object):
         return istart, iend
 
     def flight_phase_indices(self):
+        """Get the indices of data, of which different flight phase start.
+
+        Returns:
+            dict: Indices for takeoff (TO), initial climb (IC), climb (CL),
+                cruise (CR), descent (DE), final approach (FA), landing (LD).
+
+        """
         # Process the data and get the phase index
         ii_toic = self._get_to_ic()
         ii_cl = self._get_cl()

@@ -1,4 +1,3 @@
-import pickle
 from matplotlib import pyplot as plt
 import numpy as np
 from scipy.signal import gaussian
@@ -38,6 +37,11 @@ class BaseFilter(object):
             Yfull.append(y)
 
         return np.array(Xfull), np.array(Yfull)
+
+    def filterplot(self, x, y, xf, yf):
+        plt.plot(x, y, '.', color='blue', alpha=0.5)
+        plt.plot(xf, yf, '-', color='red')
+
 
 
 class SavitzkyGolay(BaseFilter):
@@ -160,49 +164,3 @@ class TWF(BaseFilter):
                 y = (yw + Y[i]) / 2.0
             YF[i] = y
         return X, np.array(YF)
-
-
-
-# following are test functions for previous method
-def filterplot(ts, alts, spds, rocs, fltr, fltrname):
-    ts_f, alts_f = fltr.filter(ts, alts)
-    ts_f, spds_f = fltr.filter(ts, spds)
-    ts_f, rocs_f = fltr.filter(ts, rocs)
-
-    plt.suptitle(fltrname)
-    plt.subplot(311)
-    plt.plot(ts, alts, '.', color='blue', alpha=0.5)
-    plt.plot(ts_f, alts_f, '-', color='red')
-    plt.xlabel('time (s)')
-
-    plt.subplot(312)
-    plt.plot(ts, spds, '.', color='green', alpha=0.5)
-    plt.plot(ts_f, spds_f, '-', color='red')
-    plt.xlabel('time (s)')
-
-
-    plt.subplot(313)
-    plt.plot(ts, rocs, '.', color='blue', alpha=0.5)
-    plt.plot(ts_f, rocs_f, '-', color='red')
-    plt.xlabel('time (s)')
-
-if __name__ == '__main__':
-    dataset = pickle.load(open('testdata.pkl', 'rb'))
-
-    sg = SavitzkyGolay(window_size=31, order=1, i=False)
-    spl = Spline(k=2)
-
-    for data in dataset:
-        ts = np.array(data['ts'])
-        ts -= ts[0]
-        H = np.array(data['H'])
-        vgx = np.array(data['vgx'])
-        vgy = np.array(data['vgy'])
-        vg = np.sqrt(vgx**2 + vgy**2)
-        vh = np.array(data['vh'])
-
-        filterplot(ts, H, vg, vh, spl, 'Spline')
-
-        plt.draw()
-        plt.waitforbuttonpress(-1)
-        plt.clf()
