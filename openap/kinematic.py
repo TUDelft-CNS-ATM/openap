@@ -96,7 +96,7 @@ class WRAP(object):
         """Get cross over altitude when constant CAS climb starts."""
         return self._get_var('cl_h_cas_const')
 
-    def climb_cross_alt_constmach(self):
+    def climb_cross_alt_conmach(self):
         """Get cross over altitude from constant CAS to Mach climb."""
         return self._get_var('cl_h_mach_const')
 
@@ -108,7 +108,7 @@ class WRAP(object):
         """Get vertical rate during constant CAS climb."""
         return self._get_var('cl_vs_avg_cas_const')
 
-    def climb_vs_constmach(self):
+    def climb_vs_conmach(self):
         """Get vertical rate during constant Mach climb."""
         return self._get_var('cl_vs_avg_mach_const')
 
@@ -140,7 +140,7 @@ class WRAP(object):
         """Get speed during the constant CAS descent."""
         return self._get_var('de_v_cas_const')
 
-    def descent_cross_alt_constmach(self):
+    def descent_cross_alt_conmach(self):
         """Get crossover altitude from constant Mach to CAS descent."""
         return self._get_var('de_h_mach_const')
 
@@ -148,7 +148,7 @@ class WRAP(object):
         """Get crossover altitude from constant Mach to CAS descent."""
         return self._get_var('de_h_cas_const')
 
-    def descent_vs_constmach(self):
+    def descent_vs_conmach(self):
         """Get vertical rate during constant Mach descent."""
         return self._get_var('de_vs_avg_mach_const')
 

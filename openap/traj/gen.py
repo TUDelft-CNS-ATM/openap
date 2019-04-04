@@ -1,9 +1,48 @@
-from openap import aero, prop, Thrust, Drag, FuelFlow, WRAP
+"""Trajectory generator based on WRAP model.
+
+This module defines the Generator class than can be used to generate flight
+trajectories using the WRAP kinematic performance model from OpenAP.
+
+Examples::
+
+    trajgen = Generator(ac='a320')
+
+    trajgen.enable_noise()   # enable Gaussian noise in trajectory data
+
+    data_cl = trajgen.climb(dt=10, cas_const_cl=280, mach_const_cl=0.78, h_cr=11)
+    data_cl = trajgen.climb(dt=10, random=True)  # using radom paramerters
+
+    data_de = trajgen.descent(dt=10, cas_const_de=280, mach_const_de=0.78, h_cr=11)
+    data_de = trajgen.descent(dt=10, random=True)
+
+    data_cr = trajgen.cruise(dt=60, range_cr=2000, h_cr=11000, m_cr=0.78)
+    data_cr = trajgen.cruise(dt=60, random=True)
+
+    data_all = trajgen.complete(dt=10, h_cr=11000, m_cr=0.78,
+                                cas_const_cl=280, mach_const_cl=0.78,
+                                cas_const_de=280, mach_const_de=0.78)
+    data_all = trajgen.complete(dt=10, random=True)
+
+"""
+
+from openap import aero, prop, WRAP
 import numpy as np
 
+
 class Generator(object):
+    """Generate trajectory using WRAP model."""
 
     def __init__(self, ac, eng=None):
+        """Intitialize the generator.
+
+        Args:
+            ac (string): Aircraft type.
+            eng (string): Engine type. Leave empty for default engine type in OpenAP.
+
+        Returns:
+            dict: flight trajectory
+
+        """
         super(Generator, self).__init__()
 
         self.ac = ac
@@ -27,7 +66,8 @@ class Generator(object):
         self.sigma_s = 0
 
     def enable_noise(self):
-        """Adding noise to the generated trajectory
+        """Adding noise to the generated trajectory.
+
         The noise model is based on ADS-B Version 1&2, NACv=3 and NACp=10
         """
         self.sigma_v = 0.5
@@ -35,21 +75,20 @@ class Generator(object):
         self.sigma_h = 7.5
         self.sigma_s = 5
 
-
     def climb(self, **kwargs):
-        """Generate climb trajectory based on WRAP model
+        """Generate climb trajectory based on WRAP model.
 
         Args:
-            **dt (int): time step in seconds
-            **vcas_const_cl (int): Constaant CAS for climb (m/s)
-            **mach_const_cl (float): Constaant Mach for climb (-)
-            **h_cr (int): target cruise altitude (m)
-            **random (bool): generate trajectory with random vca, mach, alt
+            **dt (int): Time step in seconds.
+            **cas_const_cl (int): Constaant CAS for climb (kt).
+            **mach_const_cl (float): Constaant Mach for climb (-).
+            **h_cr (int): Target cruise altitude (km).
+            **random (bool): Generate trajectory with random paramerters.
 
         Returns:
-            dict: flight trajectory
-        """
+            dict: Flight trajectory.
 
+        """
         dt = kwargs.get('dt', 1)
         random = kwargs.get('random', False)
 
@@ -57,10 +96,10 @@ class Generator(object):
         v_tof = self.wrap.takeoff_speed()['default']
 
         if random:
-            vcas_const = kwargs.get('vcas_const_cl', np.random.uniform(
-                self.wrap.climb_const_cas()['minimum'],
-                self.wrap.climb_const_cas()['maximum']
-            ))
+            cas_const = kwargs.get('cas_const_cl', np.random.uniform(
+                self.wrap.climb_const_vcas()['minimum'],
+                self.wrap.climb_const_vcas()['maximum']
+            ) / aero.kts)
 
             mach_const = kwargs.get('mach_const_cl', np.random.uniform(
                 self.wrap.climb_const_mach()['minimum'],
@@ -88,13 +127,14 @@ class Generator(object):
             )
 
         else:
-            vcas_const = kwargs.get('vcas_const_cl', self.wrap.climb_const_cas()['default'])
+            cas_const = kwargs.get('cas_const_cl', self.wrap.climb_const_vcas()['default']/aero.kts)
             mach_const = kwargs.get('mach_const_cl', self.wrap.climb_const_mach()['default'])
             h_cr = kwargs.get('h_cr', self.wrap.cruise_alt()['default'] * 1000)
             vs_pre_constcas = self.wrap.climb_vs_pre_const_cas()['default']
             vs_constcas = self.wrap.climb_vs_const_cas()['default']
             vs_constmach = self.wrap.climb_vs_const_mach()['default']
 
+        vcas_const = cas_const * aero.kts
         h_cr = np.round(h_cr / aero.ft, -2) * aero.ft   # round cruise altitude to flight level
         vs_ic = self.wrap.initclimb_vs()['default']
         h_const_cas = self.wrap.climb_alt_cross_const_cas()['default'] * 1000
@@ -102,7 +142,6 @@ class Generator(object):
         h_const_mach = aero.crossover_alt(vcas_const, mach_const)
         if h_const_mach > h_cr:
             print('Warining: const mach crossover altitude higher than cruise altitude, altitude clipped.')
-
 
         data = []
 
@@ -162,29 +201,27 @@ class Generator(object):
             'v': data[:, 3] + np.random.normal(0, self.sigma_v, ndata),
             'vs': data[:, 4] + np.random.normal(0, self.sigma_vs, ndata),
             'seg': data[:, 5],
-            'vcas_const_cl': vcas_const,
+            'cas_const_cl': cas_const,
             'mach_const_cl': mach_const,
             'h_cr': h_cr
         }
 
         return datadict
 
-
-
     def descent(self, **kwargs):
-        """Generate descent trajectory based on WRAP model
+        """Generate descent trajectory based on WRAP model.
 
         Args:
-            **dt (int): time step in seconds
-            **vcas_const_de (int): Constaant CAS for climb (m/s)
-            **mach_const_de (float): Constaant Mach for climb (-)
-            **h_cr (int): target cruise altitude (m)
-            **random (bool): generate trajectory with random vca, mach, alt
+            **dt (int): Time step in seconds.
+            **cas_const_de (int): Constaant CAS for climb (kt).
+            **mach_const_de (float): Constaant Mach for climb (-).
+            **h_cr (int): Target cruise altitude (km).
+            **random (bool): Generate trajectory with random paramerters.
 
         Returns:
-            dict: flight trajectory
-        """
+            dict: Flight trajectory.
 
+        """
         dt = kwargs.get('dt', 1)
         random = kwargs.get('random', False)
 
@@ -202,10 +239,10 @@ class Generator(object):
                 self.wrap.descent_const_mach()['maximum']
             ))
 
-            vcas_const = kwargs.get('vcas_const_de', np.random.uniform(
-                self.wrap.descent_const_cas()['minimum'],
-                self.wrap.descent_const_cas()['maximum']
-            ))
+            cas_const = kwargs.get('cas_const_de', np.random.uniform(
+                self.wrap.descent_const_vcas()['minimum'],
+                self.wrap.descent_const_vcas()['maximum']
+            ) / aero.kts)
 
             vs_constmach = np.random.uniform(
                 self.wrap.descent_vs_const_mach()['minimum'],
@@ -224,12 +261,13 @@ class Generator(object):
 
         else:
             mach_const = kwargs.get('mach_const_de', self.wrap.descent_const_mach()['default'])
-            vcas_const = kwargs.get('vcas_const_de', self.wrap.descent_const_cas()['default'])
+            cas_const = kwargs.get('cas_const_de', self.wrap.descent_const_vcas()['default']/aero.kts)
             h_cr = kwargs.get('h_cr', self.wrap.cruise_alt()['default'] * 1000)
             vs_constmach = self.wrap.descent_vs_const_mach()['default']
             vs_constcas = self.wrap.descent_vs_const_cas()['default']
             vs_post_constcas = self.wrap.descent_vs_post_const_cas()['default']
 
+        vcas_const = cas_const * aero.kts
         h_cr = np.round(h_cr / aero.ft, -2) * aero.ft   # round cruise altitude to flight level
         vs_fa = self.wrap.finalapp_vs()['default']
         h_const_cas = self.wrap.descent_alt_cross_const_cas()['default'] * 1000
@@ -237,7 +275,6 @@ class Generator(object):
         h_const_mach = aero.crossover_alt(vcas_const, mach_const)
         if h_const_mach > h_cr:
             print('Warining: const mach crossover altitude higher than cruise altitude, altitude clipped.')
-
 
         data = []
 
@@ -287,7 +324,6 @@ class Generator(object):
                 if v <= 0:
                     break
 
-
         data = np.array(data)
         ndata = len(data)
         datadict = {
@@ -297,6 +333,7 @@ class Generator(object):
             'v': data[:, 3] + np.random.normal(0, self.sigma_v, ndata),
             'vs': data[:, 4] + np.random.normal(0, self.sigma_vs, ndata),
             'seg': data[:, 5],
+            'cas_const_de': cas_const,
             'vcas_const_de': vcas_const,
             'mach_const_de': mach_const,
             'h_cr': h_cr
@@ -304,28 +341,25 @@ class Generator(object):
 
         return datadict
 
-
     def cruise(self, **kwargs):
-        """Generate descent trajectory based on WRAP model
+        """Generate descent trajectory based on WRAP model.
 
         Args:
-            **d (int): cruise distance
-            **dt (int): time step in seconds
-            **vcas (int): Constaant CAS for climb (m/s)
-            **mach (float): Constaant Mach for climb (-)
-            **alt (int): target cruise altitude (m)
-            **random (bool): generate trajectory with random vca, mach, alt
+            **dt (int): Time step in seconds.
+            **range_cr (int): Cruise range (km).
+            **h_cr (int): Cruise altitude (km).
+            **mach_cr (float): Cruise Mach number (-).
+            **random (bool): Generate trajectory with random paramerters.
 
         Returns:
             dict: flight trajectory
-        """
 
+        """
         dt = kwargs.get('dt', 1)
         random = kwargs.get('random', False)
 
-
         if random:
-            d = kwargs.get('d', np.random.uniform(
+            range = kwargs.get('range_cr', np.random.uniform(
                 self.wrap.cruise_range()['minimum'],
                 self.wrap.cruise_range()['maximum']
             ) * 1000)
@@ -335,13 +369,13 @@ class Generator(object):
                 self.wrap.cruise_alt()['maximum']
             ) * 1000)
 
-            mach_cr = kwargs.get('mach', np.random.uniform(
+            mach_cr = kwargs.get('mach_cr', np.random.uniform(
                 self.wrap.cruise_mach()['minimum'],
                 self.wrap.cruise_mach()['maximum']
             ))
         else:
-            d = kwargs.get('d', self.wrap.cruise_range()['default'] * 1000)
-            mach_cr = kwargs.get('mach', self.wrap.cruise_mach()['default'])
+            range = kwargs.get('range_cr', self.wrap.cruise_range()['default'] * 1000)
+            mach_cr = kwargs.get('mach_cr', self.wrap.cruise_mach()['default'])
             h_cr = kwargs.get('h_cr', self.wrap.cruise_alt()['default'] * 1000)
 
         h_cr = np.round(h_cr / aero.ft, -3) * aero.ft   # round cruise altitude to flight level
@@ -359,7 +393,7 @@ class Generator(object):
             t = t + dt
             s = s + v * dt
 
-            if s > d:
+            if s > range:
                 break
 
         data = np.array(data)
@@ -376,25 +410,26 @@ class Generator(object):
 
         return datadict
 
-
     def complete(self, **kwargs):
-        """Generate a complete trajectory based on WRAP model
+        """Generate a complete trajectory based on WRAP model.
 
         Args:
-            **d (int): cruise distance
-            **dt (int): time step in seconds
-            **vcas_const_cl (int): Constaant CAS for climb (m/s)
-            **mach_const_cl (float): Constaant Mach for climb (-)
-            **vcas_const_de (int): Constaant CAS for climb (m/s)
-            **mach_const_de (float): Constaant Mach for climb (-)
-            **h_cr (int): target cruise altitude (m)
-            **random (bool): generate trajectory with random vca, mach, alt
+            **dt (int): Time step in seconds.
+            **cas_const_cl (int): Constaant CAS for climb (kt).
+            **mach_const_cl (float): Constaant Mach for climb (-).
+            **cas_const_de (int): Constaant CAS for climb (kt).
+            **mach_const_de (float): Constaant Mach for climb (-).
+            **range_cr (int): Cruise range (km).
+            **h_cr (int): Target cruise altitude (km).
+            **mach_cr (float): Cruise Mach number (-).
+            **random (bool): Generate trajectory with random paramerters.
         Returns:
-            dict: flight trajectory
+            dict: Flight trajectory.
+
         """
         data_cr = self.cruise(**kwargs)
-        data_cl = self.climb(alt=data_cr['h_cr'], mach=data_cr['mach_cr'], **kwargs)
-        data_de = self.descent(alt=data_cr['h_cr'], mach=data_cr['mach_cr'], **kwargs)
+        data_cl = self.climb(h_cr=data_cr['h_cr'], mach_cr=data_cr['mach_cr'], **kwargs)
+        data_de = self.descent(h_cr=data_cr['h_cr'], mach_cr=data_cr['mach_cr'], **kwargs)
 
         data = {
             't': np.concatenate([data_cl['t'], data_cl['t'][-1]+data_cr['t'], data_cl['t'][-1]+data_cr['t'][-1]+data_de['t']]),

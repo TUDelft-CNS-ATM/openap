@@ -10,7 +10,7 @@ if __name__ == '__main__':
     plt.suptitle('Climb trajectories')
     for i in range(5):
         data = trajgen.climb(dt=10, random=True)
-        ax[0][0].plot(data['t'], data['h']/aero.ft, label='%d/%.2f' % (data['vcas_const_cl']/aero.kts, data['mach_const_cl']))
+        ax[0][0].plot(data['t'], data['h']/aero.ft, label='%d/%.2f' % (data['cas_const_cl'], data['mach_const_cl']))
         ax[0][0].set_ylabel('Altitude (ft)')
         ax[0][1].plot(data['t'], data['s']/1000);
         ax[0][1].set_ylabel('Distanse (km)')
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     plt.suptitle('Descent trajectories')
     for i in range(5):
         data = trajgen.descent(dt=10, random=True)
-        ax[0][0].plot(data['t'], data['h']/aero.ft, label='%d/%.2f' % (data['vcas_const_de']/aero.kts, data['mach_const_de']))
+        ax[0][0].plot(data['t'], data['h']/aero.ft, label='%d/%.2f' % (data['cas_const_de'], data['mach_const_de']))
         ax[0][0].set_ylabel('Altitude (ft)')
         ax[0][1].plot(data['t'], data['s']/1000);
         ax[0][1].set_ylabel('Distanse (km)')
