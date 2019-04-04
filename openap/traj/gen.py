@@ -112,32 +112,32 @@ class Generator(object):
             ) * 1000)
 
             vs_pre_constcas = np.random.uniform(
-                self.wrap.climb_vs_pre_const_cas()['minimum'],
-                self.wrap.climb_vs_pre_const_cas()['maximum']
+                self.wrap.climb_vs_pre_concas()['minimum'],
+                self.wrap.climb_vs_pre_concas()['maximum']
             )
 
             vs_constcas = np.random.uniform(
-                self.wrap.climb_vs_const_cas()['minimum'],
-                self.wrap.climb_vs_const_cas()['maximum']
+                self.wrap.climb_vs_concas()['minimum'],
+                self.wrap.climb_vs_concas()['maximum']
             )
 
             vs_constmach = np.random.uniform(
-                self.wrap.climb_vs_const_mach()['minimum'],
-                self.wrap.climb_vs_const_mach()['maximum']
+                self.wrap.climb_vs_conmach()['minimum'],
+                self.wrap.climb_vs_conmach()['maximum']
             )
 
         else:
             cas_const = kwargs.get('cas_const_cl', self.wrap.climb_const_vcas()['default']/aero.kts)
             mach_const = kwargs.get('mach_const_cl', self.wrap.climb_const_mach()['default'])
             h_cr = kwargs.get('h_cr', self.wrap.cruise_alt()['default'] * 1000)
-            vs_pre_constcas = self.wrap.climb_vs_pre_const_cas()['default']
-            vs_constcas = self.wrap.climb_vs_const_cas()['default']
-            vs_constmach = self.wrap.climb_vs_const_mach()['default']
+            vs_pre_constcas = self.wrap.climb_vs_pre_concas()['default']
+            vs_constcas = self.wrap.climb_vs_concas()['default']
+            vs_constmach = self.wrap.climb_vs_conmach()['default']
 
         vcas_const = cas_const * aero.kts
         h_cr = np.round(h_cr / aero.ft, -2) * aero.ft   # round cruise altitude to flight level
         vs_ic = self.wrap.initclimb_vs()['default']
-        h_const_cas = self.wrap.climb_alt_cross_const_cas()['default'] * 1000
+        h_const_cas = self.wrap.climb_cross_alt_concas()['default'] * 1000
 
         h_const_mach = aero.crossover_alt(vcas_const, mach_const)
         if h_const_mach > h_cr:
@@ -226,7 +226,7 @@ class Generator(object):
         random = kwargs.get('random', False)
 
         a_lnd = self.wrap.landing_acceleration()['default']
-        v_app = self.wrap.finalapp_cas()['default']
+        v_app = self.wrap.finalapp_vcas()['default']
 
         if random:
             h_cr = kwargs.get('h_cr', np.random.uniform(
@@ -245,32 +245,32 @@ class Generator(object):
             ) / aero.kts)
 
             vs_constmach = np.random.uniform(
-                self.wrap.descent_vs_const_mach()['minimum'],
-                self.wrap.descent_vs_const_mach()['maximum']
+                self.wrap.descent_vs_conmach()['minimum'],
+                self.wrap.descent_vs_conmach()['maximum']
             )
 
             vs_constcas = np.random.uniform(
-                self.wrap.descent_vs_const_cas()['minimum'],
-                self.wrap.descent_vs_const_cas()['maximum']
+                self.wrap.descent_vs_concas()['minimum'],
+                self.wrap.descent_vs_concas()['maximum']
             )
 
             vs_post_constcas = np.random.uniform(
-                self.wrap.descent_vs_post_const_cas()['minimum'],
-                self.wrap.descent_vs_post_const_cas()['maximum']
+                self.wrap.descent_vs_post_concas()['minimum'],
+                self.wrap.descent_vs_post_concas()['maximum']
             )
 
         else:
             mach_const = kwargs.get('mach_const_de', self.wrap.descent_const_mach()['default'])
             cas_const = kwargs.get('cas_const_de', self.wrap.descent_const_vcas()['default']/aero.kts)
             h_cr = kwargs.get('h_cr', self.wrap.cruise_alt()['default'] * 1000)
-            vs_constmach = self.wrap.descent_vs_const_mach()['default']
-            vs_constcas = self.wrap.descent_vs_const_cas()['default']
-            vs_post_constcas = self.wrap.descent_vs_post_const_cas()['default']
+            vs_constmach = self.wrap.descent_vs_conmach()['default']
+            vs_constcas = self.wrap.descent_vs_concas()['default']
+            vs_post_constcas = self.wrap.descent_vs_post_concas()['default']
 
         vcas_const = cas_const * aero.kts
         h_cr = np.round(h_cr / aero.ft, -2) * aero.ft   # round cruise altitude to flight level
         vs_fa = self.wrap.finalapp_vs()['default']
-        h_const_cas = self.wrap.descent_alt_cross_const_cas()['default'] * 1000
+        h_const_cas = self.wrap.descent_cross_alt_concas()['default'] * 1000
 
         h_const_mach = aero.crossover_alt(vcas_const, mach_const)
         if h_const_mach > h_cr:
