@@ -36,8 +36,8 @@ Get the aircraft and engine data:
 ```python
 from openap import prop
 
-prop.aircraft('A320')
-prop.engine('CFM56-5B4')
+aircraft = prop.aircraft('A320')
+engine = prop.engine('CFM56-5B4')
 ```
 
 Compute maximum aircraft engine thrust:
@@ -47,9 +47,9 @@ from openap import Thrust
 
 thrust = Thrust(ac='A320', eng='CFM56-5B4')
 
-thrust.takeoff(tas=100, alt=0)
-thrust.climb(tas=200, alt=20000, roc=1000)
-thrust.cruise(tas=230, alt=32000)
+T = thrust.takeoff(tas=100, alt=0)
+T = thrust.climb(tas=200, alt=20000, roc=1000)
+T = thrust.cruise(tas=230, alt=32000)
 ```
 
 Compute the aircraft drag:
@@ -59,9 +59,9 @@ from openap import Drag
 
 drag = Drag(ac='A320')
 
-drag.clean(mass=60000, tas=200, alt=20000, path_angle=5)
-drag.initclimb(mass=60000, tas=150, alt=1000, path_angle=10)
-drag.approach(mass=50000, tas=150, alt=1000, path_angle=-10)
+D = drag.clean(mass=60000, tas=200, alt=20000, path_angle=5)
+D = drag.initclimb(mass=60000, tas=150, alt=1000, path_angle=10)
+D = drag.approach(mass=50000, tas=150, alt=1000, path_angle=-10)
 ```
 
 Compute the fuel flow:
@@ -71,10 +71,10 @@ from openap import FuelFlow
 
 ff = FuelFlow(ac='A320', eng='CFM56-5B4')
 
-ff.at_thrust(thr=50000)
-ff.takeoff(tas=100, alt=0, throttle=1)
-ff.enroute(mass=60000, tas=200, alt=20000, path_angle=3)
-ff.enroute(mass=60000, tas=230, alt=32000, path_angle=0)
+FF = ff.at_thrust(thr=50000)
+FF = ff.takeoff(tas=100, alt=0, throttle=1)
+FF = ff.enroute(mass=60000, tas=200, alt=20000, path_angle=3)
+FF = ff.enroute(mass=60000, tas=230, alt=32000, path_angle=0)
 ```
 
 Accessing the WRAP parameters:
@@ -84,33 +84,34 @@ from openap import WRAP
 
 wrap = WRAP(ac='A320')
 
-wrap.takeoff_distance()
-wrap.takeoff_acceleration()
-wrap.initclimb_cas()
-wrap.initclimb_vs()
-wrap.climb_range()
-wrap.climb_vs_pre_const_cas()
-wrap.climb_const_cas()
-wrap.climb_alt_cross_const_cas()
-wrap.climb_vs_const_cas()
-wrap.climb_const_mach()
-wrap.climb_alt_cross_const_mach()
-wrap.climb_vs_const_mach()
-wrap.cruise_range()
-wrap.cruise_alt()
-wrap.cruise_init_alt()
-wrap.cruise_mach()
-wrap.descent_range()
-wrap.descent_const_mach()
-wrap.descent_alt_cross_const_mach()
-wrap.descent_const_cas()
-wrap.descent_alt_cross_const_cas()
-wrap.descent_vs_const_cas()
-wrap.descent_vs_const_mach()
-wrap.descent_vs_post_const_cas()
-wrap.finalapp_cas()
-wrap.finalapp_vs()
-wrap.landing_speed()
-wrap.landing_distance()
-wrap.landing_acceleration()
+param = wrap.takeoff_speed()
+param = wrap.takeoff_distance()
+param = wrap.takeoff_acceleration()
+param = wrap.initclimb_vcas()
+param = wrap.initclimb_vs()
+param = wrap.climb_range()
+param = wrap.climb_const_vcas()
+param = wrap.climb_const_mach()
+param = wrap.climb_cross_alt_concas()
+param = wrap.climb_cross_alt_conmach()
+param = wrap.climb_vs_pre_concas()
+param = wrap.climb_vs_concas()
+param = wrap.climb_vs_conmach()
+param = wrap.cruise_range()
+param = wrap.cruise_alt()
+param = wrap.cruise_init_alt()
+param = wrap.cruise_mach()
+param = wrap.descent_range()
+param = wrap.descent_const_mach()
+param = wrap.descent_const_vcas()
+param = wrap.descent_cross_alt_conmach()
+param = wrap.descent_cross_alt_concas()
+param = wrap.descent_vs_conmach()
+param = wrap.descent_vs_concas()
+param = wrap.descent_vs_post_concas()
+param = wrap.finalapp_vcas()
+param = wrap.finalapp_vs()
+param = wrap.landing_speed()
+param = wrap.landing_distance()
+param = wrap.landing_acceleration()
 ```

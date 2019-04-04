@@ -30,9 +30,9 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='dev',
+    version='1.0.dev1',
 
-    description='Python implementation of Open-source Aircraft Performance',
+    description='Open Aircraft Performance Model (OpenAP) in Python',
     long_description=long_description,
 
     # The project's main homepage.
@@ -40,7 +40,7 @@ setup(
 
     # Author details
     author='Junzi Sun',
-    author_email='j.sun-1@tudelft.nl',
+    author_email='junzisun@gmail.com',
 
     # Choose your license
     license='GNU GPL v3',
