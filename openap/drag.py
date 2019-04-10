@@ -62,7 +62,7 @@ class Drag(object):
             print("warning: %s drag polar used for %s." % (ac.upper(), self.ac.upper()))
 
         f = dir_dragpolar + ac + '.yml'
-        dragpolar = yaml.load(open(f))
+        dragpolar = yaml.safe_load(open(f))
         return dragpolar
 
     def _calc_drag(self, mass, tas, alt, cd0, k, path_angle):

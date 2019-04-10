@@ -40,7 +40,7 @@ def aircraft(ac):
         raise RuntimeError('Aircraft data not found.')
 
     f = files[0]
-    acdict = yaml.load(open(f))
+    acdict = yaml.safe_load(open(f))
 
     return acdict
 
