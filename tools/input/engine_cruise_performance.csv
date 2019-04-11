@@ -1,4 +1,4 @@
-engine,cruise_thrust,cruise_sfc,curise_mach,curise_alt
+engine,cruise_thrust,cruise_sfc,cruise_mach,cruise_alt
 TF1000,270,0.0181,0.6,30000
 TF1200,400,0.0187,0.6,30000
 TF1400,400,0.0187,0.6,30000

@@ -4,7 +4,7 @@ df = pd.read_csv('input/civtfspec.csv')
 
 df1 = df.iloc[:, [1,11,12,13,14]]
 
-df1.columns = ['engine', 'cruise_thrust', 'cruise_sfc', 'curise_mach', 'curise_alt']
+df1.columns = ['engine', 'cruise_thrust', 'cruise_sfc', 'cruise_mach', 'cruise_alt']
 
 df1 = df1.dropna(subset=(['engine', 'cruise_thrust']))
 

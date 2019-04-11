@@ -1,4 +1,4 @@
-uid      name               type    manufacturer                bpr    pr       max_thrust    fuel_c3    fuel_c2     fuel_c1    cruise_thrust    cruise_sfc    curise_mach    curise_alt
+uid      name               type    manufacturer                bpr    pr       max_thrust    fuel_c3    fuel_c2     fuel_c1    cruise_thrust    cruise_sfc    cruise_mach    cruise_alt
 1AS001   TFE731-2-2B        TF      Allied Signal               2.64   13.9     15600         0.109854   -0.179687   0.275497
 1AS002   TFE731-3           TF      Allied Signal               2.64   14.3     16500         0.15942    -0.239645   0.305908   817.0            0.0232        0.8            40000.0
 4AL003   AE3007A            MTF     Rolls-Royce Corporation     5.23   18.08    33730         0.237294   -0.357327   0.498916
