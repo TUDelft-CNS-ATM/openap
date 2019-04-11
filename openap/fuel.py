@@ -32,7 +32,8 @@ class FuelFlow(object):
         self.drag = Drag(self.ac)
 
         c3, c2, c1 = self.engine['fuel_c3'], self.engine['fuel_c2'], self.engine['fuel_c1']
-        print(c3,c2,c1)
+        # print(c3,c2,c1)
+
         self.fuel_flow_model = lambda x: c3*x**3 + c2*x**2 + c1*x
 
     def at_thrust(self, acthr):
