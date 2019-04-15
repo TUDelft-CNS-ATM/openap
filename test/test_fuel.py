@@ -1,9 +1,28 @@
 from openap import FuelFlow
 
-ff = FuelFlow('C550', 'JT15D-4')
+fuel = FuelFlow(ac='A320', eng='CFM56-5B4')
 
-ff.plot_model()
+FF = fuel.at_thrust(acthr=50000, alt=0)
+print("fuel.at_thrust(acthr=50000, alt=0)")
+print(FF)
+print()
 
-def test_all():
-    assert round(ff.at_thrust_ratio(0.1), 4) == 0.0305
-    assert round(ff.at_thrust_ratio(0.9), 4) == 0.1521
+FF = fuel.at_thrust(acthr=50000, alt=20000)
+print("fuel.at_thrust(acthr=50000, alt=20000)")
+print(FF)
+print()
+
+FF = fuel.takeoff(tas=100, alt=0, throttle=1)
+print("fuel.takeoff(tas=100, alt=0, throttle=1)")
+print(FF)
+print()
+
+FF = fuel.enroute(mass=60000, tas=200, alt=20000, path_angle=3)
+print("fuel.enroute(mass=60000, tas=200, alt=20000, path_angle=3)")
+print(FF)
+print()
+FF = fuel.enroute(mass=60000, tas=230, alt=32000, path_angle=0)
+
+print("fuel.enroute(mass=60000, tas=230, alt=32000, path_angle=0)")
+print(FF)
+print()

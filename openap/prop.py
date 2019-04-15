@@ -3,7 +3,9 @@
 import os
 import glob
 import yaml
+import numpy as np
 import pandas as pd
+from openap import aero
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_aircraft = curr_path + "/data/aircraft/"
@@ -109,6 +111,16 @@ def engine(eng):
     if selengs.shape[0] == 1:
         selengs.index = selengs.name
         result = selengs.to_dict(orient='records')[0]
+
+        # compute fuel flow correction factor kg/s/N per meter
+        if np.isfinite(result['cruise_sfc']):
+            sfc_cr = result['cruise_sfc']
+            sfc_to = (result['fuel_c3'] + result['fuel_c2'] + result['fuel_c1']) / (result['max_thrust']/1000)
+            fuel_ch = np.round((sfc_cr - sfc_to) / (result['cruise_alt'] * aero.ft), 8)
+        else:
+            fuel_ch = 6.7e-7
+
+        result['fuel_ch'] = fuel_ch
     else:
         raise RuntimeError('Engine data not found.')
 

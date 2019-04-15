@@ -36,18 +36,20 @@ class FuelFlow(object):
 
         self.fuel_flow_model = lambda x: c3*x**3 + c2*x**2 + c1*x
 
-    def at_thrust(self, acthr):
+    def at_thrust(self, acthr, alt=0):
         """Compute the fuel flow at a given total thrust.
 
         Args:
-            acthr (int or ndarray): The total net thrust of the aircraft (unit: kN).
+            acthr (int or ndarray): The total net thrust of the aircraft (unit: N).
+            alt (int or ndarray): Aicraft altitude (unit: ft).
 
         Returns:
             float: Fuel flow (unit: kg/s).
 
         """
         ratio = acthr / (self.engine['max_thrust'] * self.aircraft['engine']['number'])
-        fuelflow = self.fuel_flow_model(ratio) * self.aircraft['engine']['number']
+        fuelflow = self.fuel_flow_model(ratio) * self.aircraft['engine']['number'] \
+            + self.engine['fuel_ch'] * (alt*aero.ft) * (acthr/1000)
         return fuelflow
 
     def takeoff(self, tas, alt=None, throttle=1):
@@ -75,7 +77,8 @@ class FuelFlow(object):
         """Compute the fuel flow during climb, cruise, or descent.
 
         The net thrust is first estimated based on the dynamic equation.
-        Then FuelFlow.at_thrust() is called to compted the thrust.
+        Then FuelFlow.at_thrust() is called to compted the thrust. Assuming
+        no flap deflection and no landing gear extended.
 
         Args:
             tas (int or ndarray): Aircraft true airspeed (unit: kt).
@@ -86,23 +89,12 @@ class FuelFlow(object):
             float: Fuel flow (unit: kg/s).
 
         """
-        rho = aero.density(alt * aero.ft)
-        v = tas * aero.kts
+        D = self.drag.clean(mass=60000, tas=200, alt=20000, path_angle=path_angle)
+
         gamma = np.radians(path_angle)
-
-        S = self.aircraft['wing']['area']
-        dragpolar = self.drag.dragpolar()
-        cd0 = dragpolar['cd0']['clean']
-        k = dragpolar['k']
-
-        q = 0.5 * rho * v**2
-        L = mass * aero.g0 * np.cos(gamma)
-        cl = L / (q * S)
-        cd = cd0 + k * (cl)**2
-        D = q * S * cd
         T = D + mass * aero.g0 * np.sin(gamma)
 
-        fuelflow = self.at_thrust(T)
+        fuelflow = self.at_thrust(T, alt)
 
         return fuelflow
 
