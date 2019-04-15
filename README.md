@@ -60,8 +60,8 @@ from openap import Drag
 drag = Drag(ac='A320')
 
 D = drag.clean(mass=60000, tas=200, alt=20000, path_angle=5)
-D = drag.initclimb(mass=60000, tas=150, alt=1000, path_angle=10)
-D = drag.approach(mass=50000, tas=150, alt=1000, path_angle=-10)
+D = drag.nonclean(mass=60000, tas=150, alt=100, flap_angle=20,
+                  path_angle=10, landing_gear=True)
 ```
 
 Compute the fuel flow:
@@ -71,7 +71,7 @@ from openap import FuelFlow
 
 ff = FuelFlow(ac='A320', eng='CFM56-5B4')
 
-FF = ff.at_thrust(thr=50000)
+FF = ff.at_thrust(thr=50000, alt=30000)
 FF = ff.takeoff(tas=100, alt=0, throttle=1)
 FF = ff.enroute(mass=60000, tas=200, alt=20000, path_angle=3)
 FF = ff.enroute(mass=60000, tas=230, alt=32000, path_angle=0)
