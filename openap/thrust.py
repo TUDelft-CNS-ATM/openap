@@ -12,6 +12,7 @@ Simplified two-shaft turbonfan model base on:
 import numpy as np
 from openap import prop
 from openap.extra import aero
+from openap.extra import ndarrayconvert
 
 
 class Thrust(object):
@@ -63,6 +64,7 @@ class Thrust(object):
         m = -1.2043e-1 * vratio - 8.8889e-9 * roc**2 + 2.4444e-5 * roc + 4.7379e-1
         return m
 
+    @ndarrayconvert
     def takeoff(self, tas, alt=None):
         """Calculate thrust during the takeoff.
 
@@ -74,9 +76,6 @@ class Thrust(object):
             float or ndarray: Total thrust (unit: N).
 
         """
-        tas = np.asarray(tas)
-        alt = np.asarray(alt) if alt is not None else None
-
         mach = aero.tas2mach(tas*aero.kts, 0)
 
         eng_bpr = self.eng_bpr
@@ -102,6 +101,7 @@ class Thrust(object):
         F = ratio * self.eng_max_thrust * self.eng_number
         return F
 
+    @ndarrayconvert
     def cruise(self, tas, alt):
         """Calculate thrust at the cruise.
 
@@ -115,6 +115,7 @@ class Thrust(object):
         """
         return self.climb(tas, alt, roc=0)
 
+    @ndarrayconvert
     def climb(self, tas, alt, roc):
         """Calculate thrust during the climb.
 
@@ -127,9 +128,7 @@ class Thrust(object):
             float or ndarray: Total thrust (unit: N).
 
         """
-        tas = np.asarray(tas)
-        alt = np.asarray(alt)
-        roc = np.abs(np.asarray(roc))
+        roc = np.abs(roc)
 
         h = alt * aero.ft
         tas = np.where(tas < 10, 10, tas)

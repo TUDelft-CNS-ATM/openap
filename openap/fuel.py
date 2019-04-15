@@ -3,7 +3,7 @@
 import numpy as np
 from openap.extra import aero
 from openap import prop, Thrust, Drag
-
+from openap.extra import ndarrayconvert
 
 class FuelFlow(object):
     """Fuel flow model based on ICAO emmision databank."""
@@ -36,6 +36,7 @@ class FuelFlow(object):
 
         self.fuel_flow_model = lambda x: c3*x**3 + c2*x**2 + c1*x
 
+    @ndarrayconvert
     def at_thrust(self, acthr, alt=0):
         """Compute the fuel flow at a given total thrust.
 
@@ -52,6 +53,7 @@ class FuelFlow(object):
             + self.engine['fuel_ch'] * (alt*aero.ft) * (acthr/1000)
         return fuelflow
 
+    @ndarrayconvert
     def takeoff(self, tas, alt=None, throttle=1):
         """Compute the fuel flow at takeoff.
 
@@ -73,6 +75,7 @@ class FuelFlow(object):
         fuelflow =  throttle * self.at_thrust(Tmax)
         return fuelflow
 
+    @ndarrayconvert
     def enroute(self, mass, tas, alt, path_angle=0):
         """Compute the fuel flow during climb, cruise, or descent.
 

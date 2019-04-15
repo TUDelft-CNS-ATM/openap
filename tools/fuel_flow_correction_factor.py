@@ -4,23 +4,16 @@ import matplotlib.pyplot as plt
 from openap import aero
 
 df = pd.read_fwf('db/engines.txt')
-df1 = df[~df.cruise_sfc.isnull()].copy()
+df1 = df.query('cruise_sfc>0').copy()
 
-SFC_TO = []
-SFC_CR = []
-for i, eng in df1.iterrows():
-    x = 1
-    ff = eng.fuel_c3*x**3 + eng.fuel_c2*x**2 + eng.fuel_c1*x
-    sfc_to = ff / eng.max_thrust * 1000
-    SFC_TO.append(sfc_to)
-    SFC_CR.append(eng.cruise_sfc)
+df1['sealevel_sfc'] = (df1.fuel_c3 + df1.fuel_c2 + df1.fuel_c1) / (df1.max_thrust / 1000)
 
-SFC_TO = np.array(SFC_TO)
-SFC_CR = np.array(SFC_CR)
+df1['fuel_ch'] = (df1.cruise_sfc - df1.sealevel_sfc) / (df1.cruise_alt * aero.ft)
 
-factor = (SFC_CR - SFC_TO) / (df1.cruise_alt * aero.ft)
+factor = df1.fuel_ch
+print(np.mean(factor))
 print('fuel flow altitude correction factor', np.mean(factor))
 
-plt.scatter(SFC_TO, factor)
+plt.scatter(np.arange(len(factor)), factor)
 plt.ylim([factor.min(), factor.max()])
 plt.show()

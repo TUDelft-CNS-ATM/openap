@@ -6,6 +6,7 @@ import yaml
 import numpy as np
 from openap import prop
 from openap.extra import aero
+from openap.extra import ndarrayconvert
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_dragpolar = curr_path + "/data/dragpolar/"
@@ -65,6 +66,7 @@ class Drag(object):
         dragpolar = yaml.safe_load(open(f))
         return dragpolar
 
+    @ndarrayconvert
     def _calc_drag(self, mass, tas, alt, cd0, k, path_angle):
         v = tas * aero.kts
         h = alt * aero.ft
@@ -79,13 +81,11 @@ class Drag(object):
         cd = cd0 + k * cl**2
         D = cd * qS
 
-        if isinstance(D, np.ndarray):
-            D = D.astype(int)
-        else:
-            D = int(D)
+        D = D.astype(int)
 
         return D
 
+    @ndarrayconvert
     def clean(self, mass, tas, alt, path_angle=0):
         """Compute drag at clean configuration (considering compressibility).
 
@@ -105,16 +105,14 @@ class Drag(object):
         mach_crit = self.polar['mach_crit']
         mach = aero.tas2mach(tas*aero.kts, alt*aero.ft)
 
-        if isinstance(mach, np.ndarray):
-            dCdw = np.where(mach > mach_crit, 20*(mach-mach_crit)**4, 0)
-        else:
-            dCdw = 20*(mach-mach_crit)**4 if mach > mach_crit else 0
+        dCdw = np.where(mach > mach_crit, 20*(mach-mach_crit)**4, 0)
 
         cd0 = cd0 + dCdw
 
         D = self._calc_drag(mass, tas, alt, cd0, k, path_angle)
         return D
 
+    @ndarrayconvert
     def nonclean(self, mass, tas, alt, flap_angle, path_angle=0, landing_gear=False):
         """Compute drag at at non-clean configuratio.
 
