@@ -1,19 +1,15 @@
 aircraft: Boeing 787-9
 
-cd0:
-  clean:      0.029
-  initclimb:  0.030
-  finalapp:   0.033
+clean:
+  cd0:         0.029
+  k:           0.045
+  e:           0.737
 
-k:
-  clean:      0.045
-  initclimb:  0.042
-  finalapp:   0.040
+mach_crit:     0.669
 
-e:
-  clean:      0.737
-  initclimb:  0.789
-  finalapp:   0.841
+gears:         0.014
 
-gears:        0.014
-mach_crit:    0.669
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.150
+  Sf/S:        0.150

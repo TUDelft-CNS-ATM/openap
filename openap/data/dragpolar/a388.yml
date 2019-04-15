@@ -1,19 +1,15 @@
 aircraft: Airbus A380-800
 
-cd0:
-  clean:      0.028
-  initclimb:  0.030
-  finalapp:   0.033
+clean:
+  cd0:         0.028
+  k:           0.054
+  e:           0.781
 
-k:
-  clean:      0.054
-  initclimb:  0.051
-  finalapp:   0.048
+mach_crit:     0.692
 
-e:
-  clean:      0.781
-  initclimb:  0.833
-  finalapp:   0.885
+gears:         0.012
 
-gears:        0.012
-mach_crit:    0.692
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.150
+  Sf/S:        0.150

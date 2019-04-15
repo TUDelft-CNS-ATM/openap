@@ -1,19 +1,15 @@
 aircraft: Boeing 747-400
 
-cd0:
-  clean:      0.028
-  initclimb:  0.030
-  finalapp:   0.034
+clean:
+  cd0:         0.028
+  k:           0.052
+  e:           0.774
 
-k:
-  clean:      0.052
-  initclimb:  0.049
-  finalapp:   0.046
+mach_crit:     0.680
 
-e:
-  clean:      0.774
-  initclimb:  0.826
-  finalapp:   0.878
+gears:         0.015
 
-gears:        0.015
-mach_crit:    0.680
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.198
+  Sf/S:        0.150

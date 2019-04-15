@@ -1,19 +1,15 @@
 aircraft: Boeing 737-400
 
-cd0:
-  clean:      0.034
-  initclimb:  0.036
-  finalapp:   0.038
+clean:
+  cd0:         0.034
+  k:           0.049
+  e:           0.705
 
-k:
-  clean:      0.049
-  initclimb:  0.046
-  finalapp:   0.043
+mach_crit:     0.609
 
-e:
-  clean:      0.705
-  initclimb:  0.757
-  finalapp:   0.809
+gears:         0.021
 
-gears:        0.021
-mach_crit:    0.609
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.150
+  Sf/S:        0.150

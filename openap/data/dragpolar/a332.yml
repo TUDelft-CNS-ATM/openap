@@ -1,19 +1,15 @@
 aircraft: Airbus A330-200
 
-cd0:
-  clean:      0.029
-  initclimb:  0.030
-  finalapp:   0.035
+clean:
+  cd0:         0.029
+  k:           0.044
+  e:           0.728
 
-k:
-  clean:      0.044
-  initclimb:  0.041
-  finalapp:   0.037
+mach_crit:     0.642
 
-e:
-  clean:      0.728
-  initclimb:  0.780
-  finalapp:   0.858
+gears:         0.014
 
-gears:        0.014
-mach_crit:    0.642
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.150
+  Sf/S:        0.150

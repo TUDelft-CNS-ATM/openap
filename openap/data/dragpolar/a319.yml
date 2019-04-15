@@ -1,19 +1,15 @@
 aircraft: Airbus A319
 
-cd0:
-  clean:      0.019
-  initclimb:  0.021
-  finalapp:   0.025
+clean:
+  cd0:         0.019
+  k:           0.039
+  e:           0.793
 
-k:
-  clean:      0.039
-  initclimb:  0.037
-  finalapp:   0.035
+mach_crit:     0.632
 
-e:
-  clean:      0.793
-  initclimb:  0.845
-  finalapp:   0.897
+gears:         0.017
 
-gears:        0.017
-mach_crit:    0.632
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.176
+  Sf/S:        0.170

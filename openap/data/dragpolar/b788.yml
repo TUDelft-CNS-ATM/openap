@@ -1,19 +1,15 @@
 aircraft: Boeing 787-8
 
-cd0:
-  clean:      0.027
-  initclimb:  0.029
-  finalapp:   0.031
+clean:
+  cd0:         0.027
+  k:           0.045
+  e:           0.748
 
-k:
-  clean:      0.045
-  initclimb:  0.042
-  finalapp:   0.039
+mach_crit:     0.669
 
-e:
-  clean:      0.748
-  initclimb:  0.800
-  finalapp:   0.852
+gears:         0.013
 
-gears:        0.013
-mach_crit:    0.669
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.150
+  Sf/S:        0.150

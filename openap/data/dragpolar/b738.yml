@@ -1,19 +1,15 @@
 aircraft: Boeing 737-800
 
-cd0:
-  clean:      0.023
-  initclimb:  0.024
-  finalapp:   0.029
+clean:
+  cd0:         0.023
+  k:           0.044
+  e:           0.775
 
-k:
-  clean:      0.044
-  initclimb:  0.041
-  finalapp:   0.037
+mach_crit:     0.632
 
-e:
-  clean:      0.775
-  initclimb:  0.827
-  finalapp:   0.905
+gears:         0.017
 
-gears:        0.017
-mach_crit:    0.632
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.150
+  Sf/S:        0.150

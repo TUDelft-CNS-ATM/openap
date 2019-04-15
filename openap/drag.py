@@ -99,8 +99,8 @@ class Drag(object):
             int: Total drag (unit: N).
 
         """
-        cd0 = self.polar['cd0']['clean']
-        k = self.polar['k']['clean']
+        cd0 = self.polar['clean']['cd0']
+        k = self.polar['clean']['cd0']
 
         mach_crit = self.polar['mach_crit']
         mach = aero.tas2mach(tas*aero.kts, alt*aero.ft)
@@ -115,38 +115,49 @@ class Drag(object):
         D = self._calc_drag(mass, tas, alt, cd0, k, path_angle)
         return D
 
-    def initclimb(self, mass, tas, alt, path_angle=0):
-        """Compute drag at initial climb.
+    def nonclean(self, mass, tas, alt, flap_angle, path_angle=0, landing_gear=False):
+        """Compute drag at at non-clean configuratio.
 
         Args:
             mass (int or ndarray): Mass of the aircraft (unit: kg).
             tas (int or ndarray): True airspeed (unit: kt).
             alt (int or ndarray): Altitude (unit: ft).
+            flap_angle (int or ndarray): flap deflection angle (unit: degree).
             path_angle (float or ndarray): Path angle (unit: degree). Defaults to 0.
+            landing_gear (bool): Is landing gear extended? Defaults to False.
 
         Returns:
             int or ndarray: Total drag (unit: N).
 
         """
-        cd0 = self.polar['cd0']['initclimb']
-        k = self.polar['k']['initclimb']
-        D = self._calc_drag(mass, tas, alt, cd0, k, path_angle)
-        return D
+        cd0 = self.polar['clean']['cd0']
+        k = self.polar['clean']['cd0']
 
-    def finalapp(self, mass, tas, alt, path_angle=0):
-        """Compute drag at final approach.
+        # --- calc new CD0 ---
+        lambda_f = self.polar['flaps']['lambda_f']
+        cfc = self.polar['flaps']['cf/c']
+        SfS = self.polar['flaps']['Sf/S']
 
-        Args:
-            mass (int or ndarray): Mass of the aircraft (unit: kg).
-            tas (int or ndarray): True airspeed (unit: kt).
-            alt (int or ndarray): Altitude (unit: ft).
-            path_angle (float or ndarray): Path angle (unit: degree). Defaults to 0.
+        delta_cd_flap = lambda_f * (cfc)**1.38 * (SfS) \
+            * np.sin(np.radians(flap_angle))**2
 
-        Returns:
-            int or ndarray: Total drag (unit: N).
+        if landing_gear:
+            delta_cd_gear = self.aircraft['limits']['MTOW'] \
+                * 9.8065 / self.aircraft['wing']['area'] * 3.16e-5 \
+                * self.aircraft['limits']['MTOW']**(-0.215)
+        else:
+            delta_cd_gear = 0
 
-        """
-        cd0 = self.polar['cd0']['finalapp']
-        k = self.polar['k']['finalapp']
-        D = self._calc_drag(mass, tas, alt, cd0, k, path_angle)
+        cd0_total = cd0 + delta_cd_flap + delta_cd_gear
+
+        # --- calc new k ---
+        if self.aircraft['engine']['mount'] == 'rear':
+            delta_e_flap = 0.0046 * flap_angle
+        else:
+            delta_e_flap = 0.0026 * flap_angle
+
+        ar = self.aircraft['wing']['span']**2 / self.aircraft['wing']['area']
+        k_total = 1 / (1/k + np.pi * ar * delta_e_flap)
+
+        D = self._calc_drag(mass, tas, alt, cd0_total, k_total, path_angle)
         return D

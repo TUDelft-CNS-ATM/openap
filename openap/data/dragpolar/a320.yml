@@ -1,19 +1,15 @@
 aircraft: Airbus A320
 
-cd0:
-  clean:      0.018
-  initclimb:  0.020
-  finalapp:   0.024
+clean:
+  cd0:         0.018
+  k:           0.039
+  e:           0.798
 
-k:
-  clean:      0.039
-  initclimb:  0.036
-  finalapp:   0.034
+mach_crit:     0.632
 
-e:
-  clean:      0.798
-  initclimb:  0.850
-  finalapp:   0.902
+gears:         0.017
 
-gears:        0.017
-mach_crit:    0.632
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.176
+  Sf/S:        0.170

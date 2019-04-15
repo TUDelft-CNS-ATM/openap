@@ -1,19 +1,15 @@
 aircraft: Boeing 777-300ER
 
-cd0:
-  clean:      0.037
-  initclimb:  0.039
-  finalapp:   0.044
+clean:
+  cd0:         0.037
+  k:           0.048
+  e:           0.687
 
-k:
-  clean:      0.048
-  initclimb:  0.045
-  finalapp:   0.041
+mach_crit:     0.646
 
-e:
-  clean:      0.687
-  initclimb:  0.739
-  finalapp:   0.817
+gears:         0.016
 
-gears:        0.016
-mach_crit:    0.646
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.156
+  Sf/S:        0.154

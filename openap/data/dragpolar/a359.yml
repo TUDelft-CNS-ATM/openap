@@ -1,19 +1,15 @@
 aircraft: Airbus A350-900
 
-cd0:
-  clean:      0.031
-  initclimb:  0.032
-  finalapp:   0.037
+clean:
+  cd0:         0.031
+  k:           0.046
+  e:           0.725
 
-k:
-  clean:      0.046
-  initclimb:  0.043
-  finalapp:   0.039
+mach_crit:     0.646
 
-e:
-  clean:      0.725
-  initclimb:  0.777
-  finalapp:   0.855
+gears:         0.013
 
-gears:        0.013
-mach_crit:    0.646
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.150
+  Sf/S:        0.150
