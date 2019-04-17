@@ -14,6 +14,17 @@ Databases:
   - Kinematic ([WRAP](https://github.com/junzis/wrap))
   - Navigation
 
+
+Install
+-------
+
+To install latest version from the GitHub:
+
+```sh
+pip install git+https://github.com/junzis/openap
+```
+
+
 Libraries
 ---------
 
