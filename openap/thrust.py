@@ -18,7 +18,7 @@ from openap.extra import ndarrayconvert
 class Thrust(object):
     """Simplified two-shaft turbonfan model."""
 
-    def __init__(self, ac, eng):
+    def __init__(self, ac, eng=None):
         """Initialize Thrust object.
 
         Args:
@@ -29,6 +29,10 @@ class Thrust(object):
         super(Thrust, self).__init__()
 
         aircraft = prop.aircraft(ac)
+
+        if eng is None:
+            eng = aircraft['engine']['default']
+
         engine = prop.engine(eng)
 
         if type(aircraft['engine']['options']) == dict:

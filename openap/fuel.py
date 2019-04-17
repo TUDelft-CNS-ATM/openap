@@ -18,18 +18,16 @@ class FuelFlow(object):
                 by in the aircraft database.
 
         """
-        self.ac = ac
         self.aircraft = prop.aircraft(ac)
 
-        if eng is not None:
-            self.eng = eng
-        else:
-            self.eng = ac['engine']['default']
+
+        if eng is None:
+            eng = self.aircraft['engine']['default']
 
         self.engine = prop.engine(eng)
 
-        self.thrust = Thrust(self.ac, self.eng)
-        self.drag = Drag(self.ac)
+        self.thrust = Thrust(ac, eng)
+        self.drag = Drag(ac)
 
         c3, c2, c1 = self.engine['fuel_c3'], self.engine['fuel_c2'], self.engine['fuel_c1']
         # print(c3,c2,c1)
@@ -92,7 +90,8 @@ class FuelFlow(object):
             float: Fuel flow (unit: kg/s).
 
         """
-        D = self.drag.clean(mass=60000, tas=200, alt=20000, path_angle=path_angle)
+        D = self.drag.clean(mass=mass, tas=tas, alt=alt, path_angle=path_angle)
+        print(D)
 
         gamma = np.radians(path_angle)
         T = D + mass * aero.g0 * np.sin(gamma)
