@@ -91,7 +91,6 @@ class FuelFlow(object):
 
         """
         D = self.drag.clean(mass=mass, tas=tas, alt=alt, path_angle=path_angle)
-        print(D)
 
         gamma = np.radians(path_angle)
         T = D + mass * aero.g0 * np.sin(gamma)
