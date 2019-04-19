@@ -22,6 +22,7 @@ limits:
   MLW:      66300
   OEW:      41400
   MFC:      26000
+  VMO:      340
   MMO:      0.82
   ceiling:  12500
 
