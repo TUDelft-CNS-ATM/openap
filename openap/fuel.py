@@ -70,7 +70,7 @@ class FuelFlow(object):
 
         """
         Tmax = self.thrust.takeoff(tas=tas, alt=alt)
-        fuelflow =  throttle * self.at_thrust(Tmax)
+        fuelflow = throttle * self.at_thrust(Tmax)
         return fuelflow
 
     @ndarrayconvert
@@ -82,9 +82,10 @@ class FuelFlow(object):
         no flap deflection and no landing gear extended.
 
         Args:
+            mass (int or ndarray): Aircraft mass (unit: kg).
             tas (int or ndarray): Aircraft true airspeed (unit: kt).
-            alt (int or ndarray): Altitude of airport, default at sea-level (unit: ft).
-            throttle (float or ndarray): The throttle setting, between 0 and 1.
+            alt (int or ndarray): Aircraft altitude (unit: ft).
+            path_angle (float or ndarray): Flight path angle (unit: ft).
 
         Returns:
             float: Fuel flow (unit: kg/s).
@@ -93,7 +94,10 @@ class FuelFlow(object):
         D = self.drag.clean(mass=mass, tas=tas, alt=alt, path_angle=path_angle)
 
         gamma = np.radians(path_angle)
+
         T = D + mass * aero.g0 * np.sin(gamma)
+        T_idle = self.thrust.descent_idle(tas=tas, alt=alt)
+        T = np.where(T < 0, T_idle, T)
 
         fuelflow = self.at_thrust(T, alt)
 
