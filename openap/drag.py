@@ -130,7 +130,7 @@ class Drag(object):
 
         """
         cd0 = self.polar['clean']['cd0']
-        k = self.polar['clean']['cd0']
+        k = self.polar['clean']['k']
 
         # --- calc new CD0 ---
         lambda_f = self.polar['flaps']['lambda_f']
