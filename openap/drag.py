@@ -77,6 +77,7 @@ class Drag(object):
         rho = aero.density(h)
         qS = 0.5 * rho * v**2 * S
         L = mass * aero.g0 * np.cos(gamma)
+        qS = np.where(qS < 1e-3, 1e-3, qS)
         cl = L / qS
         cd = cd0 + k * cl**2
         D = cd * qS

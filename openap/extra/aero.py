@@ -317,6 +317,7 @@ def crossover_alt(v_cas, mach):
         float or ndarray: Altitude (m).
 
     """
+    mach = 1e-4 if mach < 1e-4 else mach
     delta = ((0.2*(v_cas/a0)**2 + 1)**3.5 - 1) / ((0.2 * mach**2 + 1)**3.5 - 1)
     h = T0 / beta * (delta ** (-1 * R * beta / g0) -1)
     return h
