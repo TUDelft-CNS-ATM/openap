@@ -9,16 +9,16 @@ Examples::
 
     trajgen.enable_noise()   # enable Gaussian noise in trajectory data
 
-    data_cl = trajgen.climb(dt=10, cas_const_cl=280, mach_const_cl=0.78, h_cr=11)
+    data_cl = trajgen.climb(dt=10, cas_const_cl=280, mach_const_cl=0.78, alt_cr=35000)
     data_cl = trajgen.climb(dt=10, random=True)  # using radom paramerters
 
-    data_de = trajgen.descent(dt=10, cas_const_de=280, mach_const_de=0.78, h_cr=11)
+    data_de = trajgen.descent(dt=10, cas_const_de=280, mach_const_de=0.78, alt_cr=35000)
     data_de = trajgen.descent(dt=10, random=True)
 
-    data_cr = trajgen.cruise(dt=60, range_cr=2000, h_cr=11000, m_cr=0.78)
+    data_cr = trajgen.cruise(dt=60, range_cr=2000, alt_cr=35000, m_cr=0.78)
     data_cr = trajgen.cruise(dt=60, random=True)
 
-    data_all = trajgen.complete(dt=10, h_cr=11000, m_cr=0.78,
+    data_all = trajgen.complete(dt=10, alt_cr=35000, m_cr=0.78,
                                 cas_const_cl=280, mach_const_cl=0.78,
                                 cas_const_de=280, mach_const_de=0.78)
     data_all = trajgen.complete(dt=10, random=True)
@@ -49,7 +49,7 @@ class Generator(object):
         self.acdict = prop.aircraft(self.ac)
 
         if eng is None:
-            self.eng = self.acdict['engine']['default']
+            self.eng = self.acdict["engine"]["default"]
         else:
             self.eng = eng
         self.engdict = prop.engine(self.eng)
@@ -82,66 +82,86 @@ class Generator(object):
             **dt (int): Time step in seconds.
             **cas_const_cl (int): Constaant CAS for climb (kt).
             **mach_const_cl (float): Constaant Mach for climb (-).
-            **h_cr (int): Target cruise altitude (km).
+            **alt_cr (int): Target cruise altitude (ft).
             **random (bool): Generate trajectory with random paramerters.
 
         Returns:
             dict: Flight trajectory.
 
         """
-        dt = kwargs.get('dt', 1)
-        random = kwargs.get('random', False)
+        dt = kwargs.get("dt", 1)
+        random = kwargs.get("random", False)
 
-        a_tof = self.wrap.takeoff_acceleration()['default']
-        v_tof = self.wrap.takeoff_speed()['default']
+        a_tof = self.wrap.takeoff_acceleration()["default"]
+        v_tof = self.wrap.takeoff_speed()["default"]
 
         if random:
-            cas_const = kwargs.get('cas_const_cl', np.random.uniform(
-                self.wrap.climb_const_vcas()['minimum'],
-                self.wrap.climb_const_vcas()['maximum']
-            ) / aero.kts)
+            cas_const = kwargs.get(
+                "cas_const_cl",
+                np.random.uniform(
+                    self.wrap.climb_const_vcas()["minimum"],
+                    self.wrap.climb_const_vcas()["maximum"],
+                )
+                / aero.kts,
+            )
 
-            mach_const = kwargs.get('mach_const_cl', np.random.uniform(
-                self.wrap.climb_const_mach()['minimum'],
-                self.wrap.climb_const_mach()['maximum']
-            ))
+            mach_const = kwargs.get(
+                "mach_const_cl",
+                np.random.uniform(
+                    self.wrap.climb_const_mach()["minimum"],
+                    self.wrap.climb_const_mach()["maximum"],
+                ),
+            )
 
-            h_cr = kwargs.get('h_cr', np.random.uniform(
-                self.wrap.cruise_alt()['minimum'],
-                self.wrap.cruise_alt()['maximum']
-            ) * 1000)
+            alt_cr = kwargs.get(
+                "alt_cr",
+                np.random.uniform(
+                    self.wrap.cruise_alt()["minimum"], self.wrap.cruise_alt()["maximum"]
+                )
+                * 1000
+                / aero.ft,
+            )
 
             vs_pre_constcas = np.random.uniform(
-                self.wrap.climb_vs_pre_concas()['minimum'],
-                self.wrap.climb_vs_pre_concas()['maximum']
+                self.wrap.climb_vs_pre_concas()["minimum"],
+                self.wrap.climb_vs_pre_concas()["maximum"],
             )
 
             vs_constcas = np.random.uniform(
-                self.wrap.climb_vs_concas()['minimum'],
-                self.wrap.climb_vs_concas()['maximum']
+                self.wrap.climb_vs_concas()["minimum"],
+                self.wrap.climb_vs_concas()["maximum"],
             )
 
             vs_constmach = np.random.uniform(
-                self.wrap.climb_vs_conmach()['minimum'],
-                self.wrap.climb_vs_conmach()['maximum']
+                self.wrap.climb_vs_conmach()["minimum"],
+                self.wrap.climb_vs_conmach()["maximum"],
             )
 
         else:
-            cas_const = kwargs.get('cas_const_cl', self.wrap.climb_const_vcas()['default']/aero.kts)
-            mach_const = kwargs.get('mach_const_cl', self.wrap.climb_const_mach()['default'])
-            h_cr = kwargs.get('h_cr', self.wrap.cruise_alt()['default'] * 1000)
-            vs_pre_constcas = self.wrap.climb_vs_pre_concas()['default']
-            vs_constcas = self.wrap.climb_vs_concas()['default']
-            vs_constmach = self.wrap.climb_vs_conmach()['default']
+            cas_const = kwargs.get(
+                "cas_const_cl", self.wrap.climb_const_vcas()["default"] / aero.kts
+            )
+            mach_const = kwargs.get(
+                "mach_const_cl", self.wrap.climb_const_mach()["default"]
+            )
+            alt_cr = kwargs.get(
+                "alt_cr", self.wrap.cruise_alt()["default"] * 1000 / aero.ft
+            )
+            vs_pre_constcas = self.wrap.climb_vs_pre_concas()["default"]
+            vs_constcas = self.wrap.climb_vs_concas()["default"]
+            vs_constmach = self.wrap.climb_vs_conmach()["default"]
 
         vcas_const = cas_const * aero.kts
-        h_cr = np.round(h_cr / aero.ft, -2) * aero.ft   # round cruise altitude to flight level
-        vs_ic = self.wrap.initclimb_vs()['default']
-        h_const_cas = self.wrap.climb_cross_alt_concas()['default'] * 1000
+        alt_cr = np.round(alt_cr, -2)  # round cruise altitude to flight level
+        h_cr = alt_cr * aero.ft
+        vs_ic = self.wrap.initclimb_vs()["default"]
+        h_const_cas = self.wrap.climb_cross_alt_concas()["default"] * 1000
 
         h_const_mach = aero.crossover_alt(vcas_const, mach_const)
         if h_const_mach > h_cr:
-            print('Warining: const mach crossover altitude higher than cruise altitude, altitude clipped.')
+            print(
+                "Warining: const mach crossover altitude higher than cruise altitude, altitude clipped."
+            )
 
         data = []
 
@@ -152,7 +172,7 @@ class Generator(object):
         s = 0
         v = 0
         vs = 0
-        a = 0.5   # standard acceleration m/s^2
+        a = 0.5  # standard acceleration m/s^2
         seg = None
 
         while True:
@@ -164,29 +184,29 @@ class Generator(object):
             if v < v_tof:
                 v = v + a_tof * dt
                 vs = 0
-                seg = 'TO'
+                seg = "TO"
             elif h < 1500 * aero.ft:
                 v = v + a * dt
                 vs = vs_ic
-                seg = 'IC'
+                seg = "IC"
             elif h < h_const_cas:
                 v = v + a * dt
                 if aero.tas2cas(v, h) >= vcas_const:
                     v = aero.cas2tas(vcas_const, h)
                 vs = vs_pre_constcas
-                seg = 'PRE-CAS'
+                seg = "PRE-CAS"
             elif h < h_const_mach:
                 v = aero.cas2tas(vcas_const, h)
                 vs = vs_constcas
-                seg = 'CAS'
+                seg = "CAS"
             elif h < h_cr:
                 v = aero.mach2tas(mach_const, h)
                 vs = vs_constmach
-                seg = 'MACH'
+                seg = "MACH"
             else:
                 v = aero.mach2tas(mach_const, h)
                 vs = 0
-                seg = 'CR'
+                seg = "CR"
                 if tcr == 0:
                     tcr = t
                 if t - tcr > 60:
@@ -195,15 +215,15 @@ class Generator(object):
         data = np.array(data)
         ndata = len(data)
         datadict = {
-            't': data[:, 0],
-            'h': data[:, 1] + np.random.normal(0, self.sigma_h, ndata),
-            's': data[:, 2] + np.random.normal(0, self.sigma_s, ndata),
-            'v': data[:, 3] + np.random.normal(0, self.sigma_v, ndata),
-            'vs': data[:, 4] + np.random.normal(0, self.sigma_vs, ndata),
-            'seg': data[:, 5],
-            'cas_const_cl': cas_const,
-            'mach_const_cl': mach_const,
-            'h_cr': h_cr
+            "t": data[:, 0],
+            "h": data[:, 1] + np.random.normal(0, self.sigma_h, ndata),
+            "s": data[:, 2] + np.random.normal(0, self.sigma_s, ndata),
+            "v": data[:, 3] + np.random.normal(0, self.sigma_v, ndata),
+            "vs": data[:, 4] + np.random.normal(0, self.sigma_vs, ndata),
+            "seg": data[:, 5],
+            "cas_const_cl": cas_const,
+            "mach_const_cl": mach_const,
+            "alt_cr": alt_cr,
         }
 
         return datadict
@@ -215,66 +235,86 @@ class Generator(object):
             **dt (int): Time step in seconds.
             **cas_const_de (int): Constaant CAS for climb (kt).
             **mach_const_de (float): Constaant Mach for climb (-).
-            **h_cr (int): Target cruise altitude (km).
+            **alt_cr (int): Target cruise altitude (ft).
             **random (bool): Generate trajectory with random paramerters.
 
         Returns:
             dict: Flight trajectory.
 
         """
-        dt = kwargs.get('dt', 1)
-        random = kwargs.get('random', False)
+        dt = kwargs.get("dt", 1)
+        random = kwargs.get("random", False)
 
-        a_lnd = self.wrap.landing_acceleration()['default']
-        v_app = self.wrap.finalapp_vcas()['default']
+        a_lnd = self.wrap.landing_acceleration()["default"]
+        v_app = self.wrap.finalapp_vcas()["default"]
 
         if random:
-            h_cr = kwargs.get('h_cr', np.random.uniform(
-                self.wrap.cruise_alt()['minimum'],
-                self.wrap.cruise_alt()['maximum']
-            ) * 1000)
+            alt_cr = kwargs.get(
+                "alt_cr",
+                np.random.uniform(
+                    self.wrap.cruise_alt()["minimum"], self.wrap.cruise_alt()["maximum"]
+                )
+                * 1000
+                / aero.ft,
+            )
 
-            mach_const = kwargs.get('mach_const_de', np.random.uniform(
-                self.wrap.descent_const_mach()['minimum'],
-                self.wrap.descent_const_mach()['maximum']
-            ))
+            mach_const = kwargs.get(
+                "mach_const_de",
+                np.random.uniform(
+                    self.wrap.descent_const_mach()["minimum"],
+                    self.wrap.descent_const_mach()["maximum"],
+                ),
+            )
 
-            cas_const = kwargs.get('cas_const_de', np.random.uniform(
-                self.wrap.descent_const_vcas()['minimum'],
-                self.wrap.descent_const_vcas()['maximum']
-            ) / aero.kts)
+            cas_const = kwargs.get(
+                "cas_const_de",
+                np.random.uniform(
+                    self.wrap.descent_const_vcas()["minimum"],
+                    self.wrap.descent_const_vcas()["maximum"],
+                )
+                / aero.kts,
+            )
 
             vs_constmach = np.random.uniform(
-                self.wrap.descent_vs_conmach()['minimum'],
-                self.wrap.descent_vs_conmach()['maximum']
+                self.wrap.descent_vs_conmach()["minimum"],
+                self.wrap.descent_vs_conmach()["maximum"],
             )
 
             vs_constcas = np.random.uniform(
-                self.wrap.descent_vs_concas()['minimum'],
-                self.wrap.descent_vs_concas()['maximum']
+                self.wrap.descent_vs_concas()["minimum"],
+                self.wrap.descent_vs_concas()["maximum"],
             )
 
             vs_post_constcas = np.random.uniform(
-                self.wrap.descent_vs_post_concas()['minimum'],
-                self.wrap.descent_vs_post_concas()['maximum']
+                self.wrap.descent_vs_post_concas()["minimum"],
+                self.wrap.descent_vs_post_concas()["maximum"],
             )
 
         else:
-            mach_const = kwargs.get('mach_const_de', self.wrap.descent_const_mach()['default'])
-            cas_const = kwargs.get('cas_const_de', self.wrap.descent_const_vcas()['default']/aero.kts)
-            h_cr = kwargs.get('h_cr', self.wrap.cruise_alt()['default'] * 1000)
-            vs_constmach = self.wrap.descent_vs_conmach()['default']
-            vs_constcas = self.wrap.descent_vs_concas()['default']
-            vs_post_constcas = self.wrap.descent_vs_post_concas()['default']
+            mach_const = kwargs.get(
+                "mach_const_de", self.wrap.descent_const_mach()["default"]
+            )
+            cas_const = kwargs.get(
+                "cas_const_de", self.wrap.descent_const_vcas()["default"] / aero.kts
+            )
+            alt_cr = kwargs.get(
+                "alt_cr", self.wrap.cruise_alt()["default"] * 1000 / aero.ft
+            )
+            vs_constmach = self.wrap.descent_vs_conmach()["default"]
+            vs_constcas = self.wrap.descent_vs_concas()["default"]
+            vs_post_constcas = self.wrap.descent_vs_post_concas()["default"]
 
         vcas_const = cas_const * aero.kts
-        h_cr = np.round(h_cr / aero.ft, -2) * aero.ft   # round cruise altitude to flight level
-        vs_fa = self.wrap.finalapp_vs()['default']
-        h_const_cas = self.wrap.descent_cross_alt_concas()['default'] * 1000
+        alt_cr = np.round(alt_cr, -2)  # round cruise altitude to flight level
+        h_cr = alt_cr * aero.ft
+        vs_fa = self.wrap.finalapp_vs()["default"]
+        h_const_cas = self.wrap.descent_cross_alt_concas()["default"] * 1000
 
         h_const_mach = aero.crossover_alt(vcas_const, mach_const)
         if h_const_mach > h_cr:
-            print('Warining: const mach crossover altitude higher than cruise altitude, altitude clipped.')
+            print(
+                "Warining: const mach crossover altitude higher than cruise altitude, altitude clipped."
+            )
 
         data = []
 
@@ -296,30 +336,30 @@ class Generator(object):
             if t < 60:
                 v = aero.mach2tas(mach_const, h)
                 vs = 0
-                seg = 'CR'
+                seg = "CR"
             elif h > h_const_mach:
                 v = aero.mach2tas(mach_const, h)
                 vs = vs_constmach
-                seg = 'MACH'
+                seg = "MACH"
             elif h > h_const_cas:
                 v = aero.cas2tas(vcas_const, h)
                 vs = vs_constcas
-                seg = 'CAS'
+                seg = "CAS"
             elif h > 1000 * aero.ft:
                 v = v + a * dt
                 if aero.tas2cas(v, h) < v_app:
                     v = aero.cas2tas(v_app, h)
                 vs = vs_post_constcas
-                seg = 'POST-CAS'
+                seg = "POST-CAS"
             elif h > 0:
                 v = v_app
                 vs = vs_fa
-                seg = 'FA'
+                seg = "FA"
             else:
                 h = 0
                 vs = 0
                 v = v + a_lnd * dt
-                seg = 'LD'
+                seg = "LD"
 
                 if v <= 0:
                     break
@@ -327,16 +367,16 @@ class Generator(object):
         data = np.array(data)
         ndata = len(data)
         datadict = {
-            't': data[:, 0],
-            'h': data[:, 1] + np.random.normal(0, self.sigma_h, ndata),
-            's': data[:, 2] + np.random.normal(0, self.sigma_s, ndata),
-            'v': data[:, 3] + np.random.normal(0, self.sigma_v, ndata),
-            'vs': data[:, 4] + np.random.normal(0, self.sigma_vs, ndata),
-            'seg': data[:, 5],
-            'cas_const_de': cas_const,
-            'vcas_const_de': vcas_const,
-            'mach_const_de': mach_const,
-            'h_cr': h_cr
+            "t": data[:, 0],
+            "h": data[:, 1] + np.random.normal(0, self.sigma_h, ndata),
+            "s": data[:, 2] + np.random.normal(0, self.sigma_s, ndata),
+            "v": data[:, 3] + np.random.normal(0, self.sigma_v, ndata),
+            "vs": data[:, 4] + np.random.normal(0, self.sigma_vs, ndata),
+            "seg": data[:, 5],
+            "cas_const_de": cas_const,
+            "vcas_const_de": vcas_const,
+            "mach_const_de": mach_const,
+            "alt_cr": alt_cr,
         }
 
         return datadict
@@ -347,7 +387,7 @@ class Generator(object):
         Args:
             **dt (int): Time step in seconds.
             **range_cr (int): Cruise range (km).
-            **h_cr (int): Cruise altitude (km).
+            **alt_cr (int): Cruise altitude (ft).
             **mach_cr (float): Cruise Mach number (-).
             **random (bool): Generate trajectory with random paramerters.
 
@@ -355,30 +395,44 @@ class Generator(object):
             dict: flight trajectory
 
         """
-        dt = kwargs.get('dt', 1)
-        random = kwargs.get('random', False)
+        dt = kwargs.get("dt", 1)
+        random = kwargs.get("random", False)
 
         if random:
-            range = kwargs.get('range_cr', np.random.uniform(
-                self.wrap.cruise_range()['minimum'],
-                self.wrap.cruise_range()['maximum']
-            ) * 1000)
+            range = kwargs.get(
+                "range_cr",
+                np.random.uniform(
+                    self.wrap.cruise_range()["minimum"],
+                    self.wrap.cruise_range()["maximum"],
+                )
+                * 1000,
+            )
 
-            h_cr = kwargs.get('h_cr', np.random.uniform(
-                self.wrap.cruise_alt()['minimum'],
-                self.wrap.cruise_alt()['maximum']
-            ) * 1000)
+            alt_cr = kwargs.get(
+                "alt_cr",
+                np.random.uniform(
+                    self.wrap.cruise_alt()["minimum"], self.wrap.cruise_alt()["maximum"]
+                )
+                * 1000
+                / aero.ft,
+            )
 
-            mach_cr = kwargs.get('mach_cr', np.random.uniform(
-                self.wrap.cruise_mach()['minimum'],
-                self.wrap.cruise_mach()['maximum']
-            ))
+            mach_cr = kwargs.get(
+                "mach_cr",
+                np.random.uniform(
+                    self.wrap.cruise_mach()["minimum"],
+                    self.wrap.cruise_mach()["maximum"],
+                ),
+            )
         else:
-            range = kwargs.get('range_cr', self.wrap.cruise_range()['default'] * 1000)
-            mach_cr = kwargs.get('mach_cr', self.wrap.cruise_mach()['default'])
-            h_cr = kwargs.get('h_cr', self.wrap.cruise_alt()['default'] * 1000)
+            range = kwargs.get("range_cr", self.wrap.cruise_range()["default"] * 1000)
+            mach_cr = kwargs.get("mach_cr", self.wrap.cruise_mach()["default"])
+            alt_cr = kwargs.get(
+                "alt_cr", self.wrap.cruise_alt()["default"] * 1000 / aero.ft
+            )
 
-        h_cr = np.round(h_cr / aero.ft, -3) * aero.ft   # round cruise altitude to flight level
+        alt_cr = np.round(alt_cr, -2)  # round cruise altitude to flight level
+        h_cr = alt_cr * aero.ft
 
         data = []
 
@@ -399,13 +453,13 @@ class Generator(object):
         data = np.array(data)
         ndata = len(data)
         datadict = {
-            't': data[:, 0],
-            'h': data[:, 1] + np.random.normal(0, self.sigma_h, ndata),
-            's': data[:, 2] + np.random.normal(0, self.sigma_s, ndata),
-            'v': data[:, 3] + np.random.normal(0, self.sigma_v, ndata),
-            'vs': data[:, 4] + np.random.normal(0, self.sigma_vs, ndata),
-            'h_cr': h_cr,
-            'mach_cr': mach_cr,
+            "t": data[:, 0],
+            "h": data[:, 1] + np.random.normal(0, self.sigma_h, ndata),
+            "s": data[:, 2] + np.random.normal(0, self.sigma_s, ndata),
+            "v": data[:, 3] + np.random.normal(0, self.sigma_v, ndata),
+            "vs": data[:, 4] + np.random.normal(0, self.sigma_vs, ndata),
+            "alt_cr": alt_cr,
+            "mach_cr": mach_cr,
         }
 
         return datadict
@@ -420,7 +474,7 @@ class Generator(object):
             **cas_const_de (int): Constaant CAS for climb (kt).
             **mach_const_de (float): Constaant Mach for climb (-).
             **range_cr (int): Cruise range (km).
-            **h_cr (int): Target cruise altitude (km).
+            **alt_cr (int): Target cruise altitude (ft).
             **mach_cr (float): Cruise Mach number (-).
             **random (bool): Generate trajectory with random paramerters.
         Returns:
@@ -428,14 +482,31 @@ class Generator(object):
 
         """
         data_cr = self.cruise(**kwargs)
-        data_cl = self.climb(h_cr=data_cr['h_cr'], mach_cr=data_cr['mach_cr'], **kwargs)
-        data_de = self.descent(h_cr=data_cr['h_cr'], mach_cr=data_cr['mach_cr'], **kwargs)
+
+        if "alt_cr" not in kwargs:
+            kwargs["alt_cr"] = data_cr["alt_cr"]
+
+        data_cl = self.climb(mach_cr=data_cr["mach_cr"], **kwargs)
+
+        data_de = self.descent(mach_cr=data_cr["mach_cr"], **kwargs)
 
         data = {
-            't': np.concatenate([data_cl['t'], data_cl['t'][-1]+data_cr['t'], data_cl['t'][-1]+data_cr['t'][-1]+data_de['t']]),
-            'h': np.concatenate([data_cl['h'], data_cr['h'], data_de['h']]),
-            's': np.concatenate([data_cl['s'],  data_cl['s'][-1]+data_cr['s'], data_cl['s'][-1]+data_cr['s'][-1]+data_de['s']]),
-            'v': np.concatenate([data_cl['v'], data_cr['v'], data_de['v']]),
-            'vs': np.concatenate([data_cl['vs'], data_cr['vs'], data_de['vs']]),
+            "t": np.concatenate(
+                [
+                    data_cl["t"],
+                    data_cl["t"][-1] + data_cr["t"],
+                    data_cl["t"][-1] + data_cr["t"][-1] + data_de["t"],
+                ]
+            ),
+            "h": np.concatenate([data_cl["h"], data_cr["h"], data_de["h"]]),
+            "s": np.concatenate(
+                [
+                    data_cl["s"],
+                    data_cl["s"][-1] + data_cr["s"],
+                    data_cl["s"][-1] + data_cr["s"][-1] + data_de["s"],
+                ]
+            ),
+            "v": np.concatenate([data_cl["v"], data_cr["v"], data_de["v"]]),
+            "vs": np.concatenate([data_cl["vs"], data_cr["vs"], data_de["vs"]]),
         }
         return data
