@@ -3,7 +3,21 @@ Open Aircraft Performance Model (OpenAP) Toolkit
 
 This repository contains all OpenAP databases and a Python implementation which facilitates the data access and aircraft performance computation.
 
-[Download the related research paper](https://www.researchgate.net/publication/332013573_OpenAP_The_open-source_aircraft_performance_model_and_associated_toolkit)
+OpenAP is originated from the PhD project of Junzi Sun from [TU Delft](https://www.tudelft.nl/en/), Aerospace Engineering Faculty, [CNS/ATM research group](http://cs.lr.tudelft.nl/atm/). The PhD project - *Open Aircraft Performance Modeling: Based on an Analysis of Aircraft Surveillance Data* - started in 2015 and completed in 2019. 
+
+
+Read the PhD thesis [here](https://doi.org/10.4233/uuid:af94d535-1853-4a6c-8b3f-77c98a52346a). Read the preprint of OpenAP toolkits [here](https://www.researchgate.net/publication/332013573_OpenAP_The_open-source_aircraft_performance_model_and_associated_toolkit).
+
+
+Install
+-------
+
+To install latest version of OpenAP from the GitHub:
+
+```sh
+pip install git+https://github.com/junzis/openap
+```
+
 
 Databases:
 ---------
@@ -13,16 +27,6 @@ Databases:
   - Drag polar
   - Kinematic ([WRAP](https://github.com/junzis/wrap))
   - Navigation
-
-
-Install
--------
-
-To install latest version from the GitHub:
-
-```sh
-pip install git+https://github.com/junzis/openap
-```
 
 
 Libraries
@@ -38,6 +42,7 @@ Libraries
   - `segment`: a utility library to determine climb, cruise, descent, level flight
   - `phase`: a wrapper around `segment`, providing identification of all flight phases
   - `traj`: package contains a set of tools related with trajectory generation
+
 
 Examples
 --------
