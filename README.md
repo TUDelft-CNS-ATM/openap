@@ -142,7 +142,7 @@ trajgen = Generator(ac='a320')
 
 trajgen.enable_noise()   # enable Gaussian noise in trajectory data
 
-data_cl = trajgen.climb(dt=10, random=True)  # using radom paramerters
+data_cl = trajgen.climb(dt=10, random=True)  # using random paramerters
 data_cl = trajgen.climb(dt=10, cas_const_cl=280, mach_const_cl=0.78, alt_cr=35000)
 
 data_de = trajgen.descent(dt=10, random=True)
