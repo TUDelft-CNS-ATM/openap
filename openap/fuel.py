@@ -85,14 +85,15 @@ class FuelFlow(object):
             mass (int or ndarray): Aircraft mass (unit: kg).
             tas (int or ndarray): Aircraft true airspeed (unit: kt).
             alt (int or ndarray): Aircraft altitude (unit: ft).
-            path_angle (float or ndarray): Flight path angle (unit: ft).
+            path_angle (float or ndarray): Flight path angle (unit: degrees).
 
         Returns:
             float: Fuel flow (unit: kg/s).
 
         """
         D = self.drag.clean(mass=mass, tas=tas, alt=alt, path_angle=path_angle)
-
+        
+        #Convert angles from degrees to radians.
         gamma = np.radians(path_angle)
 
         T = D + mass * aero.g0 * np.sin(gamma)
