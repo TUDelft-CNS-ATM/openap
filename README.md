@@ -87,7 +87,7 @@ from openap import FuelFlow
 
 ff = FuelFlow(ac='A320', eng='CFM56-5B4')
 
-FF = ff.at_thrust(thr=50000, alt=30000)
+FF = ff.at_thrust(acthr=50000, alt=30000)
 FF = ff.takeoff(tas=100, alt=0, throttle=1)
 FF = ff.enroute(mass=60000, tas=200, alt=20000, path_angle=3)
 FF = ff.enroute(mass=60000, tas=230, alt=32000, path_angle=0)
@@ -142,7 +142,7 @@ trajgen = Generator(ac='a320')
 
 trajgen.enable_noise()   # enable Gaussian noise in trajectory data
 
-data_cl = trajgen.climb(dt=10, random=True)  # using radom paramerters
+data_cl = trajgen.climb(dt=10, random=True)  # using random paramerters
 data_cl = trajgen.climb(dt=10, cas_const_cl=280, mach_const_cl=0.78, alt_cr=35000)
 
 data_de = trajgen.descent(dt=10, random=True)
