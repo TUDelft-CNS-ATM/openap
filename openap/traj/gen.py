@@ -141,6 +141,7 @@ class Generator(object):
             cas_const = kwargs.get(
                 "cas_const_cl", self.wrap.climb_const_vcas()["default"] / aero.kts
             )
+            cas_const = max(cas_const,v_tof / aero.kts) #cas can not be smaller then takeoff speed
             mach_const = kwargs.get(
                 "mach_const_cl", self.wrap.climb_const_mach()["default"]
             )
@@ -187,6 +188,8 @@ class Generator(object):
                 seg = "TO"
             elif h < 1500 * aero.ft:
                 v = v + a * dt
+                if aero.tas2cas(v, h) >= vcas_const:
+                    v = aero.cas2tas(vcas_const, h)
                 vs = vs_ic
                 seg = "IC"
             elif h < h_const_cas:
