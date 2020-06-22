@@ -141,7 +141,9 @@ class Generator(object):
             cas_const = kwargs.get(
                 "cas_const_cl", self.wrap.climb_const_vcas()["default"] / aero.kts
             )
-            cas_const = max(cas_const,v_tof / aero.kts) #cas can not be smaller then takeoff speed
+            cas_const = max(
+                cas_const, v_tof / aero.kts
+            )  # cas can not be smaller then takeoff speed
             mach_const = kwargs.get(
                 "mach_const_cl", self.wrap.climb_const_mach()["default"]
             )
@@ -154,7 +156,7 @@ class Generator(object):
 
         vcas_const = cas_const * aero.kts
         alt_cr = np.round(alt_cr, -2)  # round cruise altitude to flight level
-        h_cr = alt_cr * aero.ft #meters
+        h_cr = alt_cr * aero.ft  # meters
         vs_ic = self.wrap.initclimb_vs()["default"]
         h_const_cas = self.wrap.climb_cross_alt_concas()["default"] * 1000
 
@@ -218,15 +220,15 @@ class Generator(object):
         data = np.array(data)
         ndata = len(data)
         datadict = {
-            "t": data[:, 0], #t, seconds
-            "h": data[:, 1] + np.random.normal(0, self.sigma_h, ndata), #h, meters
-            "s": data[:, 2] + np.random.normal(0, self.sigma_s, ndata), #s, meters
-            "v": data[:, 3] + np.random.normal(0, self.sigma_v, ndata), #v, meters per second
-            "vs": data[:, 4] + np.random.normal(0, self.sigma_vs, ndata), #vertical speed, meters per second
+            "t": data[:, 0],  # t, seconds
+            "h": data[:, 1] + np.random.normal(0, self.sigma_h, ndata),  # h, m
+            "s": data[:, 2] + np.random.normal(0, self.sigma_s, ndata),  # s, m
+            "v": data[:, 3] + np.random.normal(0, self.sigma_v, ndata),  # v, m/s
+            "vs": data[:, 4] + np.random.normal(0, self.sigma_vs, ndata),  # VS, m/s
             "seg": data[:, 5],
             "cas_const_cl": cas_const,
             "mach_const_cl": mach_const,
-            "alt_cr": alt_cr, #alt_cr, ft
+            "alt_cr": alt_cr,  # alt_cr, ft
         }
 
         return datadict
@@ -489,9 +491,9 @@ class Generator(object):
         if "alt_cr" not in kwargs:
             kwargs["alt_cr"] = data_cr["alt_cr"]
 
-        data_cl = self.climb(mach_cr=data_cr["mach_cr"], **kwargs)
+        data_cl = self.climb(mach_const_cl=data_cr["mach_cr"], **kwargs)
 
-        data_de = self.descent(mach_cr=data_cr["mach_cr"], **kwargs)
+        data_de = self.descent(mach_const_de=data_cr["mach_cr"], **kwargs)
 
         data = {
             "t": np.concatenate(
