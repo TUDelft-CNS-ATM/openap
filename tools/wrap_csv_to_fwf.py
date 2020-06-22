@@ -4,7 +4,6 @@ import yaml
 import numpy as np
 import pandas as pd
 
-import wrap_common
 
 from tabulate import tabulate
 def to_fwf(df, fname):
