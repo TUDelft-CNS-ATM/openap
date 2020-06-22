@@ -35,34 +35,34 @@ class Drag(object):
             dict: drag polar model parameters.
 
         """
-        polar_files = glob.glob(dir_dragpolar + '*.yml')
+        polar_files = glob.glob(dir_dragpolar + "*.yml")
         ac_polar_avaiable = [s[-8:-4].lower() for s in polar_files]
 
         if self.ac in ac_polar_avaiable:
             ac = self.ac
         else:
-            if self.ac.startswith('a32'):
-                ac = 'a320'
-            elif self.ac.startswith('a33'):
-                ac = 'a332'
-            elif self.ac.startswith('a34'):
-                ac = 'a333'
-            elif self.ac.startswith('a35'):
-                ac = 'a359'
-            elif self.ac.startswith('a38'):
-                ac = 'a388'
-            elif self.ac.startswith('b73'):
-                ac = 'b738'
-            elif self.ac.startswith('b74'):
-                ac = 'b744'
-            elif self.ac.startswith('b77'):
-                ac = 'b777'
+            if self.ac.startswith("a32"):
+                ac = "a320"
+            elif self.ac.startswith("a33"):
+                ac = "a332"
+            elif self.ac.startswith("a34"):
+                ac = "a333"
+            elif self.ac.startswith("a35"):
+                ac = "a359"
+            elif self.ac.startswith("a38"):
+                ac = "a388"
+            elif self.ac.startswith("b73"):
+                ac = "b738"
+            elif self.ac.startswith("b74"):
+                ac = "b744"
+            elif self.ac.startswith("b77"):
+                ac = "b777"
             else:
-                raise RuntimeError('%s drag polar not avaiable.' % self.ac.upper())
+                raise RuntimeError("%s drag polar not avaiable." % self.ac.upper())
 
             print("warning: %s drag polar used for %s." % (ac.upper(), self.ac.upper()))
 
-        f = dir_dragpolar + ac + '.yml'
+        f = dir_dragpolar + ac + ".yml"
         dragpolar = yaml.safe_load(open(f))
         return dragpolar
 
@@ -72,14 +72,14 @@ class Drag(object):
         h = alt * aero.ft
         gamma = np.radians(path_angle)
 
-        S = self.aircraft['wing']['area']
+        S = self.aircraft["wing"]["area"]
 
         rho = aero.density(h)
-        qS = 0.5 * rho * v**2 * S
+        qS = 0.5 * rho * v ** 2 * S
         L = mass * aero.g0 * np.cos(gamma)
         qS = np.where(qS < 1e-3, 1e-3, qS)
         cl = L / qS
-        cd = cd0 + k * cl**2
+        cd = cd0 + k * cl ** 2
         D = cd * qS
 
         D = D.astype(int)
@@ -100,13 +100,13 @@ class Drag(object):
             int: Total drag (unit: N).
 
         """
-        cd0 = self.polar['clean']['cd0']
-        k = self.polar['clean']['cd0']
+        cd0 = self.polar["clean"]["cd0"]
+        k = self.polar["clean"]["k"]
 
-        mach_crit = self.polar['mach_crit']
-        mach = aero.tas2mach(tas*aero.kts, alt*aero.ft)
+        mach_crit = self.polar["mach_crit"]
+        mach = aero.tas2mach(tas * aero.kts, alt * aero.ft)
 
-        dCdw = np.where(mach > mach_crit, 20*(mach-mach_crit)**4, 0)
+        dCdw = np.where(mach > mach_crit, 20 * (mach - mach_crit) ** 4, 0)
 
         cd0 = cd0 + dCdw
 
@@ -129,34 +129,39 @@ class Drag(object):
             int or ndarray: Total drag (unit: N).
 
         """
-        cd0 = self.polar['clean']['cd0']
-        k = self.polar['clean']['k']
+        cd0 = self.polar["clean"]["cd0"]
+        k = self.polar["clean"]["k"]
 
         # --- calc new CD0 ---
-        lambda_f = self.polar['flaps']['lambda_f']
-        cfc = self.polar['flaps']['cf/c']
-        SfS = self.polar['flaps']['Sf/S']
+        lambda_f = self.polar["flaps"]["lambda_f"]
+        cfc = self.polar["flaps"]["cf/c"]
+        SfS = self.polar["flaps"]["Sf/S"]
 
-        delta_cd_flap = lambda_f * (cfc)**1.38 * (SfS) \
-            * np.sin(np.radians(flap_angle))**2
+        delta_cd_flap = (
+            lambda_f * (cfc) ** 1.38 * (SfS) * np.sin(np.radians(flap_angle)) ** 2
+        )
 
         if landing_gear:
-            delta_cd_gear = self.aircraft['limits']['MTOW'] \
-                * 9.8065 / self.aircraft['wing']['area'] * 3.16e-5 \
-                * self.aircraft['limits']['MTOW']**(-0.215)
+            delta_cd_gear = (
+                self.aircraft["limits"]["MTOW"]
+                * 9.8065
+                / self.aircraft["wing"]["area"]
+                * 3.16e-5
+                * self.aircraft["limits"]["MTOW"] ** (-0.215)
+            )
         else:
             delta_cd_gear = 0
 
         cd0_total = cd0 + delta_cd_flap + delta_cd_gear
 
         # --- calc new k ---
-        if self.aircraft['engine']['mount'] == 'rear':
+        if self.aircraft["engine"]["mount"] == "rear":
             delta_e_flap = 0.0046 * flap_angle
         else:
             delta_e_flap = 0.0026 * flap_angle
 
-        ar = self.aircraft['wing']['span']**2 / self.aircraft['wing']['area']
-        k_total = 1 / (1/k + np.pi * ar * delta_e_flap)
+        ar = self.aircraft["wing"]["span"] ** 2 / self.aircraft["wing"]["area"]
+        k_total = 1 / (1 / k + np.pi * ar * delta_e_flap)
 
         D = self._calc_drag(mass, tas, alt, cd0_total, k_total, path_angle)
         return D
