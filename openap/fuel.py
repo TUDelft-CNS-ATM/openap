@@ -5,6 +5,7 @@ from openap.extra import aero
 from openap import prop, Thrust, Drag
 from openap.extra import ndarrayconvert
 
+
 class FuelFlow(object):
     """Fuel flow model based on ICAO emmision databank."""
 
@@ -20,19 +21,22 @@ class FuelFlow(object):
         """
         self.aircraft = prop.aircraft(ac)
 
-
         if eng is None:
-            eng = self.aircraft['engine']['default']
+            eng = self.aircraft["engine"]["default"]
 
         self.engine = prop.engine(eng)
 
         self.thrust = Thrust(ac, eng)
         self.drag = Drag(ac)
 
-        c3, c2, c1 = self.engine['fuel_c3'], self.engine['fuel_c2'], self.engine['fuel_c1']
+        c3, c2, c1 = (
+            self.engine["fuel_c3"],
+            self.engine["fuel_c2"],
+            self.engine["fuel_c1"],
+        )
         # print(c3,c2,c1)
 
-        self.fuel_flow_model = lambda x: c3*x**3 + c2*x**2 + c1*x
+        self.fuel_flow_model = lambda x: c3 * x ** 3 + c2 * x ** 2 + c1 * x
 
     @ndarrayconvert
     def at_thrust(self, acthr, alt=0):
@@ -46,9 +50,17 @@ class FuelFlow(object):
             float: Fuel flow (unit: kg/s).
 
         """
-        ratio = acthr / (self.engine['max_thrust'] * self.aircraft['engine']['number'])
-        fuelflow = self.fuel_flow_model(ratio) * self.aircraft['engine']['number'] \
-            + self.engine['fuel_ch'] * (alt*aero.ft) * (acthr/1000)
+        n_eng = self.aircraft["engine"]["number"]
+        engthr = acthr / n_eng
+
+        ratio = engthr / self.engine["max_thrust"]
+
+        ff_sl = self.fuel_flow_model(ratio)
+        ff_corr_alt = self.engine["fuel_ch"] * (engthr / 1000) * (alt * aero.ft)
+        ff_eng = ff_sl + ff_corr_alt
+
+        fuelflow = ff_eng * n_eng
+
         return fuelflow
 
     @ndarrayconvert
@@ -92,8 +104,8 @@ class FuelFlow(object):
 
         """
         D = self.drag.clean(mass=mass, tas=tas, alt=alt, path_angle=path_angle)
-        
-        #Convert angles from degrees to radians.
+
+        # Convert angles from degrees to radians.
         gamma = np.radians(path_angle)
 
         T = D + mass * aero.g0 * np.sin(gamma)
@@ -115,10 +127,11 @@ class FuelFlow(object):
 
         """
         import matplotlib.pyplot as plt
+
         xx = np.linspace(0, 1, 50)
         yy = self.fuel_flow_model(xx)
         # plt.scatter(self.x, self.y, color='k')
-        plt.plot(xx, yy, '--', color='gray')
+        plt.plot(xx, yy, "--", color="gray")
         if plot:
             plt.show()
         else:
