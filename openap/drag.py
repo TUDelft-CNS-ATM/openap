@@ -3,6 +3,7 @@
 import os
 import glob
 import yaml
+import warnings
 import numpy as np
 from openap import prop
 from openap.extra import aero
@@ -15,7 +16,7 @@ dir_dragpolar = curr_path + "/data/dragpolar/"
 class Drag(object):
     """Compute the drag of aicraft."""
 
-    def __init__(self, ac):
+    def __init__(self, ac, wave_drag=False):
         """Initialize Drag object.
 
         Args:
@@ -27,6 +28,12 @@ class Drag(object):
         self.ac = ac.lower()
         self.aircraft = prop.aircraft(ac)
         self.polar = self.dragpolar()
+        self.wave_drag = wave_drag
+
+        if self.wave_drag:
+            warnings.warn(
+                "Performance warning: Wave drag model is inaccurate at the moment. This will be fixed in future release."
+            )
 
     def dragpolar(self):
         """Find and construct the drag polar model.
@@ -100,13 +107,17 @@ class Drag(object):
             int: Total drag (unit: N).
 
         """
+
         cd0 = self.polar["clean"]["cd0"]
         k = self.polar["clean"]["k"]
 
-        mach_crit = self.polar["mach_crit"]
-        mach = aero.tas2mach(tas * aero.kts, alt * aero.ft)
+        if self.wave_drag:
+            mach_crit = self.polar["mach_crit"]
+            mach = aero.tas2mach(tas * aero.kts, alt * aero.ft)
 
-        dCdw = np.where(mach > mach_crit, 20 * (mach - mach_crit) ** 4, 0)
+            dCdw = np.where(mach > mach_crit, 20 * (mach - mach_crit) ** 4, 0)
+        else:
+            dCdw = 0
 
         cd0 = cd0 + dCdw
 
