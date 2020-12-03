@@ -107,7 +107,7 @@ def engine(eng):
     engines = pd.read_fwf(db_engine)
 
     # try to look for the unique engine
-    available_engines = engines.query("name.str.startswith(@ENG)")
+    available_engines = engines.query("name.str.upper().str.startswith(@ENG)")
     if available_engines.shape[0] >= 1:
         available_engines.index = available_engines.name
 
