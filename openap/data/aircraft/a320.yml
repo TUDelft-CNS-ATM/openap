@@ -34,7 +34,7 @@ engine:
   type: turbofan
   mount: wing
   number: 2
-  default: CFM56-5A3
+  default: CFM56-5B4
   options:
     A320-111: CFM56-5-A1
     A320-211: CFM56-5-A1

@@ -19,7 +19,7 @@ def available_aircraft():
         list of string: aircraft types.
 
     """
-    files = sorted(glob.glob(dir_aircraft + '*.yml'))
+    files = sorted(glob.glob(dir_aircraft + "*.yml"))
     acs = [f[-8:-4].upper() for f in files]
     return acs
 
@@ -36,10 +36,10 @@ def aircraft(ac):
     """
     ac = ac.lower()
 
-    files = glob.glob(dir_aircraft + ac + '.yml')
+    files = glob.glob(dir_aircraft + ac + ".yml")
 
     if len(files) == 0:
-        raise RuntimeError('Aircraft data not found.')
+        raise RuntimeError("Aircraft data not found.")
 
     f = files[0]
     acdict = yaml.safe_load(open(f))
@@ -59,10 +59,10 @@ def aircraft_engine_options(ac):
     """
     acdict = aircraft(ac)
 
-    if type(acdict['engine']['options']) == dict:
-        eng_options = list(acdict['engine']['options'].values())
-    elif type(acdict['engine']['options']) == list:
-        eng_options = list(acdict['engine']['options'])
+    if type(acdict["engine"]["options"]) == dict:
+        eng_options = list(acdict["engine"]["options"].values())
+    elif type(acdict["engine"]["options"]) == list:
+        eng_options = list(acdict["engine"]["options"])
 
     return eng_options
 
@@ -80,14 +80,14 @@ def search_engine(eng):
     ENG = eng.strip().upper()
     engines = pd.read_fwf(db_engine)
 
-    selengs = engines[engines['name'].str.upper().str.startswith(ENG)]
+    available_engines = engines.query("name.str.startswith(@ENG)")
 
-    if selengs.shape[0] == 0:
-        print('Engine not found.')
+    if available_engines.shape[0] == 0:
+        print("Engine not found.")
         result = None
     else:
-        print('Engines found:')
-        result = selengs.name.tolist()
+        print("Engines found:")
+        result = available_engines.name.tolist()
         print(result)
 
     return result
@@ -107,21 +107,25 @@ def engine(eng):
     engines = pd.read_fwf(db_engine)
 
     # try to look for the unique engine
-    selengs = engines[engines['name'].str.upper() == ENG]
-    if selengs.shape[0] == 1:
-        selengs.index = selengs.name
-        result = selengs.to_dict(orient='records')[0]
+    available_engines = engines.query("name.str.startswith(@ENG)")
+    if available_engines.shape[0] >= 1:
+        available_engines.index = available_engines.name
+
+        seleng = available_engines.to_dict(orient="records")[0]
+        seleng["name"] = ENG
 
         # compute fuel flow correction factor kg/s/N per meter
-        if np.isfinite(result['cruise_sfc']):
-            sfc_cr = result['cruise_sfc']
-            sfc_to = (result['fuel_c3'] + result['fuel_c2'] + result['fuel_c1']) / (result['max_thrust']/1000)
-            fuel_ch = np.round((sfc_cr - sfc_to) / (result['cruise_alt'] * aero.ft), 8)
+        if np.isfinite(seleng["cruise_sfc"]):
+            sfc_cr = seleng["cruise_sfc"]
+            sfc_to = (seleng["fuel_c3"] + seleng["fuel_c2"] + seleng["fuel_c1"]) / (
+                seleng["max_thrust"] / 1000
+            )
+            fuel_ch = np.round((sfc_cr - sfc_to) / (seleng["cruise_alt"] * aero.ft), 8)
         else:
             fuel_ch = 6.7e-7
 
-        result['fuel_ch'] = fuel_ch
+        seleng["fuel_ch"] = fuel_ch
     else:
-        raise RuntimeError('Engine data not found.')
+        raise RuntimeError("Engine data not found.")
 
-    return result
+    return seleng
