@@ -112,7 +112,7 @@ def engine(eng):
         available_engines.index = available_engines.name
 
         seleng = available_engines.to_dict(orient="records")[0]
-        seleng["name"] = ENG
+        seleng["name"] = eng
 
         # compute fuel flow correction factor kg/s/N per meter
         if np.isfinite(seleng["cruise_sfc"]):
