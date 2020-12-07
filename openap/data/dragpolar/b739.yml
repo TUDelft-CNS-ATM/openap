@@ -1,9 +1,9 @@
 aircraft: Boeing 737-900
 
 clean:
-  cd0:         0.024
-  k:           0.044
-  e:           0.769
+  cd0:         0.020
+  k:           0.042
+  e:           0.797
 
 mach_crit:     0.632
 

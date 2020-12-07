@@ -1,9 +1,9 @@
 aircraft: Embraer E190 (LR)
 
 clean:
-  cd0:         0.019
+  cd0:         0.018
   k:           0.044
-  e:           0.813
+  e:           0.817
 
 mach_crit:     0.628
 

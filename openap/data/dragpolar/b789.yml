@@ -1,9 +1,9 @@
 aircraft: Boeing 787-9
 
 clean:
-  cd0:         0.029
-  k:           0.045
-  e:           0.737
+  cd0:         0.022
+  k:           0.042
+  e:           0.783
 
 mach_crit:     0.669
 

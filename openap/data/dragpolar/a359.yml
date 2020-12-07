@@ -1,9 +1,9 @@
 aircraft: Airbus A350-900
 
 clean:
-  cd0:         0.031
-  k:           0.046
-  e:           0.725
+  cd0:         0.023
+  k:           0.043
+  e:           0.779
 
 mach_crit:     0.646
 

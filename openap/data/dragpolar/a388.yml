@@ -1,9 +1,9 @@
 aircraft: Airbus A380-800
 
 clean:
-  cd0:         0.028
-  k:           0.054
-  e:           0.781
+  cd0:         0.021
+  k:           0.051
+  e:           0.822
 
 mach_crit:     0.692
 

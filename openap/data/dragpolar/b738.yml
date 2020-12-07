@@ -1,9 +1,9 @@
 aircraft: Boeing 737-800
 
 clean:
-  cd0:         0.023
-  k:           0.044
-  e:           0.775
+  cd0:         0.019
+  k:           0.042
+  e:           0.799
 
 mach_crit:     0.632
 

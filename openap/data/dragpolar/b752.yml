@@ -1,0 +1,15 @@
+aircraft: Boeing 757-200
+
+clean:
+  cd0:         0.021
+  k:           0.050
+  e:           0.810
+
+mach_crit:     0.632
+
+gears:         0.016
+
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.187
+  Sf/S:        0.167

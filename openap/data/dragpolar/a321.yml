@@ -1,9 +1,9 @@
 aircraft: Airbus A321
 
 clean:
-  cd0:         0.026
-  k:           0.043
-  e:           0.746
+  cd0:         0.020
+  k:           0.041
+  e:           0.785
 
 mach_crit:     0.632
 

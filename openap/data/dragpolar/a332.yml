@@ -1,9 +1,9 @@
 aircraft: Airbus A330-200
 
 clean:
-  cd0:         0.029
-  k:           0.044
-  e:           0.728
+  cd0:         0.022
+  k:           0.041
+  e:           0.774
 
 mach_crit:     0.642
 

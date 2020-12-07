@@ -1,9 +1,9 @@
 aircraft: Embraer E175 (LR)
 
 clean:
-  cd0:         0.019
-  k:           0.043
-  e:           0.803
+  cd0:         0.018
+  k:           0.042
+  e:           0.810
 
 mach_crit:     0.628
 

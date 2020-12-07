@@ -1,9 +1,9 @@
 aircraft: Embraer E195 (LR)
 
 clean:
-  cd0:         0.028
-  k:           0.048
-  e:           0.752
+  cd0:         0.021
+  k:           0.045
+  e:           0.795
 
 mach_crit:     0.628
 

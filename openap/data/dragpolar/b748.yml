@@ -1,9 +1,9 @@
 aircraft: Boeing 747-8
 
 clean:
-  cd0:         0.027
-  k:           0.049
-  e:           0.771
+  cd0:         0.021
+  k:           0.047
+  e:           0.804
 
 mach_crit:     0.680
 

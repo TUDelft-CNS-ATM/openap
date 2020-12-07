@@ -1,0 +1,15 @@
+aircraft: Airbus A340-300
+
+clean:
+  cd0:         0.017
+  k:           0.039
+  e:           0.812
+
+mach_crit:     0.642
+
+gears:         0.016
+
+flaps:
+  lambda_f:    0.900
+  cf/c:        0.150
+  Sf/S:        0.150

@@ -1,9 +1,9 @@
 aircraft: Airbus A319
 
 clean:
-  cd0:         0.019
+  cd0:         0.020
   k:           0.039
-  e:           0.793
+  e:           0.785
 
 mach_crit:     0.632
 
