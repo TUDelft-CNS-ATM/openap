@@ -10,6 +10,7 @@ from openap import aero
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_aircraft = curr_path + "/data/aircraft/"
 db_engine = curr_path + "/data/engine/engines.txt"
+db_emission = curr_path + "/data/engine/emission.txt"
 
 
 def available_aircraft():
@@ -105,6 +106,9 @@ def engine(eng):
     """
     ENG = eng.strip().upper()
     engines = pd.read_fwf(db_engine)
+    emissions = pd.read_fwf(db_emission)
+
+    engines = engines.merge(emissions, how="left", left_on="name", right_on="engine")
 
     # try to look for the unique engine
     available_engines = engines.query("name.str.upper().str.startswith(@ENG)")
