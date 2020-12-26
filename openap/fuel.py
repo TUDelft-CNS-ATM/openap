@@ -44,7 +44,7 @@ class FuelFlow(object):
 
         Args:
             acthr (int or ndarray): The total net thrust of the aircraft (unit: N).
-            alt (int or ndarray): Aicraft altitude (unit: ft).
+            alt (int or ndarray): Aircraft altitude (unit: ft).
 
         Returns:
             float: Fuel flow (unit: kg/s).
@@ -113,6 +113,10 @@ class FuelFlow(object):
         T = np.where(T < 0, T_idle, T)
 
         fuelflow = self.at_thrust(T, alt)
+
+        # do not return value outside performance boundary
+        T_max = self.thrust.climb(tas=tas, alt=alt, roc=0)
+        fuelflow = np.where(T > T_max, np.nan, fuelflow)
 
         return fuelflow
 
