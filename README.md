@@ -1,36 +1,31 @@
-Open Aircraft Performance Model (OpenAP) Toolkit
-========================================================================
+# Open Aircraft Performance Model (OpenAP) and Toolkit
 
-This repository contains all OpenAP databases and a Python implementation which facilitates the data access and aircraft performance computation.
+This repository contains all OpenAP databases and a Python toolkit that facilitates data access and performance computation.
 
-OpenAP is originated from the PhD project of Junzi Sun from [TU Delft](https://www.tudelft.nl/en/), Aerospace Engineering Faculty, [CNS/ATM research group](http://cs.lr.tudelft.nl/atm/). The PhD project - *Open Aircraft Performance Modeling: Based on an Analysis of Aircraft Surveillance Data* - started in 2015 and completed in 2019.
+[OpenAP](https://github.com/junzis/openap) is a project actively maintained by Junzi Sun from [CNS/ATM research group](http://cs.lr.tudelft.nl/atm/) at [TU Delft](https://www.tudelft.nl/en/). It is the continuation of his [PhD thesis work](https://doi.org/10.4233/uuid:af94d535-1853-4a6c-8b3f-77c98a52346a) (2015 - 2019). You can read more about OpenAP article [here](https://www.mdpi.com/2226-4310/7/8/104).
 
-
-Read the PhD thesis [here](https://doi.org/10.4233/uuid:af94d535-1853-4a6c-8b3f-77c98a52346a). Read the preprint of OpenAP toolkits [here](https://www.researchgate.net/publication/332013573_OpenAP_The_open-source_aircraft_performance_model_and_associated_toolkit).
+Use the [discussion board](https://github.com/junzis/openap/discussions) to give your feedback/suggestions, and use [issue board](https://github.com/junzis/openap/issues) to report bugs.
 
 
-Install
--------
+## Install
 
 To install latest version of OpenAP from the GitHub:
 
 ```sh
-pip install git+https://github.com/junzis/openap
+pip install --upgrade git+https://github.com/junzis/openap
 ```
 
 
-Databases:
----------
+## Databases:
 
   - Aircraft
   - Engines
   - Drag polar
-  - Kinematic ([WRAP](https://github.com/junzis/wrap))
+  - Kinematic ([WRAP model](https://github.com/junzis/wrap))
   - Navigation
 
 
-Libraries
----------
+## Libraries
 
   - `prop`: aircraft and engine properties
   - `thrust`: model to compute aircraft thrust
@@ -44,10 +39,9 @@ Libraries
   - `traj`: package contains a set of tools related with trajectory generation
 
 
-Examples
---------
+## Examples
 
-Get the aircraft and engine data:
+### Get the aircraft and engine data
 
 ```python
 from openap import prop
@@ -56,7 +50,7 @@ aircraft = prop.aircraft('A320')
 engine = prop.engine('CFM56-5B4')
 ```
 
-Compute maximum aircraft engine thrust:
+### Compute maximum aircraft engine thrust
 
 ```python
 from openap import Thrust
@@ -68,7 +62,7 @@ T = thrust.climb(tas=200, alt=20000, roc=1000)
 T = thrust.cruise(tas=230, alt=32000)
 ```
 
-Compute the aircraft drag:
+### Compute the aircraft drag
 
 ```python
 from openap import Drag
@@ -80,20 +74,41 @@ D = drag.nonclean(mass=60000, tas=150, alt=100, flap_angle=20,
                   path_angle=10, landing_gear=True)
 ```
 
-Compute the fuel flow:
+### Compute aircraft fuel flow:
 
 ```python
 from openap import FuelFlow
 
-ff = FuelFlow(ac='A320', eng='CFM56-5B4')
+fuelflow = FuelFlow(ac='A320', eng='CFM56-5B4')
 
-FF = ff.at_thrust(acthr=50000, alt=30000)
-FF = ff.takeoff(tas=100, alt=0, throttle=1)
-FF = ff.enroute(mass=60000, tas=200, alt=20000, path_angle=3)
-FF = ff.enroute(mass=60000, tas=230, alt=32000, path_angle=0)
+FF = fuelflow.at_thrust(acthr=50000, alt=30000)
+FF = fuelflow.takeoff(tas=100, alt=0, throttle=1)
+FF = fuelflow.enroute(mass=60000, tas=200, alt=20000, path_angle=3)
+FF = fuelflow.enroute(mass=60000, tas=230, alt=32000, path_angle=0)
 ```
 
-Accessing the WRAP parameters:
+### Compute aircraft emissions:
+
+```python
+from openap import FuelFlow, Emission
+
+fuelflow = FuelFlow(ac='A320', eng='CFM56-5B4')
+emission = Emission(ac='A320', eng='CFM56-5B4')
+
+TAS = 350
+ALT = 30000
+
+fuelflow = fuelflow.enroute(mass=60000, tas=TAS, alt=ALT)   # kg/s
+
+CO2 = emission.co2(fuelflow)                    # g/s
+H2O = emission.h2o(fuelflow)                    # g/s
+NOx = emission.nox(fuelflow, tas=TAS, alt=ALT)  # g/s
+CO = emission.co(fuelflow, tas=TAS, alt=ALT)    # g/s
+HC = emission.hc(fuelflow, tas=TAS, alt=ALT)    # g/s
+```
+
+
+### Access WRAP (kinematic model) parameter:
 
 ```python
 from openap import WRAP
@@ -132,7 +147,7 @@ param = wrap.landing_distance()
 param = wrap.landing_acceleration()
 ```
 
-Generating trajectories
+### Generating trajectories
 
 
 ```python
@@ -154,4 +169,24 @@ data_cr = trajgen.cruise(dt=60, range_cr=2000, alt_cr=35000, m_cr=0.78)
 data_all = trajgen.complete(dt=10, random=True)
 data_all = trajgen.complete(dt=10, alt_cr=35000, m_cr=0.78,
                             cas_const_cl=260, cas_const_de=260)
+```
+
+### Identify flight phases
+
+```python
+import pandas as pd
+from openap import FlightPhase
+
+df = pd.read_csv('data/trajectory.csv')
+
+ts = df['ts'].values    # timestamp, int, second
+alt = df['alt'].values  # altitude, int, ft
+spd = df['spd'].values  # speed, int, kts
+roc = df['roc'].values  # vertical rate, int, ft/min
+
+fp = FlightPhase()
+
+fp.set_trajectory(ts, alt, spd, roc)
+
+labels = fp.phaselabel()
 ```
