@@ -29,13 +29,11 @@ class Emission(object):
 
     def _sl2fl(self, tas, alt):
         M = aero.tas2mach(tas * aero.kts, alt * aero.ft)
-        beta_M = np.exp(0.2 * (M ** 2))
-        theta = (aero.temperature(alt * aero.ft) / 288.15) / beta_M
-        delta = (1 - 0.0019812 * alt / 288.15) ** 5.255876 / np.power(beta_M, 3.5)
-        P3_fl = delta ** 1.02
-        P3_sl = theta ** 3.3
-        ratio = P3_sl / P3_fl
-        return ratio
+        beta = np.exp(0.2 * (M ** 2))
+        theta = (aero.temperature(alt * aero.ft) / 288.15) / beta
+        delta = (1 - 0.0019812 * alt / 288.15) ** 5.255876 / np.power(beta, 3.5)
+        ratio = (theta ** 3.3) / (delta ** 1.02)
+        return beta, theta, delta, ratio
 
     @ndarrayconvert
     def co2(self, ffac):
@@ -76,16 +74,18 @@ class Emission(object):
             float: NOx emission from all engines (unit: g/s).
 
         """
-        ff = ffac / self.n_eng
-        nox_sl = self.engine["nox_c"] * (ff ** self.engine["nox_p"])
+        beta, theta, delta, ratio = self._sl2fl(tas, alt)
+
+        ffsl = (ffac / self.n_eng) * theta ** 3.8 / delta * beta
+
+        nox_sl = self.engine["nox_c"] * (ffsl ** self.engine["nox_p"])
 
         # convert to actual flight level
-        ratio = self._sl2fl(tas, alt)
         omega = 10 ** (-3) * np.exp(-0.0001426 * (alt - 12900))
         nox_fl = nox_sl * np.sqrt(1 / ratio) * np.exp(-19 * (omega - 0.00634))
 
         # convert g/(kg fuel) to g/s
-        nox_rate = nox_fl * ff * self.n_eng
+        nox_rate = nox_fl * ffsl * self.n_eng
         return nox_rate
 
     @ndarrayconvert
@@ -101,25 +101,30 @@ class Emission(object):
             float: CO emission from all engines (unit: g/s).
 
         """
-        ff = ffac / self.n_eng
+        beta, theta, delta, ratio = self._sl2fl(tas, alt)
 
-        beta = self.engine["co_beta"]
-        gamma = self.engine["co_gamma"]
+        ffsl = (ffac / self.n_eng) * theta ** 3.8 / delta * beta
+
+        co_beta = self.engine["co_beta"]
+        co_gamma = self.engine["co_gamma"]
         co_min = self.engine["co_min"]
         co_max = self.engine["co_max"]
 
-        ff = np.maximum(ff, 0.001)
-        co_sl = beta * (ff - 0.001) ** (-gamma) * np.exp(-2 * (ff - 0.001) ** beta)
+        ffsl = np.maximum(ffsl, 0.001)
+        co_sl = (
+            co_beta
+            * (ffsl - 0.001) ** (-co_gamma)
+            * np.exp(-2 * (ffsl - 0.001) ** co_beta)
+        )
 
         co_sl = np.where(co_sl < co_min, co_min, co_sl)
         co_sl = np.where(co_sl > co_max, co_max, co_sl)
 
         # convert to actual flight level
-        ratio = self._sl2fl(tas, alt)
         co_fl = co_sl * ratio
 
         # convert g/(kg fuel) to g/s
-        co_rate = co_fl * ff * self.n_eng
+        co_rate = co_fl * ffsl * self.n_eng
         return co_rate
 
     @ndarrayconvert
@@ -135,10 +140,12 @@ class Emission(object):
             float: HC emission from all engines (unit: g/s).
 
         """
-        ff = ffac / self.n_eng
+        beta, theta, delta, ratio = self._sl2fl(tas, alt)
 
-        beta = self.engine["hc_beta"]
-        gamma = self.engine["hc_gamma"]
+        ffsl = (ffac / self.n_eng) * theta ** 3.8 / delta * beta
+
+        hc_beta = self.engine["hc_beta"]
+        hc_gamma = self.engine["hc_gamma"]
         a1 = self.engine["hc_a1"]
         b1 = self.engine["hc_b1"]
         b2 = self.engine["hc_b2"]
@@ -150,21 +157,24 @@ class Emission(object):
         if hc_na:
             return None
 
-        if beta is not None:
-            ff = np.maximum(ff, 0.001)
-            hc_sl = beta * (ff + 0.05) ** (-gamma) * np.exp(-4 * (ff - 0.001) ** beta)
+        if hc_beta is not None:
+            ffsl = np.maximum(ffsl, 0.001)
+            hc_sl = (
+                hc_beta
+                * (ffsl + 0.05) ** (-hc_gamma)
+                * np.exp(-4 * (ffsl - 0.001) ** hc_beta)
+            )
         else:
-            hc_sl = 10 ** (a1 * np.log10(ff) + b1)
+            hc_sl = 10 ** (a1 * np.log10(ffsl) + b1)
             if ff85 > 0:
-                hc_sl = np.where(ff > ff85, 10 ** b2, hc_sl)
+                hc_sl = np.where(ffsl > ff85, 10 ** b2, hc_sl)
 
         hc_sl = np.where(hc_sl > hc_max, hc_max, hc_sl)
         hc_sl = np.where(hc_sl < hc_min, hc_min, hc_sl)
 
         # convert to actual flight level
-        ratio = self._sl2fl(tas, alt)
         hc_fl = hc_sl * ratio
 
         # convert g/(kg fuel) to g/s
-        hc_rate = hc_fl * ff * self.n_eng
+        hc_rate = hc_fl * ffsl * self.n_eng
         return hc_rate
