@@ -84,8 +84,8 @@ class Emission(object):
         omega = 10 ** (-3) * np.exp(-0.0001426 * (alt - 12900))
         nox_fl = nox_sl * np.sqrt(1 / ratio) * np.exp(-19 * (omega - 0.00634))
 
-        # convert g/(kg fuel) to g/s
-        nox_rate = nox_fl * ffsl * self.n_eng
+        # convert g/(kg fuel) to g/s for all engines
+        nox_rate = nox_fl * self.n_eng * ffac
         return nox_rate
 
     @ndarrayconvert
@@ -123,8 +123,8 @@ class Emission(object):
         # convert to actual flight level
         co_fl = co_sl * ratio
 
-        # convert g/(kg fuel) to g/s
-        co_rate = co_fl * ffsl * self.n_eng
+        # convert g/(kg fuel) to g/s for all engines
+        co_rate = co_fl * self.n_eng * ffac
         return co_rate
 
     @ndarrayconvert
@@ -175,6 +175,6 @@ class Emission(object):
         # convert to actual flight level
         hc_fl = hc_sl * ratio
 
-        # convert g/(kg fuel) to g/s
-        hc_rate = hc_fl * ffsl * self.n_eng
+        # convert g/(kg fuel) to g/s for all engines
+        hc_rate = hc_fl * self.n_eng * ffac
         return hc_rate
