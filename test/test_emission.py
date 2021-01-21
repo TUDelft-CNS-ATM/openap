@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from openap.emission import Emission, FuelFlow, prop
+from openap import Emission, FuelFlow, prop
 from mpl_toolkits.mplot3d import Axes3D
 
 ac = "A320"
