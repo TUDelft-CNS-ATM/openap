@@ -163,7 +163,7 @@ class Generator(object):
         h_const_mach = aero.crossover_alt(vcas_const, mach_const)
         if h_const_mach > h_cr:
             print(
-                "Warining: const mach crossover altitude higher than cruise altitude, altitude clipped."
+                "Warning: const mach crossover altitude higher than cruise altitude, altitude clipped."
             )
 
         data = []
@@ -318,7 +318,7 @@ class Generator(object):
         h_const_mach = aero.crossover_alt(vcas_const, mach_const)
         if h_const_mach > h_cr:
             print(
-                "Warining: const mach crossover altitude higher than cruise altitude, altitude clipped."
+                "Warning: const mach crossover altitude higher than cruise altitude, altitude clipped."
             )
 
         data = []
