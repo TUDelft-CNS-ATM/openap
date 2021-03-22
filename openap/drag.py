@@ -63,7 +63,7 @@ class Drag(object):
             elif self.ac.startswith("b74"):
                 ac = "b744"
             elif self.ac.startswith("b77"):
-                ac = "b777"
+                ac = "b77w"
             else:
                 raise RuntimeError("%s drag polar not avaiable." % self.ac.upper())
 
