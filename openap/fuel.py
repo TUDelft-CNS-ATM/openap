@@ -115,7 +115,7 @@ class FuelFlow(object):
         fuelflow = self.at_thrust(T, alt)
 
         # do not return value outside performance boundary, with a margin of 20%
-        T_max = self.thrust.climb(tas=tas, alt=alt, roc=0)
+        T_max = self.thrust.climb(tas=0, alt=alt, roc=0)
         fuelflow = np.where(T > 1.20 * T_max, np.nan, fuelflow)
 
         return fuelflow
