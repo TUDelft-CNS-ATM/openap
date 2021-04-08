@@ -2,7 +2,9 @@
 
 This repository contains all OpenAP databases and a Python toolkit that facilitates data access and performance computation.
 
-[OpenAP](https://github.com/junzis/openap) is a project actively maintained by Junzi Sun from [CNS/ATM research group](http://cs.lr.tudelft.nl/atm/) at [TU Delft](https://www.tudelft.nl/en/). It is the continuation of his [PhD thesis work](https://doi.org/10.4233/uuid:af94d535-1853-4a6c-8b3f-77c98a52346a) (2015 - 2019). You can read more about OpenAP in [this article](https://www.mdpi.com/2226-4310/7/8/104).
+[OpenAP](https://github.com/junzis/openap) is a project actively maintained by [Junzi Sun](https://junzis.com/) from TU Delft. 
+
+It is the continuation of his [PhD thesis work (between 2015 and 2019)](https://doi.org/10.4233/uuid:af94d535-1853-4a6c-8b3f-77c98a52346a). You can read more about OpenAP in [this article](https://www.mdpi.com/2226-4310/7/8/104).
 
 Use the [discussion board](https://github.com/junzis/openap/discussions) to give your feedback/suggestions, and use [issue board](https://github.com/junzis/openap/issues) to report bugs.
 
