@@ -80,8 +80,8 @@ class Generator(object):
 
         Args:
             **dt (int): Time step in seconds.
-            **cas_const_cl (int): Constaant CAS for climb (kt).
-            **mach_const_cl (float): Constaant Mach for climb (-).
+            **cas_const_cl (int): Constant CAS for climb (kt).
+            **mach_const_cl (float): Constant Mach for climb (-).
             **alt_cr (int): Target cruise altitude (ft).
             **random (bool): Generate trajectory with random paramerters.
 
@@ -163,7 +163,7 @@ class Generator(object):
         h_const_mach = aero.crossover_alt(vcas_const, mach_const)
         if h_const_mach > h_cr:
             print(
-                "Warining: const mach crossover altitude higher than cruise altitude, altitude clipped."
+                "Warning: const mach crossover altitude higher than cruise altitude, altitude clipped."
             )
 
         data = []
@@ -238,8 +238,8 @@ class Generator(object):
 
         Args:
             **dt (int): Time step in seconds.
-            **cas_const_de (int): Constaant CAS for climb (kt).
-            **mach_const_de (float): Constaant Mach for climb (-).
+            **cas_const_de (int): Constant CAS for climb (kt).
+            **mach_const_de (float): Constant Mach for climb (-).
             **alt_cr (int): Target cruise altitude (ft).
             **random (bool): Generate trajectory with random paramerters.
 
@@ -318,7 +318,7 @@ class Generator(object):
         h_const_mach = aero.crossover_alt(vcas_const, mach_const)
         if h_const_mach > h_cr:
             print(
-                "Warining: const mach crossover altitude higher than cruise altitude, altitude clipped."
+                "Warning: const mach crossover altitude higher than cruise altitude, altitude clipped."
             )
 
         data = []
@@ -474,10 +474,10 @@ class Generator(object):
 
         Args:
             **dt (int): Time step in seconds.
-            **cas_const_cl (int): Constaant CAS for climb (kt).
-            **mach_const_cl (float): Constaant Mach for climb (-).
-            **cas_const_de (int): Constaant CAS for climb (kt).
-            **mach_const_de (float): Constaant Mach for climb (-).
+            **cas_const_cl (int): Constant CAS for climb (kt).
+            **mach_const_cl (float): Constant Mach for climb (-).
+            **cas_const_de (int): Constant CAS for climb (kt).
+            **mach_const_de (float): Constant Mach for climb (-).
             **range_cr (int): Cruise range (km).
             **alt_cr (int): Target cruise altitude (ft).
             **mach_cr (float): Cruise Mach number (-).
