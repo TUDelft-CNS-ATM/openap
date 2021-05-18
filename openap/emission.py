@@ -1,8 +1,7 @@
 """OpenAP FuelFlow model."""
 
-import numpy as np
-from openap.extra import aero
-from openap import prop, FuelFlow
+import importlib
+from openap import prop
 from openap.extra import ndarrayconvert
 
 
@@ -10,7 +9,7 @@ class Emission(object):
     """Emission model based on ICAO emmision databank."""
 
     def __init__(self, ac, eng=None):
-        """Initialize FuelFlow object.
+        """Initialize Emission object.
 
         Args:
             ac (string): ICAO aircraft type (for example: A320).
@@ -19,6 +18,12 @@ class Emission(object):
                 by in the aircraft database.
 
         """
+        if not hasattr(self, "np"):
+            self.np = importlib.import_module("numpy")
+
+        if not hasattr(self, "aero"):
+            self.aero = importlib.import_module("openap").aero
+
         self.ac = prop.aircraft(ac)
         self.n_eng = self.ac["engine"]["number"]
 
@@ -28,10 +33,10 @@ class Emission(object):
         self.engine = prop.engine(eng)
 
     def _sl2fl(self, tas, alt):
-        M = aero.tas2mach(tas * aero.kts, alt * aero.ft)
-        beta = np.exp(0.2 * (M ** 2))
-        theta = (aero.temperature(alt * aero.ft) / 288.15) / beta
-        delta = (1 - 0.0019812 * alt / 288.15) ** 5.255876 / np.power(beta, 3.5)
+        M = self.aero.tas2mach(tas * self.aero.kts, alt * self.aero.ft)
+        beta = self.np.exp(0.2 * (M ** 2))
+        theta = (self.aero.temperature(alt * self.aero.ft) / 288.15) / beta
+        delta = (1 - 0.0019812 * alt / 288.15) ** 5.255876 / self.np.power(beta, 3.5)
         ratio = (theta ** 3.3) / (delta ** 1.02)
         return beta, theta, delta, ratio
 
@@ -81,8 +86,8 @@ class Emission(object):
         nox_sl = self.engine["nox_c"] * (ffsl ** self.engine["nox_p"])
 
         # convert to actual flight level
-        omega = 10 ** (-3) * np.exp(-0.0001426 * (alt - 12900))
-        nox_fl = nox_sl * np.sqrt(1 / ratio) * np.exp(-19 * (omega - 0.00634))
+        omega = 10 ** (-3) * self.np.exp(-0.0001426 * (alt - 12900))
+        nox_fl = nox_sl * self.np.sqrt(1 / ratio) * self.np.exp(-19 * (omega - 0.00634))
 
         # convert g/(kg fuel) to g/s for all engines
         nox_rate = nox_fl * ffac
@@ -110,15 +115,15 @@ class Emission(object):
         co_min = self.engine["co_min"]
         co_max = self.engine["co_max"]
 
-        ffsl = np.maximum(ffsl, 0.001)
+        ffsl = self.np.maximum(ffsl, 0.001)
         co_sl = (
             co_beta
             * (ffsl - 0.001) ** (-co_gamma)
-            * np.exp(-2 * (ffsl - 0.001) ** co_beta)
+            * self.np.exp(-2 * (ffsl - 0.001) ** co_beta)
         )
 
-        co_sl = np.where(co_sl < co_min, co_min, co_sl)
-        co_sl = np.where(co_sl > co_max, co_max, co_sl)
+        co_sl = self.np.where(co_sl < co_min, co_min, co_sl)
+        co_sl = self.np.where(co_sl > co_max, co_max, co_sl)
 
         # convert to actual flight level
         co_fl = co_sl * ratio
@@ -158,19 +163,19 @@ class Emission(object):
             return None
 
         if hc_beta is not None:
-            ffsl = np.maximum(ffsl, 0.001)
+            ffsl = self.np.maximum(ffsl, 0.001)
             hc_sl = (
                 hc_beta
                 * (ffsl + 0.05) ** (-hc_gamma)
-                * np.exp(-4 * (ffsl - 0.001) ** hc_beta)
+                * self.np.exp(-4 * (ffsl - 0.001) ** hc_beta)
             )
         else:
-            hc_sl = 10 ** (a1 * np.log10(ffsl) + b1)
+            hc_sl = 10 ** (a1 * self.np.log10(ffsl) + b1)
             if ff85 > 0:
-                hc_sl = np.where(ffsl > ff85, 10 ** b2, hc_sl)
+                hc_sl = self.np.where(ffsl > ff85, 10 ** b2, hc_sl)
 
-        hc_sl = np.where(hc_sl > hc_max, hc_max, hc_sl)
-        hc_sl = np.where(hc_sl < hc_min, hc_min, hc_sl)
+        hc_sl = self.np.where(hc_sl > hc_max, hc_max, hc_sl)
+        hc_sl = self.np.where(hc_sl < hc_min, hc_min, hc_sl)
 
         # convert to actual flight level
         hc_fl = hc_sl * ratio

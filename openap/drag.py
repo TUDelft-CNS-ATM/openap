@@ -1,13 +1,13 @@
 """OpenAP drag model."""
 
 import os
+import importlib
 import glob
 import yaml
 import warnings
-import numpy as np
-from openap import prop
-from openap.extra import aero
-from openap.extra import ndarrayconvert
+from . import prop
+from .extra import ndarrayconvert
+
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_dragpolar = curr_path + "/data/dragpolar/"
@@ -23,7 +23,11 @@ class Drag(object):
             ac (string): ICAO aircraft type (for example: A320).
 
         """
-        super(Drag, self).__init__()
+        if not hasattr(self, "np"):
+            self.np = importlib.import_module("numpy")
+
+        if not hasattr(self, "aero"):
+            self.aero = importlib.import_module("openap").aero
 
         self.ac = ac.lower()
         self.aircraft = prop.aircraft(ac)
@@ -75,21 +79,21 @@ class Drag(object):
 
     @ndarrayconvert
     def _calc_drag(self, mass, tas, alt, cd0, k, path_angle):
-        v = tas * aero.kts
-        h = alt * aero.ft
-        gamma = np.radians(path_angle)
+        v = tas * self.aero.kts
+        h = alt * self.aero.ft
+        gamma = path_angle * self.np.pi / 180
 
         S = self.aircraft["wing"]["area"]
 
-        rho = aero.density(h)
+        rho = self.aero.density(h)
         qS = 0.5 * rho * v ** 2 * S
-        L = mass * aero.g0 * np.cos(gamma)
-        qS = np.where(qS < 1e-3, 1e-3, qS)
+        L = mass * self.aero.g0 * self.np.cos(gamma)
+        qS = self.np.where(qS < 1e-3, 1e-3, qS)
         cl = L / qS
         cd = cd0 + k * cl ** 2
         D = cd * qS
 
-        D = D.astype(int)
+        # D = D.astype(int)
 
         return D
 
@@ -113,9 +117,9 @@ class Drag(object):
 
         if self.wave_drag:
             mach_crit = self.polar["mach_crit"]
-            mach = aero.tas2mach(tas * aero.kts, alt * aero.ft)
+            mach = self.aero.tas2mach(tas * self.aero.kts, alt * self.aero.ft)
 
-            dCdw = np.where(mach > mach_crit, 20 * (mach - mach_crit) ** 4, 0)
+            dCdw = self.np.where(mach > mach_crit, 20 * (mach - mach_crit) ** 4, 0)
         else:
             dCdw = 0
 
@@ -149,7 +153,10 @@ class Drag(object):
         SfS = self.polar["flaps"]["Sf/S"]
 
         delta_cd_flap = (
-            lambda_f * (cfc) ** 1.38 * (SfS) * np.sin(np.radians(flap_angle)) ** 2
+            lambda_f
+            * (cfc) ** 1.38
+            * (SfS)
+            * self.np.sin(flap_angle * self.np.pi / 180) ** 2
         )
 
         if landing_gear:
@@ -172,7 +179,7 @@ class Drag(object):
             delta_e_flap = 0.0026 * flap_angle
 
         ar = self.aircraft["wing"]["span"] ** 2 / self.aircraft["wing"]["area"]
-        k_total = 1 / (1 / k + np.pi * ar * delta_e_flap)
+        k_total = 1 / (1 / k + self.np.pi * ar * delta_e_flap)
 
         D = self._calc_drag(mass, tas, alt, cd0_total, k_total, path_angle)
         return D

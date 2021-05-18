@@ -5,7 +5,6 @@ import glob
 import yaml
 import numpy as np
 import pandas as pd
-from openap import aero
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_aircraft = curr_path + "/data/aircraft/"
@@ -126,7 +125,7 @@ def engine(eng):
             sfc_to = (seleng["fuel_c3"] + seleng["fuel_c2"] + seleng["fuel_c1"]) / (
                 seleng["max_thrust"] / 1000
             )
-            fuel_ch = np.round((sfc_cr - sfc_to) / (seleng["cruise_alt"] * aero.ft), 8)
+            fuel_ch = np.round((sfc_cr - sfc_to) / (seleng["cruise_alt"] * 0.3048), 8)
         else:
             fuel_ch = 6.7e-7
 

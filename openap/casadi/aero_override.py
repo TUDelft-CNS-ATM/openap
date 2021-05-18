@@ -1,28 +1,8 @@
-"""Aero library inspired by @ProfHoekstra/bluesky.
+"""aero.py adapted for CasADi"""
 
-Functions for aeronautics in this module
-    - physical quantities always in SI units
-    - lat,lon,course and heading in degrees
+from casadi import casadi
+from . import numpy_override as np
 
-International Standard Atmosphere
-    p,rho,T = atmos(h)    # atmos as function of geopotential altitude h [m]
-    a = vsound(h)         # speed of sound [m/s] as function of h[m]
-    p = pressure(h)       # calls atmos but retruns only pressure [Pa]
-    T = temperature(h)    # calculates temperature [K]
-    rho = density(h)      # calls atmos but returns only density [kg/m3]
-
-Speed conversion at altitude h[m] in ISA:
-    mach = tas2mach(v_tas,h)    # true airspeed (v_tas) to mach number conversion
-    v_tas = mach2tas(mach,h)    # true airspeed (v_tas) to mach number conversion
-    v_tas = eas2tas(v_eas,h)    # equivalent airspeed to true airspeed, h in [m]
-    v_eas = tas2eas(v_tas,h)    # true airspeed to equivent airspeed, h in [m]
-    v_tas = cas2tas(v_cas,h)    # v_cas  to v_tas conversion both m/s, h in [m]
-    v_cas = tas2cas(v_tas,h)    # v_tas to v_cas conversion both m/s, h in [m]
-    v_cas = mach2cas(mach,h)    # mach to v_cas conversion v_cas in m/s, h in [m]
-    mach   = cas2mach(v_cas,h)  # v_cas to mach copnversion v_cas in m/s, h in [m]
-"""
-
-import numpy as np
 
 """Aero and Geo Constants """
 kts = 0.514444  # knot -> m/s
@@ -49,10 +29,10 @@ def atmos(h):
     """Compute press, density and temperature at a given altitude.
 
     Args:
-        h (float or ndarray): Altitude (in meters).
+        h (SX or MX): Altitude (in meters).
 
     Returns:
-        (float, float, float) or (ndarray, ndarray, ndarray):
+        (SX, SX, SX) or (MX, MX, MX):
             Air pressure (Pa), density (kg/m3), and temperature (K).
 
     """
@@ -68,10 +48,10 @@ def temperature(h):
     """Compute air temperature at a given altitude.
 
     Args:
-        h (float or ndarray): Altitude (in meters).
+        h (SX or MX): Altitude (in meters).
 
     Returns:
-        float or ndarray: Air temperature (K).
+        SX or MX: Air temperature (K).
 
     """
     p, r, T = atmos(h)
@@ -82,10 +62,10 @@ def pressure(h):
     """Compute air pressure at a given altitude.
 
     Args:
-        h (float or ndarray): Altitude (in meters).
+        h (SX or MX): Altitude (in meters).
 
     Returns:
-        float or ndarray: Air pressure (Pa).
+        SX or MX: Air pressure (Pa).
 
     """
     p, r, T = atmos(h)
@@ -96,10 +76,10 @@ def density(h):
     """Compute air density at a given altitude.
 
     Args:
-        h (float or ndarray): Altitude (in meters).
+        h (SX or MX): Altitude (in meters).
 
     Returns:
-        float or ndarray: Air density (kg/m3).
+        SX or MX: Air density (kg/m3).
 
     """
     p, r, T = atmos(h)
@@ -110,10 +90,10 @@ def vsound(h):
     """Compute speed of sound at a given altitude.
 
     Args:
-        h (float or ndarray): Altitude (in meters).
+        h (SX or MX): Altitude (in meters).
 
     Returns:
-        float or ndarray: speed of sound (m/s).
+        SX or MX: speed of sound (m/s).
 
     """
     T = temperature(h)
@@ -125,14 +105,14 @@ def distance(lat1, lon1, lat2, lon2, h=0):
     """Compute distance between two (or two series) of coordinates using Harversine formula.
 
     Args:
-        lat1 (float or ndarray): Starting latitude (in degrees).
-        lon1 (float or ndarray): Starting longitude (in degrees).
-        lat2 (float or ndarray): Ending latitude (in degrees).
-        lon2 (float or ndarray): Ending longitude (in degrees).
-        h (float or ndarray): Altitude (in meters). Defaults to 0.
+        lat1 (SX or MX): Starting latitude (in degrees).
+        lon1 (SX or MX): Starting longitude (in degrees).
+        lat2 (SX or MX): Ending latitude (in degrees).
+        lon2 (SX or MX): Ending longitude (in degrees).
+        h (SX or MX): Altitude (in meters). Defaults to 0.
 
     Returns:
-        float or ndarray: Distance (in meters).
+        SX or MX: Distance (in meters).
 
     """
     # convert decimal degrees to radians
@@ -154,13 +134,13 @@ def bearing(lat1, lon1, lat2, lon2):
     """Compute the bearing between two (or two series) of coordinates.
 
     Args:
-        lat1 (float or ndarray): Starting latitude (in degrees).
-        lon1 (float or ndarray): Starting longitude (in degrees).
-        lat2 (float or ndarray): Ending latitude (in degrees).
-        lon2 (float or ndarray): Ending longitude (in degrees).
+        lat1 (SX or MX): Starting latitude (in degrees).
+        lon1 (SX or MX): Starting longitude (in degrees).
+        lat2 (SX or MX): Ending latitude (in degrees).
+        lon2 (SX or MX): Ending longitude (in degrees).
 
     Returns:
-        float or ndarray: Bearing (in degrees). Between 0 and 360.
+        SX or MX: Bearing (in degrees). Between 0 and 360.
 
     """
     lat1 = np.radians(lat1)
@@ -178,10 +158,10 @@ def bearing(lat1, lon1, lat2, lon2):
 def h_isa(p):
     """Compute ISA altitude for a given pressure.
     Args:
-        p (float or ndarray): Pressure (in Pa).
+        p (SX or MX): Pressure (in Pa).
 
     Returns:
-        float or ndarray: altitude (m).
+        SX or MX: altitude (m).
     """
     # p >= 22630:
     T = T0 * (p0 / p) ** ((-0.0065 * R) / g0)
@@ -192,7 +172,7 @@ def h_isa(p):
     p1 = 22630
     h1 = -R * T1 / g0 * np.log(p / p1) + 11000
 
-    h_ = np.where(p > 22630, h, h1)
+    h_ = casadi.if_else(p > 22630, h, h1)
 
     return h_
 
@@ -201,11 +181,11 @@ def tas2mach(v_tas, h):
     """Convert true airspeed to mach number at a given altitude.
 
     Args:
-        v_tas (float or ndarray): True airspeed (m/s).
-        h (float or ndarray): Altitude (m).
+        v_tas (SX or MX): True airspeed (m/s).
+        h (SX or MX): Altitude (m).
 
     Returns:
-        float or ndarray: mach number.
+        SX or MX: mach number.
 
     """
     a = vsound(h)
@@ -217,11 +197,11 @@ def mach2tas(mach, h):
     """Convert mach number to true airspeed at a given altitude.
 
     Args:
-        mach (float or ndarray): Mach number.
-        h (float or ndarray): Altitude (m).
+        mach (SX or MX): Mach number.
+        h (SX or MX): Altitude (m).
 
     Returns:
-        float or ndarray: True airspeed (m/s).
+        SX or MX: True airspeed (m/s).
 
     """
     a = vsound(h)
@@ -233,11 +213,11 @@ def eas2tas(v_eas, h):
     """Convert equivalent airspeed to true airspeed at a given altitude.
 
     Args:
-        v_eas (float or ndarray): Equivalent airspeed (m/s).
-        h (float or ndarray): Altitude (m).
+        v_eas (SX or MX): Equivalent airspeed (m/s).
+        h (SX or MX): Altitude (m).
 
     Returns:
-        float or ndarray: True airspeed (m/s).
+        SX or MX: True airspeed (m/s).
 
     """
     rho = density(h)
@@ -249,11 +229,11 @@ def tas2eas(v_tas, h):
     """Convert true airspeed to equivalent airspeed at a given altitude.
 
     Args:
-        v_tas (float or ndarray): True airspeed (m/s).
-        h (float or ndarray): Altitude (m).
+        v_tas (SX or MX): True airspeed (m/s).
+        h (SX or MX): Altitude (m).
 
     Returns:
-        float or ndarray: Equivalent airspeed (m/s).
+        SX or MX: Equivalent airspeed (m/s).
 
     """
     rho = density(h)
@@ -265,11 +245,11 @@ def cas2tas(v_cas, h):
     """Convert calibrated airspeed to true airspeed at a given altitude.
 
     Args:
-        v_cas (float or ndarray): Equivalent airspeed (m/s).
-        h (float or ndarray): Altitude (m).
+        v_cas (SX or MX): Equivalent airspeed (m/s).
+        h (SX or MX): Altitude (m).
 
     Returns:
-        float or ndarray: True airspeed (m/s).
+        SX or MX: True airspeed (m/s).
 
     """
     p, rho, T = atmos(h)
@@ -282,11 +262,11 @@ def tas2cas(v_tas, h):
     """Convert true airspeed to calibrated airspeed at a given altitude.
 
     Args:
-        v_tas (float or ndarray): True airspeed (m/s).
-        h (float or ndarray): Altitude (m).
+        v_tas (SX or MX): True airspeed (m/s).
+        h (SX or MX): Altitude (m).
 
     Returns:
-        float or ndarray: Calibrated airspeed (m/s).
+        SX or MX: Calibrated airspeed (m/s).
 
     """
     p, rho, T = atmos(h)
@@ -299,11 +279,11 @@ def mach2cas(mach, h):
     """Convert mach number to calibrated airspeed at a given altitude.
 
     Args:
-        mach (float or ndarray): Mach number.
-        h (float or ndarray): Altitude (m).
+        mach (SX or MX): Mach number.
+        h (SX or MX): Altitude (m).
 
     Returns:
-        float or ndarray: Calibrated airspeed (m/s).
+        SX or MX: Calibrated airspeed (m/s).
 
     """
     v_tas = mach2tas(mach, h)
@@ -315,11 +295,11 @@ def cas2mach(v_cas, h):
     """Convert calibrated airspeed to mach number  at a given altitude.
 
     Args:
-        v_cas (float or ndarray): Calibrated airspeed (m/s).
-        h (float or ndarray): Altitude (m).
+        v_cas (SX or MX): Calibrated airspeed (m/s).
+        h (SX or MX): Altitude (m).
 
     Returns:
-        float or ndarray: Mach number.
+        SX or MX: Mach number.
 
     """
     v_tas = cas2tas(v_cas, h)
@@ -331,11 +311,11 @@ def crossover_alt(v_cas, mach):
     """Convert the crossover altitude given constant CAS and Mach.
 
     Args:
-        v_cas (float or ndarray): Calibrated airspeed (m/s).
-        mach (float or ndarray): Mach number.
+        v_cas (SX or MX): Calibrated airspeed (m/s).
+        mach (SX or MX): Mach number.
 
     Returns:
-        float or ndarray: Altitude (m).
+        SX or MX: Altitude (m).
 
     """
     mach = 1e-4 if mach < 1e-4 else mach

@@ -48,7 +48,7 @@ if __name__ == "__main__":
     plt.suptitle("Cruise trajectories")
     for i in range(5):
         data = trajgen.cruise(dt=60, random=True)
-        ax[0][0].plot(data["t"], data["h"] / aero.ft, label="%d" % data["h_cr"])
+        ax[0][0].plot(data["t"], data["h"] / aero.ft, label="%d" % data["alt_cr"])
         ax[0][0].set_ylabel("Altitude (ft)")
         ax[0][1].plot(data["t"], data["s"] / 1000)
         ax[0][1].set_ylabel("Distanse (km)")

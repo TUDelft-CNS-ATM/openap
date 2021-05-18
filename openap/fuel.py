@@ -1,8 +1,7 @@
 """OpenAP FuelFlow model."""
 
-import numpy as np
-from openap.extra import aero
-from openap import prop, Thrust, Drag
+import importlib
+from openap import prop
 from openap.extra import ndarrayconvert
 
 
@@ -19,6 +18,15 @@ class FuelFlow(object):
                 by in the aircraft database.
 
         """
+        if not hasattr(self, "np"):
+            self.np = importlib.import_module("numpy")
+
+        if not hasattr(self, "Thrust"):
+            self.Thrust = importlib.import_module("openap.thrust").Thrust
+
+        if not hasattr(self, "Drag"):
+            self.Drag = importlib.import_module("openap.drag").Drag
+
         self.aircraft = prop.aircraft(ac)
 
         if eng is None:
@@ -26,8 +34,8 @@ class FuelFlow(object):
 
         self.engine = prop.engine(eng)
 
-        self.thrust = Thrust(ac, eng)
-        self.drag = Drag(ac)
+        self.thrust = self.Thrust(ac, eng)
+        self.drag = self.Drag(ac)
 
         c3, c2, c1 = (
             self.engine["fuel_c3"],
@@ -56,7 +64,7 @@ class FuelFlow(object):
         ratio = engthr / self.engine["max_thrust"]
 
         ff_sl = self.fuel_flow_model(ratio)
-        ff_corr_alt = self.engine["fuel_ch"] * (engthr / 1000) * (alt * aero.ft)
+        ff_corr_alt = self.engine["fuel_ch"] * (engthr / 1000) * (alt * 0.3048)
         ff_eng = ff_sl + ff_corr_alt
 
         fuelflow = ff_eng * n_eng
@@ -106,17 +114,17 @@ class FuelFlow(object):
         D = self.drag.clean(mass=mass, tas=tas, alt=alt, path_angle=path_angle)
 
         # Convert angles from degrees to radians.
-        gamma = np.radians(path_angle)
+        gamma = self.np.radians(path_angle)
 
-        T = D + mass * aero.g0 * np.sin(gamma)
+        T = D + mass * 9.80665 * self.np.sin(gamma)
         T_idle = self.thrust.descent_idle(tas=tas, alt=alt)
-        T = np.where(T < 0, T_idle, T)
+        T = self.np.where(T < 0, T_idle, T)
 
         fuelflow = self.at_thrust(T, alt)
 
         # do not return value outside performance boundary, with a margin of 20%
         T_max = self.thrust.climb(tas=0, alt=alt, roc=0)
-        fuelflow = np.where(T > 1.20 * T_max, np.nan, fuelflow)
+        fuelflow = self.np.where(T > 1.20 * T_max, self.np.nan, fuelflow)
 
         return fuelflow
 
@@ -132,7 +140,7 @@ class FuelFlow(object):
         """
         import matplotlib.pyplot as plt
 
-        xx = np.linspace(0, 1, 50)
+        xx = self.np.linspace(0, 1, 50)
         yy = self.fuel_flow_model(xx)
         # plt.scatter(self.x, self.y, color='k')
         plt.plot(xx, yy, "--", color="gray")
