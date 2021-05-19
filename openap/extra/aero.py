@@ -177,11 +177,13 @@ def bearing(lat1, lon1, lat2, lon2):
 
 def h_isa(p):
     """Compute ISA altitude for a given pressure.
+
     Args:
         p (float or ndarray): Pressure (in Pa).
 
     Returns:
         float or ndarray: altitude (m).
+
     """
     # p >= 22630:
     T = T0 * (p0 / p) ** ((-0.0065 * R) / g0)
@@ -195,6 +197,40 @@ def h_isa(p):
     h_ = np.where(p > 22630, h, h1)
 
     return h_
+
+
+def latlon(lat1, lon1, d, brg, h=0):
+    """Get lat/lon given current point, distance and bearing.
+
+    Args:
+        lat1 (float or ndarray): Starting latitude (in degrees).
+        lon1 (float or ndarray): Starting longitude (in degrees).
+        d (float or ndarray): distance from point 1 (meters)
+        brg (float or ndarray): bearing at point 1 (in degrees)
+        h (float or ndarray): Altitude (in meters). Defaults to 0.
+
+    Returns:
+        lat2: Point latitude.
+        lon2: Point longitude
+
+    """
+    # convert decimal degrees to radians
+    lat1 = np.radians(lat1)
+    lon1 = np.radians(lon1)
+    brg = np.radians(brg)
+
+    # haversine formula
+    lat2 = np.arcsin(
+        np.sin(lat1) * np.cos(d / (r_earth + h))
+        + np.cos(lat1) * np.sin(d / (r_earth + h)) * np.cos(brg)
+    )
+    lon2 = lon1 + np.arctan2(
+        np.sin(brg) * np.sin(d / (r_earth + h)) * np.cos(lat1),
+        np.cos(d / (r_earth + h)) - np.sin(lat1) * np.sin(lat2),
+    )
+    lat2 = np.degrees(lat2)
+    lon2 = np.degrees(lon2)
+    return lat2, lon2
 
 
 def tas2mach(v_tas, h):
