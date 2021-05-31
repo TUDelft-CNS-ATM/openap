@@ -13,7 +13,7 @@ db_emission = curr_path + "/data/engine/emission.txt"
 
 
 def available_aircraft():
-    """Get avaiable aircraft types in OpenAP model.
+    """Get available aircraft types in OpenAP model.
 
     Returns:
         list of string: aircraft types.
@@ -31,7 +31,7 @@ def aircraft(ac):
         ac (string): ICAO aircraft type (for example: A320).
 
     Returns:
-        dict: Peformance parameters related to the aircraft.
+        dict: Performance parameters related to the aircraft.
 
     """
     ac = ac.lower()
