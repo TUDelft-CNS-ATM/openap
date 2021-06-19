@@ -30,8 +30,8 @@ class Emission(object):
     def _sl2fl(self, tas, alt):
         M = aero.tas2mach(tas * aero.kts, alt * aero.ft)
         beta = np.exp(0.2 * (M ** 2))
-        theta = (aero.temperature(alt * aero.ft) / 288.15) / beta
-        delta = (1 - 0.0019812 * alt / 288.15) ** 5.255876 / np.power(beta, 3.5)
+        theta = (aero.temperature(alt * aero.ft) / aero.T0) / beta
+        delta = (1 - 0.0019812 * alt / aero.T0) ** 5.255876 / np.power(beta, 3.5)
         ratio = (theta ** 3.3) / (delta ** 1.02)
         return beta, theta, delta, ratio
 
