@@ -14,7 +14,7 @@ dir_dragpolar = curr_path + "/data/dragpolar/"
 
 
 class Drag(object):
-    """Compute the drag of aicraft."""
+    """Compute the drag of aircraft."""
 
     def __init__(self, ac, wave_drag=False):
         """Initialize Drag object.
@@ -130,7 +130,7 @@ class Drag(object):
 
     @ndarrayconvert
     def nonclean(self, mass, tas, alt, flap_angle, path_angle=0, landing_gear=False):
-        """Compute drag at at non-clean configuratio.
+        """Compute drag at at non-clean configuration.
 
         Args:
             mass (int or ndarray): Mass of the aircraft (unit: kg).
