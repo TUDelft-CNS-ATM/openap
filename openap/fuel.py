@@ -44,7 +44,7 @@ class FuelFlow(object):
         )
         # print(c3,c2,c1)
 
-        self.fuel_flow_model = lambda x: c3 * x ** 3 + c2 * x ** 2 + c1 * x
+        self.func_fuel = prop.func_fuel(c3, c2, c1)
 
     @ndarrayconvert
     def at_thrust(self, acthr, alt=0):
@@ -63,7 +63,7 @@ class FuelFlow(object):
 
         ratio = engthr / self.engine["max_thrust"]
 
-        ff_sl = self.fuel_flow_model(ratio)
+        ff_sl = self.func_fuel(ratio)
         ff_corr_alt = self.engine["fuel_ch"] * (engthr / 1000) * (alt * 0.3048)
         ff_eng = ff_sl + ff_corr_alt
 
@@ -141,7 +141,7 @@ class FuelFlow(object):
         import matplotlib.pyplot as plt
 
         xx = self.np.linspace(0, 1, 50)
-        yy = self.fuel_flow_model(xx)
+        yy = self.func_fuel(xx)
         # plt.scatter(self.x, self.y, color='k')
         plt.plot(xx, yy, "--", color="gray")
         if plot:

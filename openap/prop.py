@@ -8,8 +8,7 @@ import pandas as pd
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_aircraft = curr_path + "/data/aircraft/"
-db_engine = curr_path + "/data/engine/engines.txt"
-db_emission = curr_path + "/data/engine/emission.txt"
+file_engine = curr_path + "/data/engine/engines.csv"
 
 
 def available_aircraft():
@@ -78,7 +77,7 @@ def search_engine(eng):
 
     """
     ENG = eng.strip().upper()
-    engines = pd.read_fwf(db_engine)
+    engines = pd.read_csv(file_engine)
 
     available_engines = engines.query("name.str.startswith(@ENG)", engine="python")
 
@@ -104,10 +103,7 @@ def engine(eng):
 
     """
     ENG = eng.strip().upper()
-    engines = pd.read_fwf(db_engine)
-    emissions = pd.read_fwf(db_emission)
-
-    engines = engines.merge(emissions, how="left", left_on="name", right_on="engine")
+    engines = pd.read_csv(file_engine)
 
     # try to look for the unique engine
     available_engines = engines.query(
@@ -134,3 +130,7 @@ def engine(eng):
         raise RuntimeError(f"Data for engine {eng} not found.")
 
     return seleng
+
+
+def func_fuel(c3, c2, c1):
+    return lambda x: c3 * x ** 3 + c2 * x ** 2 + c1 * x
