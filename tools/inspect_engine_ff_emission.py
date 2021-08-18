@@ -9,8 +9,12 @@ for ac in acs:
     engs = prop.aircraft_engine_options(ac)
     for eng in engs:
 
-        e = prop.engine(eng)
-        print(e)
+        try:
+            e = prop.engine(eng)
+            print(e)
+        except:
+            print(f"{eng} from {ac} cannot be found.")
+            continue
 
         c3, c2, c1 = (
             e["fuel_c3"],

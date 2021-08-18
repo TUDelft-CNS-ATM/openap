@@ -27,7 +27,7 @@ def clean_bpr(bpr):
     return bpr
 
 
-f = "input/edb-emissions-databank v25a (web).xlsx"
+f = "input/edb-emissions-databank v27 (web).xlsx"
 
 xl = pd.ExcelFile(f)
 
