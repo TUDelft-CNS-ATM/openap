@@ -5,4 +5,4 @@ from casadi import *  # this override the previous
 where = casadi.if_else
 maximum = casadi.fmax
 minimum = casadi.fmin
-interp = lambda x, y: casadi.interpolant("LUT", "linear", [x], y)
+interp = lambda x, xp, yp: casadi.interpolant("LUT", "linear", [xp], yp)(x)
