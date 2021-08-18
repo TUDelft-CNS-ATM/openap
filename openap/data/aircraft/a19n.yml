@@ -1,0 +1,41 @@
+aircraft: Airbus A319neo
+
+fuselage:
+  length:   33.84
+  height:   4.14
+  width:    3.95
+
+wing:
+  area:     124
+  span:     35.8
+  mac:      4.29
+  sweep:    25
+  t/c:      null
+
+flaps:
+  type:     single-slotted
+  area:     21.1
+  bf/b:     0.780
+
+limits:
+  MTOW:     75500
+  MLW:      62500
+  OEW:      42600
+  MFC:      29700
+  VMO:      350
+  MMO:      0.82
+  ceiling:  12500
+
+cruise:
+  height:   11000
+  mach:     0.78
+
+engine:
+  type: turbofan
+  mount: wing
+  number: 2
+  default: PW1124G1-JM
+  options:
+    A319-171N: PW1124G1-JM
+    A319-151N: LEAP-1A24
+    A319-153N: LEAP-1A26
