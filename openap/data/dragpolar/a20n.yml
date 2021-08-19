@@ -1,9 +1,9 @@
-aircraft: Airbus A320
+aircraft: Airbus A320neo
 
 clean:
-  cd0:         0.018
-  k:           0.039
-  e:           0.799
+  cd0:         0.017
+  k:           0.038
+  e:           0.807
 
 mach_crit:     0.632
 

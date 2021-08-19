@@ -2,8 +2,8 @@ aircraft: Boeing 757-200
 
 clean:
   cd0:         0.021
-  k:           0.050
-  e:           0.810
+  k:           0.049
+  e:           0.813
 
 mach_crit:     0.632
 

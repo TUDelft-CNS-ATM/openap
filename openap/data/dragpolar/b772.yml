@@ -1,9 +1,9 @@
-aircraft: Boeing 777-200ER
+aircraft: Boeing 777-200/200ER
 
 clean:
   cd0:         0.024
   k:           0.047
-  e:           0.781
+  e:           0.783
 
 mach_crit:     0.646
 
