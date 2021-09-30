@@ -9,9 +9,11 @@ import pandas as pd
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_aircraft = curr_path + "/data/aircraft/"
 file_engine = curr_path + "/data/engine/engines.csv"
+file_synonym = curr_path + "/data/aircraft/_synonym.csv"
 
+aircraft_synonym = pd.read_csv(file_synonym) 
 
-def available_aircraft():
+def available_aircraft(use_synonym=False):
     """Get available aircraft types in OpenAP model.
 
     Returns:
@@ -19,11 +21,16 @@ def available_aircraft():
 
     """
     files = sorted(glob.glob(dir_aircraft + "*.yml"))
-    acs = [f[-8:-4].upper() for f in files]
+    acs = [f[-8:-4] for f in files]
+
+    if use_synonym:
+        syno = aircraft_synonym.orig.to_list()
+        acs = acs + syno
+
     return acs
 
 
-def aircraft(ac):
+def aircraft(ac, use_synonym=False):
     """Get details of an aircraft type.
 
     Args:
@@ -38,7 +45,12 @@ def aircraft(ac):
     files = glob.glob(dir_aircraft + ac + ".yml")
 
     if len(files) == 0:
-        raise RuntimeError(f"Data for aircraft {ac} not found.")
+        syno = aircraft_synonym.query('orig==@ac')
+        if use_synonym and syno.shape[0] > 0:
+            new_ac = syno.new.iloc[0]
+            files = glob.glob(dir_aircraft + new_ac + ".yml")
+        else:
+            raise RuntimeError(f"Aircraft {ac} not avaiable in OpenAP.")
 
     f = files[0]
     acdict = yaml.safe_load(open(f))

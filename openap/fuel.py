@@ -8,7 +8,7 @@ from openap.extra import ndarrayconvert
 class FuelFlow(object):
     """Fuel flow model based on ICAO emission databank."""
 
-    def __init__(self, ac, eng=None):
+    def __init__(self, ac, eng=None, **kwargs):
         """Initialize FuelFlow object.
 
         Args:
@@ -27,15 +27,15 @@ class FuelFlow(object):
         if not hasattr(self, "Drag"):
             self.Drag = importlib.import_module("openap.drag").Drag
 
-        self.aircraft = prop.aircraft(ac)
+        self.aircraft = prop.aircraft(ac, **kwargs)
 
         if eng is None:
             eng = self.aircraft["engine"]["default"]
 
         self.engine = prop.engine(eng)
 
-        self.thrust = self.Thrust(ac, eng)
-        self.drag = self.Drag(ac)
+        self.thrust = self.Thrust(ac, eng, **kwargs)
+        self.drag = self.Drag(ac, **kwargs)
 
         c3, c2, c1 = (
             self.engine["fuel_c3"],

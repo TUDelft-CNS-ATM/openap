@@ -2,6 +2,7 @@
 
 import os
 import importlib
+import pandas as pd
 import glob
 import yaml
 import warnings
@@ -11,12 +12,14 @@ from .extra import ndarrayconvert
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_dragpolar = curr_path + "/data/dragpolar/"
+file_synonym = curr_path + "/data/dragpolar/_synonym.csv"
 
+polar_synonym = pd.read_csv(file_synonym) 
 
 class Drag(object):
     """Compute the drag of aircraft."""
 
-    def __init__(self, ac, wave_drag=False):
+    def __init__(self, ac, wave_drag=False, **kwargs):
         """Initialize Drag object.
 
         Args:
@@ -29,8 +32,10 @@ class Drag(object):
         if not hasattr(self, "aero"):
             self.aero = importlib.import_module("openap").aero
 
+        self.use_synonym = kwargs.get('use_synonym', False)
+
         self.ac = ac.lower()
-        self.aircraft = prop.aircraft(ac)
+        self.aircraft = prop.aircraft(ac, **kwargs)
         self.polar = self.dragpolar()
         self.wave_drag = wave_drag
 
@@ -52,26 +57,11 @@ class Drag(object):
         if self.ac in ac_polar_available:
             ac = self.ac
         else:
-            if self.ac.startswith("a32"):
-                ac = "a320"
-            elif self.ac.startswith("a33"):
-                ac = "a332"
-            elif self.ac.startswith("a34"):
-                ac = "a333"
-            elif self.ac.startswith("a35"):
-                ac = "a359"
-            elif self.ac.startswith("a38"):
-                ac = "a388"
-            elif self.ac.startswith("b73"):
-                ac = "b738"
-            elif self.ac.startswith("b74"):
-                ac = "b744"
-            elif self.ac.startswith("b77"):
-                ac = "b77w"
+            syno = polar_synonym.query('orig==@self.ac')
+            if self.use_synonym and syno.shape[0] > 0:
+                ac = syno.new.iloc[0]
             else:
-                raise RuntimeError("%s drag polar not available." % self.ac.upper())
-
-            print("warning: %s drag polar used for %s." % (ac.upper(), self.ac.upper()))
+                raise RuntimeError(f"Drag polar for {self.ac} not avaiable in OpenAP.")
 
         f = dir_dragpolar + ac + ".yml"
         dragpolar = yaml.safe_load(open(f))

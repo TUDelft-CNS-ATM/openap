@@ -8,7 +8,7 @@ from openap.extra import ndarrayconvert
 class Emission(object):
     """Emission model based on ICAO emmision databank."""
 
-    def __init__(self, ac, eng=None):
+    def __init__(self, ac, eng=None, **kwargs):
         """Initialize Emission object.
 
         Args:
@@ -24,7 +24,7 @@ class Emission(object):
         if not hasattr(self, "aero"):
             self.aero = importlib.import_module("openap").aero
 
-        self.ac = prop.aircraft(ac)
+        self.ac = prop.aircraft(ac, **kwargs)
         self.n_eng = self.ac["engine"]["number"]
 
         if eng is None:

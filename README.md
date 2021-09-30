@@ -1,17 +1,17 @@
 # Open Aircraft Performance Model (OpenAP) and Toolkit
 
-This repository contains all OpenAP databases and a Python toolkit that facilitates data access and performance computation.
+This repository contains the OpenAP databases and a Python toolkit that facilitates aircraft performance and emission computation.
 
 [OpenAP](https://github.com/junzis/openap) is a project actively maintained by [Junzi Sun](https://junzis.com/) from TU Delft. 
 
-It is the continuation of his [PhD thesis work (between 2015 and 2019)](https://doi.org/10.4233/uuid:af94d535-1853-4a6c-8b3f-77c98a52346a). You can read more about OpenAP in [this article](https://www.mdpi.com/2226-4310/7/8/104).
+It is the continuation of his [PhD thesis work (2019)](https://doi.org/10.4233/uuid:af94d535-1853-4a6c-8b3f-77c98a52346a). You can read more about OpenAP in [this article](https://www.mdpi.com/2226-4310/7/8/104).
 
 Use the [discussion board](https://github.com/junzis/openap/discussions) to give your feedback/suggestions, and use [issue board](https://github.com/junzis/openap/issues) to report bugs.
 
 
 ## Install
 
-To install latest version of OpenAP from the GitHub:
+To install the latest version of OpenAP from GitHub:
 
 ```sh
 pip install --upgrade git+https://github.com/junzis/openap
@@ -29,16 +29,17 @@ pip install --upgrade git+https://github.com/junzis/openap
 
 ## Libraries
 
-  - `prop`: aircraft and engine properties
-  - `thrust`: model to compute aircraft thrust
-  - `drag`: model to compute aircraft drag
-  - `fuel`: model to compute fuel consumption
-  - `kinematic`: a utility library to access WRAP data
-  - `aero`: common aeronautical conversions
-  - `nav`: model to access navigation information
-  - `segment`: a utility library to determine climb, cruise, descent, level flight
+  - `prop`: a package for accessing aircraft and engine properties
+  - `thrust`: a package for computing aircraft thrust
+  - `drag`: a package for computing aircraft drag
+  - `fuel`: a package for computing fuel consumption
+  - `emission`: a package for computing aircraft emissions
+  - `kinematic`: a package for accessing WRAP data
+  - `aero`: a package for common aeronautical conversions
+  - `nav`: a package for accessing navigation information
+  - `segment`: a package for determining climb, cruise, descent, level flight
   - `phase`: a wrapper around `segment`, providing identification of all flight phases
-  - `traj`: package contains a set of tools related with trajectory generation
+  - `traj`: package contains a set of tools for trajectory generation
 
 
 ## Examples
@@ -100,13 +101,13 @@ emission = Emission(ac='A320', eng='CFM56-5B4')
 TAS = 350
 ALT = 30000
 
-fuelflow = fuelflow.enroute(mass=60000, tas=TAS, alt=ALT)   # kg/s
+FF = fuelflow.enroute(mass=60000, tas=TAS, alt=ALT)   # kg/s
 
-CO2 = emission.co2(fuelflow)                    # g/s
-H2O = emission.h2o(fuelflow)                    # g/s
-NOx = emission.nox(fuelflow, tas=TAS, alt=ALT)  # g/s
-CO = emission.co(fuelflow, tas=TAS, alt=ALT)    # g/s
-HC = emission.hc(fuelflow, tas=TAS, alt=ALT)    # g/s
+CO2 = emission.co2(FF)                    # g/s
+H2O = emission.h2o(FF)                    # g/s
+NOx = emission.nox(FF, tas=TAS, alt=ALT)  # g/s
+CO = emission.co(FF, tas=TAS, alt=ALT)    # g/s
+HC = emission.hc(FF, tas=TAS, alt=ALT)    # g/s
 ```
 
 
