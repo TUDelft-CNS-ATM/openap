@@ -4,7 +4,10 @@ This repository contains the OpenAP model data and Python packages for aircraft 
 
 More information on user guide and related articles at: [OpenAP.dev](https://openap.dev/)
 
-Use the [junzis/openap/discussions](https://github.com/junzis/openap/discussions) to provide your feedback/suggestions, and use [junzis/openap/issues](https://github.com/junzis/openap/issues) to report bugs.
+The most recent development fork of OpenAP is: https://github.com/junzis/openap. For discussions and issues, you can use the following links:
+
+ - https://github.com/junzis/openap/discussions (discussions, feedback and suggestions)
+ - https://github.com/junzis/openap/issues (bug reporting)
 
 
 ## Install
