@@ -188,8 +188,8 @@ class Thrust(object):
     def descent_idle(self, tas, alt):
         """Idle thrust during the descent.
 
-        Note: The idle thrust at the descent is taken as 15% of the maximum
-        thrust at the climbing. This may (likely) differ from actual idle thrust.
+        Note: The idle thrust at the descent is taken as 7% of the maximum
+        avaiable thrust. This may (likely) differ from actual idle thrust.
 
         Args:
             tas (float or ndarray): True airspeed (kt).
@@ -199,5 +199,5 @@ class Thrust(object):
             float or ndarray: Total thrust (unit: N).
 
         """
-        F = 0.15 * self.climb(tas, alt, roc=0)
+        F = 0.07 * self.climb(tas, alt, roc=0)
         return F
