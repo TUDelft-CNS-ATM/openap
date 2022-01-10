@@ -75,7 +75,7 @@ class Thrust(object):
 
     @ndarrayconvert
     def takeoff(self, tas, alt=None):
-        """Calculate thrust during the takeoff.
+        """Calculate thrust at takeoff condition.
 
         Args:
             tas (float or ndarray): True airspeed (kt).

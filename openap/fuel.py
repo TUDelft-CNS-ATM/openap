@@ -27,6 +27,9 @@ class FuelFlow(object):
         if not hasattr(self, "Drag"):
             self.Drag = importlib.import_module("openap.drag").Drag
 
+        if not hasattr(self, "WRAP"):
+            self.WRAP = importlib.import_module("openap.kinematic").WRAP
+
         self.aircraft = prop.aircraft(ac, **kwargs)
 
         if eng is None:
@@ -36,6 +39,7 @@ class FuelFlow(object):
 
         self.thrust = self.Thrust(ac, eng, **kwargs)
         self.drag = self.Drag(ac, **kwargs)
+        self.wrap = self.WRAP(ac)
 
         c3, c2, c1 = (
             self.engine["fuel_c3"],
@@ -61,7 +65,10 @@ class FuelFlow(object):
         n_eng = self.aircraft["engine"]["number"]
         engthr = acthr / n_eng
 
-        ratio = engthr / self.engine["max_thrust"]
+        # use maximum dynamic thrust at see-level as denominator
+        v_lof_max = self.wrap.takeoff_speed()["maximum"]
+        maxthr = self.thrust.takeoff(tas=v_lof_max / 0.5144, alt=0)
+        ratio = acthr / maxthr
 
         ff_sl = self.func_fuel(ratio)
         ff_corr_alt = self.engine["fuel_ch"] * (engthr / 1000) * (alt * 0.3048)
@@ -122,7 +129,7 @@ class FuelFlow(object):
 
         fuelflow = self.at_thrust(T, alt)
 
-        # do not return value outside performance boundary, with a margin of 20%
+        # do not performa calculation outside performance boundary (with margin of 20%)
         T_max = self.thrust.climb(tas=0, alt=alt, roc=0)
         fuelflow = self.np.where(T > 1.20 * T_max, self.np.nan, fuelflow)
 
