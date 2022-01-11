@@ -39,7 +39,7 @@ class FuelFlow(object):
 
         self.thrust = self.Thrust(ac, eng, **kwargs)
         self.drag = self.Drag(ac, **kwargs)
-        self.wrap = self.WRAP(ac)
+        self.wrap = self.WRAP(ac, **kwargs)
 
         c3, c2, c1 = (
             self.engine["fuel_c3"],
