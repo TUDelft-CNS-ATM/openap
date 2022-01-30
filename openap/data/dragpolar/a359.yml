@@ -5,8 +5,6 @@ clean:
   k:           0.043
   e:           0.783
 
-mach_crit:     0.646
-
 gears:         0.013
 
 flaps:

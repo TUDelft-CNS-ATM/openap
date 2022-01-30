@@ -5,6 +5,7 @@ import importlib
 import pandas as pd
 import glob
 import yaml
+import math
 import warnings
 from . import prop
 from .extra import ndarrayconvert
@@ -14,7 +15,8 @@ curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_dragpolar = curr_path + "/data/dragpolar/"
 file_synonym = curr_path + "/data/dragpolar/_synonym.csv"
 
-polar_synonym = pd.read_csv(file_synonym) 
+polar_synonym = pd.read_csv(file_synonym)
+
 
 class Drag(object):
     """Compute the drag of aircraft."""
@@ -32,7 +34,7 @@ class Drag(object):
         if not hasattr(self, "aero"):
             self.aero = importlib.import_module("openap").aero
 
-        self.use_synonym = kwargs.get('use_synonym', False)
+        self.use_synonym = kwargs.get("use_synonym", False)
 
         self.ac = ac.lower()
         self.aircraft = prop.aircraft(ac, **kwargs)
@@ -40,9 +42,7 @@ class Drag(object):
         self.wave_drag = wave_drag
 
         if self.wave_drag:
-            warnings.warn(
-                "Performance warning: Wave drag model is inaccurate at the moment. This will be fixed in future release."
-            )
+            warnings.warn("Performance warning: Wave drag model is experimental.")
 
     def dragpolar(self):
         """Find and construct the drag polar model.
@@ -57,7 +57,7 @@ class Drag(object):
         if self.ac in ac_polar_available:
             ac = self.ac
         else:
-            syno = polar_synonym.query('orig==@self.ac')
+            syno = polar_synonym.query("orig==@self.ac")
             if self.use_synonym and syno.shape[0] > 0:
                 ac = syno.new.iloc[0]
             else:
@@ -66,6 +66,21 @@ class Drag(object):
         f = dir_dragpolar + ac + ".yml"
         dragpolar = yaml.safe_load(open(f))
         return dragpolar
+
+    @ndarrayconvert
+    def _cl(self, mass, tas, alt, path_angle):
+        v = tas * self.aero.kts
+        h = alt * self.aero.ft
+        gamma = path_angle * self.np.pi / 180
+
+        S = self.aircraft["wing"]["area"]
+
+        rho = self.aero.density(h)
+        qS = 0.5 * rho * v ** 2 * S
+        L = mass * self.aero.g0 * self.np.cos(gamma)
+        qS = self.np.where(qS < 1e-3, 1e-3, qS)
+        cl = L / qS
+        return cl
 
     @ndarrayconvert
     def _calc_drag(self, mass, tas, alt, cd0, k, path_angle):
@@ -82,9 +97,6 @@ class Drag(object):
         cl = L / qS
         cd = cd0 + k * cl ** 2
         D = cd * qS
-
-        # D = D.astype(int)
-
         return D
 
     @ndarrayconvert
@@ -106,10 +118,23 @@ class Drag(object):
         k = self.polar["clean"]["k"]
 
         if self.wave_drag:
-            mach_crit = self.polar["mach_crit"]
             mach = self.aero.tas2mach(tas * self.aero.kts, alt * self.aero.ft)
+            cl = self._cl(mass, tas, alt, path_angle)
 
-            dCdw = self.np.where(mach > mach_crit, 20 * (mach - mach_crit) ** 4, 0)
+            sweep = math.radians(self.aircraft["wing"]["sweep"])
+            tc = self.aircraft["wing"]["t/c"]
+            if tc is None:
+                tc = 0.11
+
+            cos_sweep = math.cos(sweep)
+            mach_crit = (
+                0.87 - 0.108 / cos_sweep - 0.1 * cl / (cos_sweep ** 2) - tc / cos_sweep
+            ) / cos_sweep
+
+            dmach = self.np.where(mach - mach_crit <= 0, 0, mach - mach_crit)
+
+            dCdw = self.np.where(dmach, 20 * dmach ** 4, 0)
+
         else:
             dCdw = 0
 
