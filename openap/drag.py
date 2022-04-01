@@ -26,6 +26,7 @@ class Drag(object):
 
         Args:
             ac (string): ICAO aircraft type (for example: A320).
+            wave_drag (bool): enable wave_drag model (experimental).
 
         """
         if not hasattr(self, "np"):
@@ -39,8 +40,8 @@ class Drag(object):
         self.ac = ac.lower()
         self.aircraft = prop.aircraft(ac, **kwargs)
         self.polar = self.dragpolar()
-        self.wave_drag = wave_drag
 
+        self.wave_drag = wave_drag
         if self.wave_drag:
             warnings.warn("Performance warning: Wave drag model is experimental.")
 

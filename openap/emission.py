@@ -71,6 +71,19 @@ class Emission(object):
         return ffac * 1230
 
     @ndarrayconvert
+    def soot(self, ffac):
+        """Compute soot emission with given fuel flow.
+
+        Args:
+            ffac (float or ndarray): Fuel flow for all engines (unit: kg/s).
+
+        Returns:
+            float: Soot emission from all engines (unit: g/s).
+
+        """
+        return ffac * 0.03
+
+    @ndarrayconvert
     def sox(self, ffac):
         """Compute SOx emission with given fuel flow.
 
