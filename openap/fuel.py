@@ -101,7 +101,7 @@ class FuelFlow(object):
         return fuelflow
 
     @ndarrayconvert
-    def enroute(self, mass, tas, alt, path_angle=0, fillna=True):
+    def enroute(self, mass, tas, alt, path_angle=0, limit=True):
         """Compute the fuel flow during climb, cruise, or descent.
 
         The net thrust is first estimated based on the dynamic equation.
@@ -121,18 +121,21 @@ class FuelFlow(object):
         D = self.drag.clean(mass=mass, tas=tas, alt=alt, path_angle=path_angle)
 
         # Convert angles from degrees to radians.
-        gamma = path_angle * self.np.pi / 180
+        gamma = path_angle * 3.142 / 180
 
-        T = D + mass * 9.80665 * self.np.sin(gamma)
-        T_idle = self.thrust.descent_idle(tas=tas, alt=alt)
-        T = self.np.where(T < 0, T_idle, T)
+        T = D + mass * 9.81 * self.np.sin(gamma)
+
+        if limit:
+            T_max = self.thrust.climb(tas=tas, alt=alt, roc=0)
+            T_idle = self.thrust.descent_idle(tas=tas, alt=alt)
+
+            # below idle thrust
+            T = self.np.where(T < T_idle, T_idle, T)
+
+            # outside performance boundary (with margin of 20%)
+            T = self.np.where(T > 1.2 * T_max, self.np.nan, T)
 
         fuelflow = self.at_thrust(T, alt)
-
-        # do not performa calculation outside performance boundary (with margin of 20%)
-        if fillna:
-            T_max = self.thrust.climb(tas=tas, alt=alt, roc=0)
-            fuelflow = self.np.where(T > 1.20 * T_max, self.np.nan, fuelflow)
 
         return fuelflow
 
