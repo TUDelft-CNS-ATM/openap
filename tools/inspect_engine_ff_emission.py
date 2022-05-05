@@ -23,7 +23,7 @@ for ac in acs:
         )
 
         x = np.array([0.07, 0.3, 0.85, 1.0])
-        xx = np.linspace(0.07, 1, 100)
+        xx = np.linspace(0, 1, 100)
 
         plt.suptitle(f"{ac} / {eng}")
 
