@@ -151,7 +151,7 @@ class FuelFlow(object):
             T = self.np.where(T < T_idle, T_idle, T)
 
             # outside performance boundary (with margin of 20%)
-            T = self.np.where(T > 1.2 * T_max, self.np.nan, T)
+            T = self.np.where(T > 1.2 * T_max, 1.2 * T_max, T)
 
         fuelflow = self.at_thrust(T, alt, limit=limit)
 
