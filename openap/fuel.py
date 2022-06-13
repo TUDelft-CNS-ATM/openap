@@ -24,6 +24,7 @@ class FuelFlow(object):
             eng (string): Engine type (for example: CFM56-5A3).
                 Leave empty to use the default engine specified
                 by in the aircraft database.
+            polydeg (int): Order of the polynomials for fuel flow model (2 or 3), defaults to 2.
 
         """
         if not hasattr(self, "np"):
@@ -49,7 +50,7 @@ class FuelFlow(object):
         self.drag = self.Drag(ac, **kwargs)
         self.wrap = self.WRAP(ac, **kwargs)
 
-        polydeg = kwargs.get("polydeg", 3)
+        polydeg = kwargs.get("polydeg", 2)
 
         if polydeg == 2:
             a, b = self.engine["fuel_a"], self.engine["fuel_b"]
@@ -79,9 +80,7 @@ class FuelFlow(object):
         n_eng = self.aircraft["engine"]["number"]
         engthr = acthr / n_eng
 
-        # use maximum dynamic thrust at see-level as denominator
-        v_lof_max = self.wrap.takeoff_speed()["maximum"]
-        maxthr = self.thrust.takeoff(tas=v_lof_max / 0.5144, alt=0)
+        maxthr = self.thrust.takeoff(tas=0, alt=0)
         ratio = acthr / maxthr
 
         if limit:
