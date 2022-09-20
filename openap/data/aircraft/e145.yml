@@ -1,5 +1,10 @@
 aircraft: Embraer ERJ145 (LR)
 
+pax: 
+  max: 50
+  low: 50
+  high: 50
+
 fuselage:
   length:   29.87
   height:   2.28

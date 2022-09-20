@@ -1,5 +1,11 @@
 aircraft: Airbus A350-900
 
+pax: 
+  max: 440
+  low: 300
+  high: 350
+
+
 fuselage:
   length:   66.8
   height:   6.09

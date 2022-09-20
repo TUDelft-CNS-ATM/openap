@@ -1,5 +1,10 @@
 aircraft: Cessna Citation II
 
+pax: 
+  max: 10
+  low: 5
+  high: 10
+
 fuselage:
   length:   14.39
   height:   1.46

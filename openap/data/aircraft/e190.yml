@@ -1,5 +1,10 @@
 aircraft: Embraer E190 (LR)
 
+pax: 
+  max: 114
+  low: 88
+  high: 100
+
 fuselage:
   length:   36.24
   height:   3.35

@@ -1,5 +1,10 @@
 aircraft: Airbus A320neo
 
+pax: 
+  max: 194
+  low: 150
+  high: 180
+
 fuselage:
   length:   37.57
   height:   4.14

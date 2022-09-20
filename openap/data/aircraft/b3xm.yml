@@ -1,5 +1,11 @@
 aircraft: Boeing 737 MAX 10
 
+pax: 
+  max: 230
+  low: 188
+  high: 204
+
+
 fuselage:
   length:   43.8
   height:   3.73

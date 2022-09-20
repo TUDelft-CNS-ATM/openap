@@ -1,5 +1,10 @@
 aircraft: Airbus A380-800
 
+pax: 
+  max: 853
+  low: 410
+  high: 620
+
 fuselage:
   length:   72.72
   height:   8.41

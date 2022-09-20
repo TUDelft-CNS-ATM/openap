@@ -1,5 +1,10 @@
 aircraft: Boeing 767-300
 
+pax: 
+  max: 350
+  low: 210
+  high: 290
+
 fuselage:
   length:   54.94
   height:   5.03

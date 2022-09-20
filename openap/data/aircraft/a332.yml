@@ -1,5 +1,10 @@
 aircraft: Airbus A330-200
 
+pax: 
+  max: 406
+  low: 220
+  high: 260
+
 fuselage:
   length:   58.82
   height:   5.64

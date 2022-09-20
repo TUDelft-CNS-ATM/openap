@@ -1,5 +1,10 @@
 aircraft: Boeing 747-400
 
+pax: 
+  max: 660
+  low: 520
+  high: 570
+
 fuselage:
   length:   70.66
   height:   8.10

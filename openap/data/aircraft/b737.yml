@@ -1,5 +1,10 @@
 aircraft: Boeing 737-700
 
+pax: 
+  max: 149
+  low: 130
+  high: 149
+
 fuselage:
   length:   33.6
   height:   3.73

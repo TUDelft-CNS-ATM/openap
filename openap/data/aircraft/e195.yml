@@ -1,5 +1,10 @@
 aircraft: Embraer E195 (LR)
 
+pax: 
+  max: 124
+  low: 88
+  high: 116
+
 fuselage:
   length:   38.65
   height:   3.35

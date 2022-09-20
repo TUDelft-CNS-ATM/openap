@@ -1,5 +1,10 @@
 aircraft: Boeing 737-800
 
+pax: 
+  max: 189
+  low: 162
+  high: 189
+
 fuselage:
   length:   39.47
   height:   3.73

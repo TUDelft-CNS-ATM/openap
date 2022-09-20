@@ -1,5 +1,10 @@
 aircraft: Airbus A319
 
+pax: 
+  max: 156
+  low: 110
+  high: 140
+
 fuselage:
   length:   33.84
   height:   4.14
