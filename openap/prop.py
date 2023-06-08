@@ -5,6 +5,7 @@ import glob
 import yaml
 import numpy as np
 import pandas as pd
+from functools import lru_cache
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_aircraft = curr_path + "/data/aircraft/"
@@ -14,6 +15,7 @@ file_synonym = curr_path + "/data/aircraft/_synonym.csv"
 aircraft_synonym = pd.read_csv(file_synonym)
 
 
+@lru_cache()
 def available_aircraft(use_synonym=False):
     """Get available aircraft types in OpenAP model.
 
@@ -59,6 +61,7 @@ def aircraft(ac, use_synonym=False, **kwargs):
     return acdict
 
 
+@lru_cache()
 def aircraft_engine_options(ac):
     """Get engine options of an aircraft type.
 
@@ -79,6 +82,7 @@ def aircraft_engine_options(ac):
     return eng_options
 
 
+@lru_cache()
 def search_engine(eng):
     """Search engine by the starting characters.
 
@@ -105,6 +109,7 @@ def search_engine(eng):
     return result
 
 
+@lru_cache()
 def engine(eng):
     """Get engine parameters.
 

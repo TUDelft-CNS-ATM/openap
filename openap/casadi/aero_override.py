@@ -24,6 +24,9 @@ beta = -0.0065  # [K/m] ISA temp gradient below tropopause
 r_earth = 6371000.0  # m, average earth radius
 a0 = 340.293988  # m/s, sea level speed of sound ISA, sqrt(gamma*R*T0)
 
+deg = 180 / 3.14159  # radians -> degrees
+rad = 3.14159 / 180  # degrees -> radians
+
 
 def atmos(h):
     """Compute press, density and temperature at a given altitude.
@@ -116,10 +119,10 @@ def distance(lat1, lon1, lat2, lon2, h=0):
 
     """
     # convert decimal degrees to radians
-    lat1 = np.radians(lat1)
-    lon1 = np.radians(lon1)
-    lat2 = np.radians(lat2)
-    lon2 = np.radians(lon2)
+    lat1 = lat1 * rad
+    lon1 = lon1 * rad
+    lat2 = lat2 * rad
+    lon2 = lon2 * rad
 
     # haversine formula
     dlon = lon2 - lon1
@@ -143,14 +146,14 @@ def bearing(lat1, lon1, lat2, lon2):
         SX or MX: Bearing (in degrees). Between 0 and 360.
 
     """
-    lat1 = np.radians(lat1)
-    lon1 = np.radians(lon1)
-    lat2 = np.radians(lat2)
-    lon2 = np.radians(lon2)
+    lat1 = lat1 * rad
+    lon1 = lon1 * rad
+    lat2 = lat2 * rad
+    lon2 = lon2 * rad
     x = np.sin(lon2 - lon1) * np.cos(lat2)
     y = np.cos(lat1) * np.sin(lat2) - np.sin(lat1) * np.cos(lat2) * np.cos(lon2 - lon1)
     initial_bearing = np.arctan2(x, y)
-    initial_bearing = np.degrees(initial_bearing)
+    initial_bearing = initial_bearing * deg
     bearing = (initial_bearing + 360) % 360
     return bearing
 
@@ -195,9 +198,9 @@ def latlon(lat1, lon1, d, brg, h=0):
 
     """
     # convert decimal degrees to radians
-    lat1 = np.radians(lat1)
-    lon1 = np.radians(lon1)
-    brg = np.radians(brg)
+    lat1 = lat1 * rad
+    lon1 = lon1 * rad
+    brg = brg * rad
 
     # haversine formula
     lat2 = np.arcsin(
@@ -208,8 +211,8 @@ def latlon(lat1, lon1, d, brg, h=0):
         np.sin(brg) * np.sin(d / (r_earth + h)) * np.cos(lat1),
         np.cos(d / (r_earth + h)) - np.sin(lat1) * np.sin(lat2),
     )
-    lat2 = np.degrees(lat2)
-    lon2 = np.degrees(lon2)
+    lat2 = lat2 * deg
+    lon2 = lon2 * deg
     return lat2, lon2
 
 
@@ -356,7 +359,7 @@ def crossover_alt(v_cas, mach):
     """
     mach = 1e-4 if mach < 1e-4 else mach
     delta = ((0.2 * (v_cas / a0) ** 2 + 1) ** 3.5 - 1) / (
-        (0.2 * mach ** 2 + 1) ** 3.5 - 1
+        (0.2 * mach**2 + 1) ** 3.5 - 1
     )
     h = T0 / beta * (delta ** (-1 * R * beta / g0) - 1)
     return h
