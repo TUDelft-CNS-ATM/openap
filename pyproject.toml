@@ -16,7 +16,7 @@ packages = [{ include = "openap", from = "." }]
 include = ["LICENSE"]
 
 [tool.poetry.dependencies]
-python = ">=3.6"
+python = ">=3.8"
 numpy = ">=1.24"
 scipy = ">=1.7"
 scikit-fuzzy = ">=0.4"
@@ -29,7 +29,7 @@ black = "^22.12.0"
 isort = "^5.11.4"
 
 [tool.black]
-target_version = ['py37', 'py38', 'py39', 'py310', 'py311']
+target_version = ['py38', 'py39', 'py310', 'py311']
 include = '\.pyi?$'
 
 [tool.isort]
