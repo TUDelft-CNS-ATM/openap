@@ -2,6 +2,7 @@ orig,new
 a124,b744
 a306,a332
 a310,a319
+a318,a319
 at72,e145
 at75,e145
 at76,e145
@@ -15,7 +16,9 @@ c56x,c550
 crj2,e145
 crj9,e75l
 e290,e190
-lj45,c550
+glf5,glf6
+gl5t,glf6
+lj45,glf6
 md11,b773
 pc24,c550
 su95,e170
