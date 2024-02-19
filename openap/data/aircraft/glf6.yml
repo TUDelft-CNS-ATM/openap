@@ -1,0 +1,45 @@
+aircraft: Gulfstream G650 / 650ER
+
+pax: 
+  max: 18
+  low: 8
+  high: 18
+
+fuselage:
+  length:   30.41
+  height:   7.82
+  width:    2.49
+
+wing:
+  area:     119.2
+  span:     30.36
+  mac:      4.76
+  sweep:    36
+  t/c:      0.1
+
+flaps:
+  type:     single-slotted
+  area:     null
+  bf/b:     null
+
+limits:
+  MTOW:     45200
+  MLW:      37900
+  OEW:      24000
+  MFC:      21000
+  VMO:      null
+  MMO:      0.925
+  ceiling:  16000
+  range:    13000
+
+cruise:
+  height:   12000
+  mach:     0.85
+
+engine:
+  type: turbofan
+  mount: rear
+  number: 2
+  default: BR700-725A1-12
+  options:
+    - BR700-725A1-12
