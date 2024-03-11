@@ -1,15 +1,15 @@
 """OpenAP drag model."""
 
-import os
-import importlib
-import pandas as pd
 import glob
-import yaml
-import math
+import importlib
+import os
 import warnings
+
+import pandas as pd
+import yaml
+
 from . import prop
 from .extra import ndarrayconvert
-
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_dragpolar = curr_path + "/data/dragpolar/"
@@ -69,16 +69,15 @@ class Drag(object):
         return dragpolar
 
     @ndarrayconvert
-    def _cl(self, mass, tas, alt, path_angle):
+    def _cl(self, mass, tas, alt):
         v = tas * self.aero.kts
         h = alt * self.aero.ft
-        gamma = path_angle * self.np.pi / 180
 
         S = self.aircraft["wing"]["area"]
 
         rho = self.aero.density(h)
-        qS = 0.5 * rho * v ** 2 * S
-        L = mass * self.aero.g0 * self.np.cos(gamma)
+        qS = 0.5 * rho * v**2 * S
+        L = mass * self.aero.g0
         qS = self.np.where(qS < 1e-3, 1e-3, qS)
         cl = L / qS
         return cl
@@ -92,11 +91,11 @@ class Drag(object):
         S = self.aircraft["wing"]["area"]
 
         rho = self.aero.density(h)
-        qS = 0.5 * rho * v ** 2 * S
+        qS = 0.5 * rho * v**2 * S
         L = mass * self.aero.g0 * self.np.cos(gamma)
         qS = self.np.where(qS < 1e-3, 1e-3, qS)
         cl = L / qS
-        cd = cd0 + k * cl ** 2
+        cd = cd0 + k * cl**2
         D = cd * qS
         return D
 
@@ -120,21 +119,24 @@ class Drag(object):
 
         if self.wave_drag:
             mach = self.aero.tas2mach(tas * self.aero.kts, alt * self.aero.ft)
-            cl = self._cl(mass, tas, alt, path_angle)
+            cl = self._cl(mass, tas, alt)
 
-            sweep = math.radians(self.aircraft["wing"]["sweep"])
+            sweep = self.np.radians(self.aircraft["wing"]["sweep"])
             tc = self.aircraft["wing"]["t/c"]
             if tc is None:
-                tc = 0.11
+                tc = 0.12
 
-            cos_sweep = math.cos(sweep)
+            cos_sweep = self.np.cos(sweep)
+
+            kappa = 0.95  # assume supercritical airfoils
+
             mach_crit = (
-                0.87 - 0.108 / cos_sweep - 0.1 * cl / (cos_sweep ** 2) - tc / cos_sweep
-            ) / cos_sweep
+                kappa / cos_sweep - tc / cos_sweep**2 - 0.1 * cl / cos_sweep**3 - 0.108
+            )
 
-            dmach = self.np.where(mach - mach_crit <= 0, 0, mach - mach_crit)
+            dmach = mach - mach_crit
 
-            dCdw = self.np.where(dmach, 20 * dmach ** 4, 0)
+            dCdw = self.np.where(dmach > 0, 20 * dmach**4, 0)
 
         else:
             dCdw = 0
