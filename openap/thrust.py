@@ -10,6 +10,7 @@ Simplified two-shaft turbonfan model base on:
 """
 
 import importlib
+
 from openap import prop
 from openap.extra import ndarrayconvert
 
@@ -32,17 +33,19 @@ class Thrust(object):
             self.aero = importlib.import_module("openap").aero
 
         aircraft = prop.aircraft(ac, **kwargs)
+        force_engine = kwargs.get("force_engine", False)
 
         if eng is None:
             eng = aircraft["engine"]["default"]
 
         engine = prop.engine(eng)
 
-        if type(aircraft["engine"]["options"]) == dict:
+        eng_options = aircraft["engine"]["options"]
+
+        if isinstance(eng_options, dict):
             eng_options = list(aircraft["engine"]["options"].values())
-        elif type(aircraft["engine"]["options"]) == list:
-            eng_options = list(aircraft["engine"]["options"])
-        if engine["name"] not in eng_options:
+
+        if (not force_engine) and (engine["name"] not in eng_options):
             raise RuntimeError(
                 f"Engine {eng} and aircraft {ac} mismatch. Available engines for {ac} are {eng_options}"
             )
@@ -70,7 +73,7 @@ class Thrust(object):
         return n
 
     def _mfunc(self, vratio, roc):
-        m = -1.2043e-1 * vratio - 8.8889e-9 * roc ** 2 + 2.4444e-5 * roc + 4.7379e-1
+        m = -1.2043e-1 * vratio - 8.8889e-9 * roc**2 + 2.4444e-5 * roc + 4.7379e-1
         return m
 
     @ndarrayconvert
@@ -95,7 +98,7 @@ class Thrust(object):
             ratio = (
                 1
                 - 0.377 * (1 + eng_bpr) / self.np.sqrt((1 + 0.82 * eng_bpr) * G0) * mach
-                + (0.23 + 0.19 * self.np.sqrt(eng_bpr)) * mach ** 2
+                + (0.23 + 0.19 * self.np.sqrt(eng_bpr)) * mach**2
             )
 
         else:
@@ -103,9 +106,9 @@ class Thrust(object):
             P = self.aero.pressure(alt * self.aero.ft)
             dP = P / self.aero.p0
 
-            A = -0.4327 * dP ** 2 + 1.3855 * dP + 0.0472
-            Z = 0.9106 * dP ** 3 - 1.7736 * dP ** 2 + 1.8697 * dP
-            X = 0.1377 * dP ** 3 - 0.4374 * dP ** 2 + 1.3003 * dP
+            A = -0.4327 * dP**2 + 1.3855 * dP + 0.0472
+            Z = 0.9106 * dP**3 - 1.7736 * dP**2 + 1.8697 * dP
+            X = 0.1377 * dP**3 - 0.4374 * dP**2 + 1.3003 * dP
 
             ratio = (
                 A
@@ -114,7 +117,7 @@ class Thrust(object):
                 / self.np.sqrt((1 + 0.82 * eng_bpr) * G0)
                 * Z
                 * mach
-                + (0.23 + 0.19 * self.np.sqrt(eng_bpr)) * X * mach ** 2
+                + (0.23 + 0.19 * self.np.sqrt(eng_bpr)) * X * mach**2
             )
 
         F = ratio * self.eng_max_thrust * self.eng_number

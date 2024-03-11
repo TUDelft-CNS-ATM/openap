@@ -1,6 +1,7 @@
 """OpenAP FuelFlow model."""
 
 import importlib
+
 from openap import prop
 from openap.extra import ndarrayconvert
 
@@ -10,7 +11,7 @@ def func_fuel2(a, b):
 
 
 def func_fuel3(c3, c2, c1):
-    return lambda x: c3 * x ** 3 + c2 * x ** 2 + c1 * x
+    return lambda x: c3 * x**3 + c2 * x**2 + c1 * x
 
 
 class FuelFlow(object):
