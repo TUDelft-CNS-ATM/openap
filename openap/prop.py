@@ -56,7 +56,8 @@ def aircraft(ac, use_synonym=False, **kwargs):
             raise RuntimeError(f"Aircraft {ac} not avaiable in OpenAP.")
 
     f = files[0]
-    acdict = yaml.safe_load(open(f))
+    with open(f, "r") as file:
+        acdict = yaml.safe_load(file.read())
 
     return acdict
 
