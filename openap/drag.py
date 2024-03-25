@@ -65,7 +65,8 @@ class Drag(object):
                 raise RuntimeError(f"Drag polar for {self.ac} not avaiable in OpenAP.")
 
         f = dir_dragpolar + ac + ".yml"
-        dragpolar = yaml.safe_load(open(f))
+        with open(f, "r") as file:
+            dragpolar = yaml.safe_load(file.read())
         return dragpolar
 
     @ndarrayconvert
