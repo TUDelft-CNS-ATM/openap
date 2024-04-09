@@ -18,7 +18,7 @@ packages = [{ include = "openap", from = "." }]
 include = ["LICENSE"]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.9"
 numpy = ">=1.24"
 scipy = ">=1.7"
 scikit-fuzzy = ">=0.4"
