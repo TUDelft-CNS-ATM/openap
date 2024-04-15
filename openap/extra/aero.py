@@ -23,7 +23,6 @@ Speed conversion at altitude h[m] in ISA:
 """
 
 import numpy as np
-import scipy.constants
 
 """Aero and Geo Constants """
 kts = 0.514444  # knot -> m/s

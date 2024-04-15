@@ -1,6 +1,7 @@
 """OpenAP FuelFlow model."""
 
 import importlib
+
 from openap import prop
 from openap.extra import ndarrayconvert
 

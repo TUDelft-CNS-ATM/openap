@@ -1,13 +1,12 @@
 """Retrieve properties of aircraft and engines."""
 
-import os
 import glob
-import yaml
-import numpy as np
-import pandas as pd
+import os
 from functools import lru_cache
 
-from openap.extra.aero import ft
+import numpy as np
+import pandas as pd
+import yaml
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_aircraft = os.path.join(curr_path, "data/aircraft/")

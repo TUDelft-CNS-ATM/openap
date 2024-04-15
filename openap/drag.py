@@ -7,7 +7,6 @@ import warnings
 
 import pandas as pd
 import yaml
-import warnings
 
 from . import prop
 from .extra import ndarrayconvert
@@ -145,7 +144,6 @@ class Drag(object):
             # Equation 15 in Gur et al. (2010)
             dmach = self.np.maximum(mach - mach_crit, 0.0)
             dCdw = 20 * dmach**4
-
 
         else:
             dCdw = 0

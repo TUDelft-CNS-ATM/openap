@@ -21,8 +21,9 @@ Examples:
 
 """
 
-import os
 import glob
+import os
+
 import pandas as pd
 
 curr_path = os.path.dirname(os.path.realpath(__file__))

@@ -50,6 +50,7 @@ class Thrust(object):
                     f"Engine {eng} and aircraft {ac} mismatch. "
                     f"Available engines for {ac} are {eng_options}"
                 )
+            )
 
         self.cruise_alt = aircraft["cruise"]["height"] / self.aero.ft
         self.eng_bpr = engine["bpr"]
