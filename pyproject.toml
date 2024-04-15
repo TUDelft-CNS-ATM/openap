@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "openap"
-version = "1.4"
+version = "1.5"
 description = "Open Aircraft Performance Model (OpenAP) in Python"
 homepage = "https://openap.dev"
 repository = "https://github.com/junzis/openap"
@@ -21,7 +21,6 @@ include = ["LICENSE"]
 python = ">=3.9"
 numpy = ">=1.24"
 scipy = ">=1.7"
-scikit-fuzzy = ">=0.4"
 pandas = ">=1.2"
 pyyaml = ">=5.1"
 matplotlib = ">=3.1"
