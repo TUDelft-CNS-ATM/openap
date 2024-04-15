@@ -25,7 +25,8 @@ class FuelFlow(object):
             eng (string): Engine type (for example: CFM56-5A3).
                 Leave empty to use the default engine specified
                 by in the aircraft database.
-            polydeg (int): Order of the polynomials for fuel flow model (2 or 3), defaults to 2.
+            polydeg (int): Order of the polynomials for fuel flow model
+                            (2 or 3), defaults to 2.
 
         """
         if not hasattr(self, "np"):
@@ -64,14 +65,15 @@ class FuelFlow(object):
             )
             self.polyfuel = func_fuel3(c3, c2, c1)
         else:
-            raise RuntimeError(f"polydeg must be 2 or 3")
+            raise ValueError(f"Polydeg must be 2 or 3")
 
     @ndarrayconvert
     def at_thrust(self, acthr, alt=0, limit=True):
         """Compute the fuel flow at a given total thrust.
 
         Args:
-            acthr (int or ndarray): The total net thrust of the aircraft (unit: N).
+            acthr (int or ndarray): The total net thrust of the
+                aircraft (unit: N).
             alt (int or ndarray): Aircraft altitude (unit: ft).
 
         Returns:
@@ -85,6 +87,7 @@ class FuelFlow(object):
         ratio = acthr / maxthr
 
         if limit:
+            # assume minimum is 7% at idle
             ratio = self.np.where(ratio < 0.07, 0.07, ratio)
             ratio = self.np.where(ratio > 1, 1, ratio)
 
@@ -106,7 +109,8 @@ class FuelFlow(object):
 
         Args:
             tas (int or ndarray): Aircraft true airspeed (unit: kt).
-            alt (int or ndarray): Altitude of airport (unit: ft). Defaults to sea-level.
+            alt (int or ndarray): Altitude of airport (unit: ft).
+                Defaults to sea-level.
             throttle (float or ndarray): The throttle setting, between 0 and 1.
                 Defaults to 1, which is at full thrust.
 
@@ -138,8 +142,7 @@ class FuelFlow(object):
         """
         D = self.drag.clean(mass=mass, tas=tas, alt=alt, path_angle=path_angle)
 
-        # Convert angles from degrees to radians.
-        gamma = path_angle * 3.142 / 180
+        gamma = path_angle * 3.142 / 180  # radians
 
         T = D + mass * 9.81 * self.np.sin(gamma)
 
