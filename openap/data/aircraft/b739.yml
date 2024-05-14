@@ -1,5 +1,10 @@
 aircraft: Boeing 737-900
 
+pax: 
+  max: 215
+  low: 170
+  high: 190
+
 fuselage:
   length:   42.11
   height:   3.73

@@ -1,5 +1,10 @@
 aircraft: Airbus A340-300
 
+pax: 
+  max: 440
+  low: 250
+  high: 290
+
 fuselage:
   length:   63.69
   height:   5.64

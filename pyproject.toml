@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "openap"
+version = "1.5"
+description = "Open Aircraft Performance Model (OpenAP) in Python"
+homepage = "https://openap.dev"
+repository = "https://github.com/junzis/openap"
+authors = ["Junzi Sun <j.sun-1@tudelft.nl>"]
+license = "GNU Lesser General Public License v3 (LGPLv3)"
+readme = "README.md"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+    "Programming Language :: Python :: 3",
+]
+packages = [{ include = "openap", from = "." }]
+include = ["LICENSE"]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+numpy = ">=1.24"
+scipy = ">=1.7"
+pandas = ">=1.2"
+pyyaml = ">=5.1"
+matplotlib = ">=3.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.12.0"
+isort = "^5.11.4"
+
+[tool.black]
+target_version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

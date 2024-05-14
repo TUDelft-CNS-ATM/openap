@@ -1,5 +1,11 @@
 aircraft: Boeing 737 MAX 7
 
+pax: 
+  max: 172
+  low: 138
+  high: 153
+
+
 fuselage:
   length:   33.6
   height:   3.73

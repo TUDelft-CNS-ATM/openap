@@ -1,5 +1,10 @@
 aircraft: Boeing 737 MAX 8
 
+pax: 
+  max: 210
+  low: 162
+  high: 178
+
 fuselage:
   length:   39.47
   height:   3.73

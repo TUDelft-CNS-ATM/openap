@@ -1,5 +1,10 @@
 aircraft: Boeing 777-200/200ER 
 
+pax: 
+  max: 440
+  low: 300
+  high: 320
+
 fuselage:
   length:   63.73
   height:   6.20

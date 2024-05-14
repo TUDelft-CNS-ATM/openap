@@ -1,5 +1,10 @@
 aircraft: Embraer E170
 
+pax: 
+  max: 78
+  low: 60
+  high: 72
+
 fuselage:
   length:   29.90
   height:   3.35

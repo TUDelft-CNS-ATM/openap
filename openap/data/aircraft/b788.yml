@@ -1,5 +1,10 @@
 aircraft: Boeing 787-8
 
+pax: 
+  max: 380
+  low: 220
+  high: 250
+
 fuselage:
   length:   56.72
   height:   5.94

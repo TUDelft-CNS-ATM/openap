@@ -1,5 +1,10 @@
 aircraft: Boeing 757-200
 
+pax: 
+  max: 239
+  low: 200
+  high: 225
+
 fuselage:
   length:   47.3
   height:   4.10

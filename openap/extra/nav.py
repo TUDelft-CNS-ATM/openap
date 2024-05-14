@@ -1,8 +1,10 @@
 """Navigation module helps accessing the navigation databases."""
 
 import os
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+
 from openap.extra import aero
 
 fixes = None
@@ -10,15 +12,18 @@ airports = None
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 db_airport = curr_path + "/../data/nav/airports.csv"
-db_fix = curr_path + '/../data/nav/fix.dat'
+db_fix = curr_path + "/../data/nav/fix.dat"
 
 
 def _read_fix():
     return pd.read_csv(
-        db_fix, skiprows=3, skipfooter=1,
-        engine='python',
-        sep=r'\s+',
-        names=('lat', 'lon', 'fix')
+        db_fix,
+        skiprows=3,
+        skipfooter=1,
+        engine="python",
+        sep=r"\s+",
+        names=("lat", "lon", "fix"),
+        encoding="unicode_escape",
     )
 
 
@@ -42,7 +47,7 @@ def airport(name):
     if not isinstance(airport, pd.DataFrame):
         airports = _read_airport()
 
-    df = airports[airports['icao']==NAME]
+    df = airports[airports["icao"] == NAME]
     if df.shape[0] == 0:
         return None
     else:
@@ -65,13 +70,16 @@ def closest_airport(lat, lon):
     if not isinstance(airport, pd.DataFrame):
         airports = _read_airport()
 
-    df = airports[airports['lat'].between(lat-2, lat+2) & airports['lon'].between(lon-2, lon+2)]
+    df = airports[
+        airports["lat"].between(lat - 2, lat + 2)
+        & airports["lon"].between(lon - 2, lon + 2)
+    ]
 
     if df.shape[0] == 0:
         return None
 
-    coords = np.array(df[['lat', 'lon']])
-    dist2 = np.sum((coords - [lat, lon])**2, axis=1)
+    coords = np.array(df[["lat", "lon"]])
+    dist2 = np.sum((coords - [lat, lon]) ** 2, axis=1)
     idx = np.argmin(dist2)
 
     ap = df.iloc[idx, :]
@@ -95,7 +103,7 @@ def fix(name):
         fixes = _read_fix()
 
     NAME = str(name).upper()
-    fix = fixes[fixes['fix']==NAME].iloc[0].tolist()
+    fix = fixes[fixes["fix"] == NAME].iloc[0].tolist()
     return fix
 
 
@@ -116,11 +124,13 @@ def closest_fix(lat, lon):
     if not isinstance(fixes, pd.DataFrame):
         fixes = _read_fix()
 
-    mask = (fixes['lat'].between(lat-1, lat+1)) & (fixes['lon'].between(lon-1, lon+1))
+    mask = (fixes["lat"].between(lat - 1, lat + 1)) & (
+        fixes["lon"].between(lon - 1, lon + 1)
+    )
     chunk = fixes[mask]
 
-    lats = np.asarray(chunk['lat'])
-    lons = np.asarray(chunk['lon'])
+    lats = np.asarray(chunk["lat"])
+    lons = np.asarray(chunk["lon"])
 
     distances = aero.distance(lat, lon, lats, lons)
     idx = distances.argmin()

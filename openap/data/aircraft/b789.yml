@@ -1,5 +1,10 @@
 aircraft: Boeing 787-9
 
+pax: 
+  max: 420
+  low: 260
+  high: 290
+
 fuselage:
   length:   62.81
   height:   5.94

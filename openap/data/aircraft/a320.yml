@@ -1,5 +1,10 @@
 aircraft: Airbus A320
 
+pax: 
+  max: 180
+  low: 140
+  high: 170
+
 fuselage:
   length:   37.57
   height:   4.14

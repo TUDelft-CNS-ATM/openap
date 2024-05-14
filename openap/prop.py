@@ -1,18 +1,22 @@
-"""Retrive properties of aircraft and engines."""
+"""Retrieve properties of aircraft and engines."""
 
-import os
 import glob
-import yaml
+import os
+from functools import lru_cache
+
 import numpy as np
 import pandas as pd
+import yaml
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
-dir_aircraft = curr_path + "/data/aircraft/"
-file_engine = curr_path + "/data/engine/engines.csv"
-file_synonym = curr_path + "/data/aircraft/_synonym.csv"
+dir_aircraft = os.path.join(curr_path, "data/aircraft/")
+file_engine = os.path.join(curr_path, "data/engine/engines.csv")
+file_synonym = os.path.join(curr_path, "data/aircraft/_synonym.csv")
 
-aircraft_synonym = pd.read_csv(file_synonym) 
+aircraft_synonym = pd.read_csv(file_synonym)
 
+
+@lru_cache()
 def available_aircraft(use_synonym=False):
     """Get available aircraft types in OpenAP model.
 
@@ -30,7 +34,7 @@ def available_aircraft(use_synonym=False):
     return acs
 
 
-def aircraft(ac, use_synonym=False):
+def aircraft(ac, use_synonym=False, **kwargs):
     """Get details of an aircraft type.
 
     Args:
@@ -45,19 +49,21 @@ def aircraft(ac, use_synonym=False):
     files = glob.glob(dir_aircraft + ac + ".yml")
 
     if len(files) == 0:
-        syno = aircraft_synonym.query('orig==@ac')
+        syno = aircraft_synonym.query("orig==@ac")
         if use_synonym and syno.shape[0] > 0:
             new_ac = syno.new.iloc[0]
             files = glob.glob(dir_aircraft + new_ac + ".yml")
         else:
-            raise RuntimeError(f"Aircraft {ac} not avaiable in OpenAP.")
+            raise ValueError(f"Aircraft {ac} not available.")
 
     f = files[0]
-    acdict = yaml.safe_load(open(f))
+    with open(f, "r") as file:
+        acdict = yaml.safe_load(file.read())
 
     return acdict
 
 
+@lru_cache()
 def aircraft_engine_options(ac):
     """Get engine options of an aircraft type.
 
@@ -78,6 +84,7 @@ def aircraft_engine_options(ac):
     return eng_options
 
 
+@lru_cache()
 def search_engine(eng):
     """Search engine by the starting characters.
 
@@ -104,6 +111,7 @@ def search_engine(eng):
     return result
 
 
+@lru_cache()
 def engine(eng):
     """Get engine parameters.
 
@@ -130,19 +138,14 @@ def engine(eng):
         # compute fuel flow correction factor kg/s/N per meter
         if np.isfinite(seleng["cruise_sfc"]):
             sfc_cr = seleng["cruise_sfc"]
-            sfc_to = (seleng["fuel_c3"] + seleng["fuel_c2"] + seleng["fuel_c1"]) / (
-                seleng["max_thrust"] / 1000
-            )
+            sfc_to = seleng["ff_to"] / (seleng["max_thrust"] / 1000)
             fuel_ch = np.round((sfc_cr - sfc_to) / (seleng["cruise_alt"] * 0.3048), 8)
         else:
+            # see openap paper
             fuel_ch = 6.7e-7
 
         seleng["fuel_ch"] = fuel_ch
     else:
-        raise RuntimeError(f"Data for engine {eng} not found.")
+        raise ValueError(f"Data for engine {eng} not found.")
 
     return seleng
-
-
-def func_fuel(c3, c2, c1):
-    return lambda x: c3 * x ** 3 + c2 * x ** 2 + c1 * x

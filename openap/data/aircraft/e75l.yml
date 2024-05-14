@@ -1,5 +1,10 @@
 aircraft: Embraer E175 (LR)
 
+pax: 
+  max: 88
+  low: 64
+  high: 78
+
 fuselage:
   length:   29.90
   height:   3.35

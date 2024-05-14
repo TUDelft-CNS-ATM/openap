@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import argparse
+import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 
@@ -176,27 +177,39 @@ df = df.loc[
 ]
 
 
-def func_fuel(x, c3, c2, c1):
-    return c3 * x ** 3 + c2 * x ** 2 + c1 * x
+def func_fuel3(x, c3, c2, c1, c0):
+    return c3 * x ** 3 + c2 * x ** 2 + c1 * x + c0
+
+
+def func_fuel2(x, a, b):
+    return a * (x + b) ** 2
+
+
+# def func_fuel(x, c1, c2):
+#     return c1 * np.exp(c2 * x)
 
 
 # compute fuel flow coefficient
-x = [0, 0.07, 0.3, 0.85, 1.0]
+x = [0.07, 0.3, 0.85, 1.0]
 for i, r in df.iterrows():
-    y = [0, r["ff_idl"], r["ff_app"], r["ff_co"], r["ff_to"]]
+    y = [r["ff_idl"], r["ff_app"], r["ff_co"], r["ff_to"]]
 
     # coef = np.polyfit(x, y, 2)
     # df.loc[i, 'fuel_c2'] = coef[0]
     # df.loc[i, 'fuel_c1'] = coef[1]
     # df.loc[i, 'fuel_c0'] = coef[2]
 
-    coef, cov = curve_fit(func_fuel, x, y)
+    coef, cov = curve_fit(func_fuel3, x, y)
     df.loc[i, "fuel_c3"] = coef[0]
     df.loc[i, "fuel_c2"] = coef[1]
     df.loc[i, "fuel_c1"] = coef[2]
 
-    # print(r['name'], coef)
-    # xx = np.linspace(0, 1, 100)
+    coef, cov = curve_fit(func_fuel2, x, y)
+    df.loc[i, "fuel_a"] = coef[0]
+    df.loc[i, "fuel_b"] = coef[1]
+
+    # print(r["name"], coef)
+    # xx = np.linspace(-1, 1, 100)
     # plt.plot(xx, func_fuel(xx, *coef))
     # plt.scatter(x, y)
     # plt.draw()

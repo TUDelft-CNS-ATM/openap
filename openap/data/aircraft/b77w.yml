@@ -1,5 +1,10 @@
 aircraft: Boeing 777-300ER
 
+pax: 
+  max: 550
+  low: 365
+  high: 451
+
 fuselage:
   length:   73.86
   height:   6.20

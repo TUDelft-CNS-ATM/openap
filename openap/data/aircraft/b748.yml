@@ -1,5 +1,10 @@
 aircraft: Boeing 747-8
 
+pax: 
+  max: 605
+  low: 460
+  high: 480
+
 fuselage:
   length:   76.3
   height:   7.10

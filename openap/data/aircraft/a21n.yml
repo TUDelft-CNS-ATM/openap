@@ -1,5 +1,10 @@
 aircraft: Airbus A321neo
 
+pax: 
+  max: 244
+  low: 180
+  high: 220
+
 fuselage:
   length:   44.51
   height:   4.14

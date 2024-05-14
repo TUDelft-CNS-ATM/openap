@@ -1,6 +1,7 @@
 """OpenAP FuelFlow model."""
 
 import importlib
+
 from openap import prop
 from openap.extra import ndarrayconvert
 
@@ -35,12 +36,12 @@ class Emission(object):
     def _fl2sl(self, ffac, tas, alt):
         """Convert to sea-level equivalent"""
         M = self.aero.tas2mach(tas * self.aero.kts, alt * self.aero.ft)
-        beta = self.np.exp(0.2 * (M ** 2))
+        beta = self.np.exp(0.2 * (M**2))
         theta = (self.aero.temperature(alt * self.aero.ft) / 288.15) / beta
         delta = (1 - 0.0019812 * alt / 288.15) ** 5.255876 / self.np.power(beta, 3.5)
-        ratio = (theta ** 3.3) / (delta ** 1.02)
-
-        ff_sl = (ffac / self.n_eng) * theta ** 3.8 / delta * beta
+        ratio = (theta**3.3) / (delta**1.02)
+        # TODO: Where does this equation come from?
+        ff_sl = (ffac / self.n_eng) * theta**3.8 / delta * beta
 
         return ff_sl, ratio
 
@@ -55,7 +56,8 @@ class Emission(object):
             float: CO2 emission from all engines (unit: g/s).
 
         """
-        return ffac * 3149
+        # IATA: jet fuel -> co2
+        return ffac * 3160
 
     @ndarrayconvert
     def h2o(self, ffac):
@@ -68,6 +70,7 @@ class Emission(object):
             float: H2O emission from all engines (unit: g/s).
 
         """
+        # kerosene -> water
         return ffac * 1230
 
     @ndarrayconvert
@@ -81,6 +84,7 @@ class Emission(object):
             float: Soot emission from all engines (unit: g/s).
 
         """
+        # Barrett et al. 2010 - Global Mortality Attributable to Aircraft Cruise Emissions
         return ffac * 0.03
 
     @ndarrayconvert
@@ -94,7 +98,8 @@ class Emission(object):
             float: SOx emission from all engines (unit: g/s).
 
         """
-        return ffac * 0.84
+        # Barrett et al. 2010 - Global Mortality Attributable to Aircraft Cruise Emissions
+        return ffac * 1.2
 
     @ndarrayconvert
     def nox(self, ffac, tas, alt=0):
@@ -129,6 +134,8 @@ class Emission(object):
 
         # convert back to actual flight level
         omega = 10 ** (-3) * self.np.exp(-0.0001426 * (alt - 12900))
+
+        # TODO: source
         nox_fl = nox_sl * self.np.sqrt(1 / ratio) * self.np.exp(-19 * (omega - 0.00634))
 
         # convert g/(kg fuel) to g/s for all engines
@@ -166,6 +173,7 @@ class Emission(object):
             ],
         )
 
+        # TODO: source
         # convert back to actual flight level
         co_fl = co_sl * ratio
 
@@ -203,7 +211,7 @@ class Emission(object):
                 self.engine["ei_hc_to"],
             ],
         )
-
+        # TODO: source
         # convert back to actual flight level
         hc_fl = hc_sl * ratio
 

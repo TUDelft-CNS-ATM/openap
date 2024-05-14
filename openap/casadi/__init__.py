@@ -26,10 +26,10 @@ class Thrust(thrust.Thrust, metaclass=RemoveDecoratorMeta):
 
 
 class FuelFlow(fuel.FuelFlow, metaclass=RemoveDecoratorMeta):
-    def __init__(self, ac, eng=None):
+    def __init__(self, ac, eng=None, **kwargs):
         self.Drag = Drag
         self.Thrust = Thrust
-        super(FuelFlow, self).__init__(ac=ac, eng=eng)
+        super(FuelFlow, self).__init__(ac=ac, eng=eng, **kwargs)
 
 
 class Emission(emission.Emission, metaclass=RemoveDecoratorMeta):

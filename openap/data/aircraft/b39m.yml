@@ -1,5 +1,10 @@
 aircraft: Boeing 737 MAX 9
 
+pax: 
+  max: 220
+  low: 178
+  high: 193
+
 fuselage:
   length:   42.11
   height:   3.73

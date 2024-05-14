@@ -1,5 +1,10 @@
 aircraft: Boeing 737-400
 
+pax: 
+  max: 188
+  low: 145
+  high: 160
+
 fuselage:
   length:   33.4
   height:   3.73
