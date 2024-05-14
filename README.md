@@ -2,22 +2,9 @@
 
 This repository contains the OpenAP model data and Python packages for aircraft performance and emission calculations.
 
-More information on user guide and related articles at: [OpenAP.dev](https://openap.dev/)
-
-The most recent development fork of OpenAP is: https://github.com/junzis/openap. For discussions and issues, you can use the following links:
-
- - https://github.com/junzis/openap/discussions (discussions, feedback and suggestions)
- - https://github.com/junzis/openap/issues (bug reporting)
-
+More information on the user guide and related articles at: [OpenAP.dev](https://openap.dev/)
 
 ## Install
-
-
-Install the development branch from GitHub:
-
-```sh
-pip install --upgrade git+https://github.com/junzis/openap
-```
 
 Install the latest stable release from pypi:
 
@@ -31,39 +18,41 @@ Install the latest stable release on conda-forge:
 conda install openap
 ```
 
+Install the development branch from GitHub (may not be stable):
+
+```sh
+pip install --upgrade git+https://github.com/junzis/openap
+```
+
 ## Content
 
-OpenAP library has two parts, which are __OpenAP model data__ and __OpenAP Python packages__.
-
+OpenAP library has two parts, which are **OpenAP model data** and **OpenAP Python packages**.
 
 ### Model data
 
 Data in this repository includes:
 
-  - Aircraft data: Collected from open literature.
-  - Engines data: Primarily from ICAO emission data-bank, including fuel flow and emissions.
-  - Drag polar data: Exclusively derived from open data ([reference](https://junzis.com/files/openap_dragpolar.pdf)).
-  - Kinematic data: Kinematic model (formally [WRAP](https://github.com/junzis/wrap)) describe speed, altitude, and vertical rate.
-  - Navigation data: Airport and waypoints obtained from [X-plane ](https://developer.x-plane.com/docs/data-development-documentation/).
-
+- Aircraft data: Collected from open literature.
+- Engines data: Primarily from the ICAO emission data-bank, including fuel flow and emissions.
+- Drag polar data: Exclusively derived from open data ([reference](https://research.tudelft.nl/files/71038050/published_OpenAP_drag_polar.pdf)).
+- Kinematic data: The kinematic model (formally [WRAP](https://github.com/junzis/wrap)) describes speed, altitude, and vertical rate.
+- Navigation data: Airport and waypoints obtained from [X-plane](https://developer.x-plane.com/docs/data-development-documentation/).
 
 ### Python packages
 
 The OpenAP Python library includes the following packages:
 
-  - `prop`: a package for accessing aircraft and engine properties
-  - `thrust`: a package for computing aircraft thrust
-  - `drag`: a package for computing aircraft drag
-  - `fuel`: a package for computing fuel consumption
-  - `emission`: a package for computing aircraft emissions
-  - `kinematic`: a package for accessing WRAP data
-  - `aero`: a package for common aeronautical conversions
-  - `nav`: a package for accessing navigation information
-  - `segment`: a package for determining climb, cruise, descent, level flight
-  - `phase`: a wrapper around `segment`, providing identification of all flight phases
-  - `traj`: package contains a set of tools for trajectory generation
-
-
+- `prop`: module for accessing aircraft and engine properties
+- `thrust`: module for computing aircraft thrust
+- `drag`: module for computing aircraft drag
+- `fuel`: module for computing fuel consumption
+- `emission`: module for computing aircraft emissions
+- `kinematic`: module for accessing WRAP data
+- `aero`: module for common aeronautical conversions
+- `nav`: module for accessing navigation information
+- `segment`: module for determining climb, cruise, descent, level flight
+- `phase`: module providing identification of all flight phases
+- `traj`: module contains a set of tools for trajectory generation
 
 ## Citing OpenAP
 
