@@ -1,17 +1,24 @@
 """OpenAP FuelFlow model."""
 
+import glob
 import importlib
+import os
+import pathlib
 
-from openap import prop
+import pandas as pd
+import yaml
+from openap import aero, prop
 from openap.extra import ndarrayconvert
 
+curr_path = os.path.dirname(os.path.realpath(__file__))
+dir_fuelmodel = os.path.join(curr_path, "data/fuel/")
+file_synonym = os.path.join(curr_path, "data/fuel/_synonym.csv")
 
-def func_fuel2(a, b):
-    return lambda x: a * (x + b) ** 2
+fuel_synonym = pd.read_csv(file_synonym)
 
 
-def func_fuel3(c3, c2, c1):
-    return lambda x: c3 * x**3 + c2 * x**2 + c1 * x
+def func_fuel(coef):
+    return lambda x: -coef * (x - 1) ** 2 + coef
 
 
 class FuelFlow(object):
@@ -25,8 +32,6 @@ class FuelFlow(object):
             eng (string): Engine type (for example: CFM56-5A3).
                 Leave empty to use the default engine specified
                 by in the aircraft database.
-            polydeg (int): Order of the polynomials for fuel flow model
-                            (2 or 3), defaults to 2.
 
         """
         if not hasattr(self, "np"):
@@ -41,6 +46,7 @@ class FuelFlow(object):
         if not hasattr(self, "WRAP"):
             self.WRAP = importlib.import_module("openap.kinematic").WRAP
 
+        self.ac = ac.lower()
         self.aircraft = prop.aircraft(ac, **kwargs)
 
         if eng is None:
@@ -52,20 +58,31 @@ class FuelFlow(object):
         self.drag = self.Drag(ac, **kwargs)
         self.wrap = self.WRAP(ac, **kwargs)
 
-        polydeg = kwargs.get("polydeg", 2)
+        self.params = self.fuel_params()
+        self.polyfuel = func_fuel(self.params["fuel_coef"])
 
-        if polydeg == 2:
-            a, b = self.engine["fuel_a"], self.engine["fuel_b"]
-            self.polyfuel = func_fuel2(a, b)
-        elif polydeg == 3:
-            c3, c2, c1 = (
-                self.engine["fuel_c3"],
-                self.engine["fuel_c2"],
-                self.engine["fuel_c1"],
-            )
-            self.polyfuel = func_fuel3(c3, c2, c1)
+    def fuel_params(self):
+        """Obtain the fuel model parameters.
+
+        Returns:
+            dict: drag polar model parameters.
+        """
+        polar_files = glob.glob(dir_fuelmodel + "*.yml")
+        ac_polar_available = [pathlib.Path(s).stem for s in polar_files]
+
+        if self.ac in ac_polar_available:
+            ac = self.ac
         else:
-            raise ValueError(f"Polydeg must be 2 or 3")
+            syno = fuel_synonym.query("orig==@self.ac")
+            if self.use_synonym and syno.shape[0] > 0:
+                ac = syno.new.iloc[0]
+            else:
+                raise ValueError(f"Drag polar for {self.ac} not avaiable.")
+
+        f = dir_fuelmodel + ac + ".yml"
+        with open(f, "r") as file:
+            params = yaml.safe_load(file.read())
+        return params
 
     @ndarrayconvert
     def at_thrust(self, acthr, alt=0, limit=True):
@@ -80,22 +97,16 @@ class FuelFlow(object):
             float: Fuel flow (unit: kg/s).
 
         """
+        max_eng_thrust = self.engine["max_thrust"]
         n_eng = self.aircraft["engine"]["number"]
-        engthr = acthr / n_eng
 
-        maxthr = self.thrust.takeoff(tas=0, alt=0)
-        ratio = acthr / maxthr
+        ratio = acthr / (max_eng_thrust * n_eng)
 
         if limit:
-            # assume minimum is 7% at idle
-            ratio = self.np.where(ratio < 0.07, 0.07, ratio)
+            ratio = self.np.where(ratio < 0, 0, ratio)
             ratio = self.np.where(ratio > 1, 1, ratio)
 
-        ff_sl = self.polyfuel(ratio)
-        ff_corr_alt = self.engine["fuel_ch"] * (engthr / 1000) * (alt * 0.3048)
-        ff_eng = ff_sl + ff_corr_alt
-
-        fuelflow = ff_eng * n_eng
+        fuelflow = self.polyfuel(ratio)
 
         return fuelflow
 
@@ -123,7 +134,7 @@ class FuelFlow(object):
         return fuelflow
 
     @ndarrayconvert
-    def enroute(self, mass, tas, alt, path_angle=0, limit=True):
+    def enroute(self, mass, tas, alt, vs=0, acc=0, limit=True):
         """Compute the fuel flow during climb, cruise, or descent.
 
         The net thrust is first estimated based on the dynamic equation.
@@ -134,17 +145,26 @@ class FuelFlow(object):
             mass (int or ndarray): Aircraft mass (unit: kg).
             tas (int or ndarray): Aircraft true airspeed (unit: kt).
             alt (int or ndarray): Aircraft altitude (unit: ft).
-            path_angle (float or ndarray): Flight path angle (unit: degrees).
+            vs (float or ndarray): Vertical rate (unit: ft/min). Default is 0.
+            acc (float or ndarray): acceleration (unit: m/s^2). Default is 0.
 
         Returns:
             float: Fuel flow (unit: kg/s).
 
         """
-        D = self.drag.clean(mass=mass, tas=tas, alt=alt, path_angle=path_angle)
+        gamma = self.np.arctan2(vs * aero.fpm, tas * aero.kts)
 
-        gamma = path_angle * 3.142 / 180  # radians
+        # limit gamma to -10 to 10 degrees (0.175 radians)
+        gamma = self.np.where(gamma < -0.175, -0.175, gamma)
+        gamma = self.np.where(gamma > 0.175, 0.175, gamma)
 
-        T = D + mass * 9.81 * self.np.sin(gamma)
+        # limit acc to 5 m/s^2
+        acc = self.np.where(acc < -5, -5, acc)
+        acc = self.np.where(acc > 5, 5, acc)
+
+        D = self.drag.clean(mass=mass, tas=tas, alt=alt, vs=vs)
+
+        T = D + mass * 9.81 * self.np.sin(gamma) + mass * acc
 
         if limit:
             T_max = self.thrust.climb(tas=tas, alt=alt, roc=0)

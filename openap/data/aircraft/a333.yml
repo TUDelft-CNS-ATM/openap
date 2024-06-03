@@ -1,39 +1,41 @@
 aircraft: Airbus A330-300
 
-pax: 
+mtow: 242000
+mlw: 188000
+oew: 122780
+mfc: 139000
+vmo: 330
+mmo: 0.86
+ceiling: 12500
+
+pax:
   max: 440
   low: 250
   high: 290
 
 fuselage:
-  length:   63.67
-  height:   5.64
-  width:    5.64
+  length: 63.67
+  height: 5.64
+  width: 5.64
 
 wing:
-  area:     361.6
-  span:     60.3
-  mac:      7.26
-  sweep:    29.7
-  t/c:      0.11
+  area: 361.6
+  span: 60.3
+  mac: 7.26
+  sweep: 29.7
+  t/c: 0.11
 
 flaps:
-  type:     double-slotted
-  area:     null
-  bf/b:     0.665
-
-limits:
-  MTOW:     242000
-  MLW:      188000
-  OEW:      122780
-  MFC:      139000
-  VMO:      330
-  MMO:      0.86
-  ceiling:  12500
+  type: double-slotted
+  area: null
+  bf/b: 0.665
+  lambda_f: 0.900
+  cf/c: 0.150
+  Sf/S: 0.150
 
 cruise:
-  height:   11000
-  mach:     0.82
+  height: 11000
+  mach: 0.82
 
 engine:
   type: turbofan
@@ -50,3 +52,13 @@ engine:
     A330-341: Trent 768
     A330-342: Trent 772
     A330-343: Trent 772
+
+drag:
+  cd0: 0.022
+  k: 0.041
+  e: 0.773
+  gears: 0.014
+
+fuel:
+  engine: Trent 772
+  fuel_coef: 5.84957777

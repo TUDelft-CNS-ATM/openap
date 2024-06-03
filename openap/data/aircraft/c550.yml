@@ -1,39 +1,41 @@
 aircraft: Cessna Citation II
 
-pax: 
+mtow: 6849
+mlw: 6804
+oew: 3655
+mfc: 2204
+vmo: 270
+mmo: 0.7
+ceiling: 13100
+
+pax:
   max: 10
   low: 5
   high: 10
 
 fuselage:
-  length:   14.39
-  height:   1.46
-  width:    1.46
+  length: 14.39
+  height: 1.46
+  width: 1.46
 
 wing:
-  area:     31.83
-  span:     15.90
-  mac:      2.05
-  sweep:    0
-  t/c:      0.13
+  area: 31.83
+  span: 15.90
+  mac: 2.05
+  sweep: 0
+  t/c: 0.13
 
 flaps:
-  type:     single-slotted
-  area:     null
-  bf/b:     null
-
-limits:
-  MTOW:     6849
-  MLW:      6804
-  OEW:      3655
-  MFC:      2204
-  VMO:      270
-  MMO:      0.7
-  ceiling:  13100
+  type: single-slotted
+  area: null
+  bf/b: null
+  lambda_f: 1.700
+  cf/c: 0.150
+  Sf/S: 0.150
 
 cruise:
-  height:   11000
-  mach:     0.67
+  height: 11000
+  mach: 0.67
 
 engine:
   type: turbofan
@@ -42,3 +44,9 @@ engine:
   default: JT15D-4
   options:
     - JT15D-4
+
+drag:
+  cd0: 0.028
+  k: 0.049
+  e: 0.818
+  gears: 0.020

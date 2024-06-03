@@ -230,5 +230,5 @@ class Thrust(object):
             float or ndarray: Total thrust (unit: N).
 
         """
-        F = 0.07 * self.climb(tas, alt, roc=0)
+        F = 0.07 * self.takeoff(tas, alt)
         return F

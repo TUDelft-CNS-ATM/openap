@@ -1,39 +1,41 @@
 aircraft: Boeing 737-900
 
-pax: 
+mtow: 85100
+mlw: 71300
+oew: 44600
+mfc: 26000
+vmo: 340
+mmo: 0.82
+ceiling: 12500
+
+pax:
   max: 215
   low: 170
   high: 190
 
 fuselage:
-  length:   42.11
-  height:   3.73
-  width:    3.73
+  length: 42.11
+  height: 3.73
+  width: 3.73
 
 wing:
-  area:     124.6
-  span:     34.32
-  mac:      4.17
-  sweep:    25
-  t/c:      null
+  area: 124.6
+  span: 34.32
+  mac: 4.17
+  sweep: 25
+  t/c: null
 
 flaps:
-  type:     double-slotted
-  area:     null
-  bf/b:     0.60
-
-limits:
-  MTOW:     85100
-  MLW:      71300
-  OEW:      44600
-  MFC:      26000
-  VMO:      340
-  MMO:      0.82
-  ceiling:  12500
+  type: double-slotted
+  area: null
+  bf/b: 0.60
+  lambda_f: 0.900
+  cf/c: 0.150
+  Sf/S: 0.150
 
 cruise:
-  height:   11000
-  mach:     0.79
+  height: 11000
+  mach: 0.79
 
 engine:
   type: turbofan
@@ -44,3 +46,13 @@ engine:
     - CFM56-7B24
     - CFM56-7B26
     - CFM56-7B27
+
+clean:
+  cd0: 0.020
+  k: 0.042
+  e: 0.797
+  gears: 0.018
+
+fuel:
+  engine: CFM56-7B27E
+  fuel_coef: 2.79057225

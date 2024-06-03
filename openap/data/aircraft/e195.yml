@@ -1,39 +1,43 @@
 aircraft: Embraer E195 (LR)
 
-pax: 
+mtow: 50790
+mlw: 45000
+oew: 28583
+mfc: 16153
+vmo: 320
+mmo: 0.82
+ceiling: 12500
+
+pax:
   max: 124
   low: 88
   high: 116
 
 fuselage:
-  length:   38.65
-  height:   3.35
-  width:    3.01
+  length: 38.65
+  height: 3.35
+  width: 3.01
 
 wing:
-  area:     92.5
-  span:     28.72
-  mac:      3.68
-  sweep:    23
-  t/c:      null
+  area: 92.5
+  span: 28.72
+  mac: 3.68
+  sweep: 23
+  t/c: null
 
 flaps:
-  type:     double-slotted
-  area:     null
-  bf/b:     null
+  type: double-slotted
+  area: null
+  bf/b: null
+  lambda_f: 0.900
+  cf/c: 0.150
+  Sf/S: 0.150
 
 limits:
-  MTOW:     50790
-  MLW:      45000
-  OEW:      28583
-  MFC:      16153
-  VMO:      320
-  MMO:      0.82
-  ceiling:  12500
 
 cruise:
-  height:   11000
-  mach:     0.78
+  height: 11000
+  mach: 0.78
 
 engine:
   type: turbofan
@@ -42,3 +46,13 @@ engine:
   default: CF34-10E5
   options:
     - CF34-10E5
+
+drag:
+  cd0: 0.021
+  k: 0.045
+  e: 0.795
+  gears: 0.017
+
+fuel:
+  engine: CF34-10E5A1
+  fuel_coef: 1.76241166

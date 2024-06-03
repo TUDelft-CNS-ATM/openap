@@ -1,39 +1,41 @@
 aircraft: Airbus A319
 
-pax: 
+mtow: 75500
+mlw: 62500
+oew: 40800
+mfc: 30190
+vmo: 350
+mmo: 0.82
+ceiling: 12500
+
+pax:
   max: 156
   low: 110
   high: 140
 
 fuselage:
-  length:   33.84
-  height:   4.14
-  width:    3.95
+  length: 33.84
+  height: 4.14
+  width: 3.95
 
 wing:
-  area:     124
-  span:     35.8
-  mac:      4.29
-  sweep:    25
-  t/c:      null
+  area: 124
+  span: 35.8
+  mac: 4.1935
+  sweep: 25
+  t/c: null
 
 flaps:
-  type:     single-slotted
-  area:     21.1
-  bf/b:     0.780
-
-limits:
-  MTOW:     75500
-  MLW:      62500
-  OEW:      40800
-  MFC:      30190
-  VMO:      350
-  MMO:      0.82
-  ceiling:  12500
+  type: single-slotted
+  area: 21.1
+  bf/b: 0.780
+  lambda_f: 0.900
+  cf/c: 0.176
+  Sf/S: 0.170
 
 cruise:
-  height:   11000
-  mach:     0.78
+  height: 11000
+  mach: 0.78
 
 engine:
   type: turbofan
@@ -49,3 +51,13 @@ engine:
     A319-131: V2522-A5
     A319-132: V2524-A5
     A319-133: V2527M-A5
+
+drag:
+  cd0: 0.020
+  k: 0.039
+  e: 0.783
+  gears: 0.017
+
+fuel:
+  engine: V2524-A5
+  fuel_coef: 2.33357287

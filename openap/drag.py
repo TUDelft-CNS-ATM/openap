@@ -85,10 +85,11 @@ class Drag(object):
         return cl
 
     @ndarrayconvert
-    def _calc_drag(self, mass, tas, alt, cd0, k, path_angle):
+    def _calc_drag(self, mass, tas, alt, cd0, k, vs):
         v = tas * self.aero.kts
         h = alt * self.aero.ft
-        gamma = path_angle * self.np.pi / 180
+
+        gamma = self.np.arctan2(vs * self.aero.fpm, tas * self.aero.kts)
 
         S = self.aircraft["wing"]["area"]
 
@@ -104,14 +105,14 @@ class Drag(object):
         return D
 
     @ndarrayconvert
-    def clean(self, mass, tas, alt, path_angle=0):
+    def clean(self, mass, tas, alt, vs=0):
         """Compute drag at clean configuration (considering compressibility).
 
         Args:
             mass (int or ndarray): Mass of the aircraft (unit: kg).
             tas (int or ndarray): True airspeed (unit: kt).
             alt (int or ndarray): Altitude (unit: ft).
-            path_angle (float or ndarray): Path angle (unit: degree). Defaults to 0.
+            vs (float or ndarray): Vertical rate (unit: feet/min). Defaults to 0.
 
         Returns:
             int: Total drag (unit: N).
@@ -150,11 +151,11 @@ class Drag(object):
 
         cd0 = cd0 + dCdw
 
-        D = self._calc_drag(mass, tas, alt, cd0, k, path_angle)
+        D = self._calc_drag(mass, tas, alt, cd0, k, vs)
         return D
 
     @ndarrayconvert
-    def nonclean(self, mass, tas, alt, flap_angle, path_angle=0, landing_gear=False):
+    def nonclean(self, mass, tas, alt, flap_angle, vs=0, landing_gear=False):
         """Compute drag at at non-clean configuration.
 
         Args:
@@ -162,7 +163,7 @@ class Drag(object):
             tas (int or ndarray): True airspeed (unit: kt).
             alt (int or ndarray): Altitude (unit: ft).
             flap_angle (int or ndarray): flap deflection angle (unit: degree).
-            path_angle (float or ndarray): Path angle (unit: degree). Defaults to 0.
+            vs (float or ndarray): Vertical rate (unit: feet/min). Defaults to 0.
             landing_gear (bool): Is landing gear extended? Defaults to False.
 
         Returns:
@@ -212,5 +213,5 @@ class Drag(object):
         ar = self.aircraft["wing"]["span"] ** 2 / self.aircraft["wing"]["area"]
         k_total = 1 / (1 / k + self.np.pi * ar * delta_e_flap)
 
-        D = self._calc_drag(mass, tas, alt, cd0_total, k_total, path_angle)
+        D = self._calc_drag(mass, tas, alt, cd0_total, k_total, vs)
         return D

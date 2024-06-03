@@ -1,39 +1,41 @@
 aircraft: Airbus A340-300
 
-pax: 
+mtow: 276000
+mlw: 190000
+oew: 130000
+mfc: 147850
+vmo: 330
+mmo: 0.86
+ceiling: 12500
+
+pax:
   max: 440
   low: 250
   high: 290
 
 fuselage:
-  length:   63.69
-  height:   5.64
-  width:    5.64
+  length: 63.69
+  height: 5.64
+  width: 5.64
 
 wing:
-  area:     363.1
-  span:     60.3
-  mac:      7.26
-  sweep:    29.7
-  t/c:      0.11
+  area: 363.1
+  span: 60.3
+  mac: 7.26
+  sweep: 29.7
+  t/c: 0.11
 
 flaps:
-  type:     double-slotted
-  area:     null
-  bf/b:     0.665
-
-limits:
-  MTOW:     276000
-  MLW:      190000
-  OEW:      130000
-  MFC:      147850
-  VMO:      330
-  MMO:      0.86
-  ceiling:  12500
+  type: double-slotted
+  area: null
+  bf/b: 0.665
+  lambda_f: 0.900
+  cf/c: 0.150
+  Sf/S: 0.150
 
 cruise:
-  height:   11000
-  mach:     0.82
+  height: 11000
+  mach: 0.82
 
 engine:
   type: turbofan
@@ -44,3 +46,9 @@ engine:
     A340-311: CFM56-5C2
     A340-312: CFM56-5C3
     A340-313: CFM56-5C4
+
+drag:
+  cd0: 0.019
+  k: 0.040
+  e: 0.799
+  gears: 0.016

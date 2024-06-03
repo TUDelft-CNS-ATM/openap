@@ -1,39 +1,41 @@
 aircraft: Boeing 747-8
 
-pax: 
+mtow: 447700
+mlw: 312100
+oew: 220100
+mfc: 238600
+vmo: 365
+mmo: 0.92
+ceiling: 13100
+
+pax:
   max: 605
   low: 460
   high: 480
 
 fuselage:
-  length:   76.3
-  height:   7.10
-  width:    6.50
+  length: 76.3
+  height: 7.10
+  width: 6.50
 
 wing:
-  area:     554
-  span:     68.4
-  mac:      9.68
-  sweep:    37.5
-  t/c:      0.094
+  area: 554
+  span: 68.4
+  mac: 9.68
+  sweep: 37.5
+  t/c: 0.094
 
 flaps:
-  type:     triple-slotted
-  area:     78.7
-  bf/b:     0.639
-
-limits:
-  MTOW:     447700
-  MLW:      312100
-  OEW:      220100
-  MFC:      238600
-  VMO:      365
-  MMO:      0.92
-  ceiling:  13100
+  type: triple-slotted
+  area: 78.7
+  bf/b: 0.639
+  lambda_f: 0.900
+  cf/c: 0.186
+  Sf/S: 0.142
 
 cruise:
-  height:   11000
-  mach:     0.85
+  height: 11000
+  mach: 0.85
 
 engine:
   type: turbofan
@@ -42,3 +44,9 @@ engine:
   default: GEnx-2B67
   options:
     - GEnx-2B67
+
+drag:
+  cd0: 0.021
+  k: 0.047
+  e: 0.806
+  gears: 0.015

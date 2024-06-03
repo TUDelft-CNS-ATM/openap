@@ -1,39 +1,41 @@
 aircraft: Airbus A320
 
-pax: 
+mtow: 78000
+mlw: 66000
+oew: 42600
+mfc: 24210
+vmo: 350
+mmo: 0.82
+ceiling: 12500
+
+pax:
   max: 180
   low: 140
   high: 170
 
 fuselage:
-  length:   37.57
-  height:   4.14
-  width:    3.95
+  length: 37.57
+  height: 4.14
+  width: 3.95
 
 wing:
-  area:     124
-  span:     35.8
-  mac:      4.29
-  sweep:    25
-  t/c:      null
+  area: 124
+  span: 35.8
+  mac: 4.1935
+  sweep: 25
+  t/c: null
 
 flaps:
-  type:     single-slotted
-  area:     21.1
-  bf/b:     0.780
-
-limits:
-  MTOW:     78000
-  MLW:      66000
-  OEW:      42600
-  MFC:      24210
-  VMO:      350
-  MMO:      0.82
-  ceiling:  12500
+  type: single-slotted
+  area: 21.1
+  bf/b: 0.780
+  lambda_f: 0.900
+  cf/c: 0.176
+  Sf/S: 0.170
 
 cruise:
-  height:   11000
-  mach:     0.78
+  height: 11000
+  mach: 0.78
 
 engine:
   type: turbofan
@@ -50,3 +52,13 @@ engine:
     A320-231: V2500-A1
     A320-232: V2527-A5
     A320-233: V2527E-A5
+
+drag:
+  cd0: 0.018
+  k: 0.039
+  e: 0.799
+  gears: 0.017
+
+fuel:
+  engine: CFM56-5B4/P
+  fuel_coef: 2.65942225
