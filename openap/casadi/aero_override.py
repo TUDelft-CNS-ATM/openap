@@ -1,8 +1,8 @@
 """aero.py adapted for CasADi"""
 
 from casadi import casadi
-from . import numpy_override as np
 
+from . import numpy_override as np
 
 """Aero and Geo Constants """
 kts = 0.514444  # knot -> m/s
@@ -39,10 +39,14 @@ def atmos(h):
             Air pressure (Pa), density (kg/m3), and temperature (K).
 
     """
-    T = np.maximum(288.15 - 0.0065 * h, 216.65)
-    rhotrop = 1.225 * (T / 288.15) ** 4.256848030018761
-    dhstrat = np.maximum(0.0, h - 11000.0)
-    rho = rhotrop * np.exp(-dhstrat / 6341.552161)
+    # T = np.maximum(288.15 - 0.0065 * h, 216.65)
+    # rhotrop = 1.225 * (T / 288.15) ** 4.256848030018761
+    # dhstrat = np.maximum(0.0, h - 11000.0)
+    # rho = rhotrop * np.exp(-dhstrat / 6341.552161)
+
+    # use exponential model to avoid discontinuity at tropopause
+    T = 85.46369268 * np.exp(-0.00017235 * h) + 213.31449979
+    rho = 1.31788377 * np.exp(-0.00011107 * h) - 0.03933069
     p = rho * R * T
     return p, rho, T
 
