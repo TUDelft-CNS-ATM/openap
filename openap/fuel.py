@@ -152,17 +152,18 @@ class FuelFlow(object):
             float: Fuel flow (unit: kg/s).
 
         """
+        D = self.drag.clean(mass=mass, tas=tas, alt=alt, vs=vs)
+
         gamma = self.np.arctan2(vs * aero.fpm, tas * aero.kts)
 
-        # limit gamma to -10 to 10 degrees (0.175 radians)
-        gamma = self.np.where(gamma < -0.175, -0.175, gamma)
-        gamma = self.np.where(gamma > 0.175, 0.175, gamma)
+        if limit:
+            # limit gamma to -10 to 10 degrees (0.175 radians)
+            gamma = self.np.where(gamma < -0.175, -0.175, gamma)
+            gamma = self.np.where(gamma > 0.175, 0.175, gamma)
 
-        # limit acc to 5 m/s^2
-        acc = self.np.where(acc < -5, -5, acc)
-        acc = self.np.where(acc > 5, 5, acc)
-
-        D = self.drag.clean(mass=mass, tas=tas, alt=alt, vs=vs)
+            # limit acc to 5 m/s^2
+            acc = self.np.where(acc < -5, -5, acc)
+            acc = self.np.where(acc > 5, 5, acc)
 
         T = D + mass * 9.81 * self.np.sin(gamma) + mass * acc
 
