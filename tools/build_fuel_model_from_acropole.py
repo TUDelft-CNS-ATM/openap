@@ -25,7 +25,7 @@ def func(ratio, coef):
 acropole_aircraft = pd.read_csv("acropole_aircraft_params.csv")
 
 
-def gen_fuel_model(typecode, engine_type, show_plot=False):
+def gen_fuel_model(typecode, engine_type, wave_drag=False, show_plot=False):
 
     if typecode.lower() not in openap.prop.available_aircraft():
         warnings.warn(f"{typecode} not in openap")
@@ -69,7 +69,7 @@ def gen_fuel_model(typecode, engine_type, show_plot=False):
 
     eng = openap.prop.engine(ac["engine"]["default"])
 
-    drag = openap.Drag(typecode, use_synonym=True)
+    drag = openap.Drag(typecode, wave_drag=wave_drag, use_synonym=True)
     thrust = openap.Thrust(typecode, use_synonym=True)
 
     results = []
@@ -151,6 +151,13 @@ def gen_fuel_model(typecode, engine_type, show_plot=False):
         plt.show()
 
     return typecode, engine_type, popt[0]
+
+
+# %%
+
+# gen_fuel_model("A320", None, wave_drag=True, show_plot=True)
+
+# %%
 
 
 @click.command()

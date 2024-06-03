@@ -60,6 +60,17 @@ def aircraft(ac, use_synonym=False, **kwargs):
     with open(f, "r") as file:
         acdict = yaml.safe_load(file.read())
 
+    # compatibility with old aircraft files
+    acdict["limits"] = dict(
+        MTOW=acdict.get("mtow"),
+        MLW=acdict.get("mlw"),
+        OEW=acdict.get("oew"),
+        MFC=acdict.get("mfc"),
+        VMO=acdict.get("vmo"),
+        MMO=acdict.get("mmo"),
+        ceiling=acdict.get("ceiling"),
+    )
+
     return acdict
 
 
