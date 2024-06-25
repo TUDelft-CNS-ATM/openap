@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "openap"
-version = "1.5"
+version = "2.0"
 description = "Open Aircraft Performance Model (OpenAP) in Python"
 homepage = "https://openap.dev"
 repository = "https://github.com/junzis/openap"
