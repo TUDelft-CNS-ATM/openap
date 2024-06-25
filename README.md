@@ -26,17 +26,16 @@ pip install --upgrade git+https://github.com/junzis/openap
 
 ## Content
 
-OpenAP library has two parts, which are **OpenAP model data** and **OpenAP Python packages**.
-
 ### Model data
 
 Data in this repository includes:
 
 - Aircraft data: Collected from open literature.
 - Engines data: Primarily from the ICAO emission data-bank, including fuel flow and emissions.
-- Drag polar data: Exclusively derived from open data ([reference](https://research.tudelft.nl/files/71038050/published_OpenAP_drag_polar.pdf)).
-- Kinematic data: The kinematic model (formally [WRAP](https://github.com/junzis/wrap)) describes speed, altitude, and vertical rate.
-- Navigation data: Airport and waypoints obtained from [X-plane](https://developer.x-plane.com/docs/data-development-documentation/).
+- Drag polar model data: Exclusively derived from open data ([reference](https://research.tudelft.nl/files/71038050/published_OpenAP_drag_polar.pdf)).
+- Fuel mode data: Polynomial models derived from the [acropole model](https://github.com/DGAC/Acropole) by [@JarryGabriel](https://github.com/JarryGabriel).
+- Kinematic data: The kinematic model describes speed, altitude, and vertical rate ([reference](https://github.com/junzis/wrap)).
+- Navigation data: Airport and waypoints obtained from [X-Plane](https://developer.x-plane.com/docs/data-development-documentation/).
 
 ### Python packages
 
