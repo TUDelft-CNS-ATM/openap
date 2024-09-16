@@ -46,6 +46,8 @@ class FuelFlow(object):
         if not hasattr(self, "WRAP"):
             self.WRAP = importlib.import_module("openap.kinematic").WRAP
 
+        self.use_synonym = kwargs.get("use_synonym", False)
+
         self.ac = ac.lower()
         self.aircraft = prop.aircraft(ac, **kwargs)
 
