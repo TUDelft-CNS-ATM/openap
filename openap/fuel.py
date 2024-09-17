@@ -67,7 +67,7 @@ class FuelFlow(object):
         """Obtain the fuel model parameters.
 
         Returns:
-            dict: drag polar model parameters.
+            dict: fuel model parameters.
         """
         polar_files = glob.glob(dir_fuelmodel + "*.yml")
         ac_polar_available = [pathlib.Path(s).stem for s in polar_files]
@@ -79,7 +79,7 @@ class FuelFlow(object):
             if self.use_synonym and syno.shape[0] > 0:
                 ac = syno.new.iloc[0]
             else:
-                raise ValueError(f"Drag polar for {self.ac} not avaiable.")
+                raise ValueError(f"Fuel model for {self.ac} not avaiable.")
 
         f = dir_fuelmodel + ac + ".yml"
         with open(f, "r") as file:
