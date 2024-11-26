@@ -1,12 +1,14 @@
-"""OpenAP FuelFlow model."""
+""" "OpenAP FuelFlow model."""
 
 import glob
 import importlib
 import os
 import pathlib
 
-import pandas as pd
 import yaml
+
+import numpy as np
+import pandas as pd
 from openap import aero, prop
 from openap.extra import ndarrayconvert
 
@@ -102,8 +104,11 @@ class FuelFlow(object):
 
         ratio = acthr / (max_eng_thrust * n_eng)
 
+        # always limit the lowest ratio to 0.07 without creating a discontinuity
+        ratio = self.np.log(1 + self.np.exp(20 * (ratio - 0.07))) / 20 + 0.07
+
+        # upper limit the ratio to 1
         if limit:
-            ratio = self.np.where(ratio < 0, 0, ratio)
             ratio = self.np.where(ratio > 1, 1, ratio)
 
         fuelflow = self.polyfuel(ratio)
@@ -157,7 +162,7 @@ class FuelFlow(object):
         gamma = self.np.arctan2(vs * aero.fpm, tas * aero.kts)
 
         if limit:
-            # limit gamma to -10 to 10 degrees (0.175 radians)
+            # limit gamma to -20 to 20 degrees (0.175 radians)
             gamma = self.np.where(gamma < -0.175, -0.175, gamma)
             gamma = self.np.where(gamma > 0.175, 0.175, gamma)
 
