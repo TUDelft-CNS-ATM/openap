@@ -40,16 +40,17 @@ def atmos(h, dT=0):
             Air pressure (Pa), density (kg/m3), and temperature (K).
 
     """
-    # dT = np.maximum(-15, np.minimum(dT, 15))
-    # T0_shift = T0 + dT
-    # T = np.maximum(T0_shift + beta * h, 216.65 + dT)
-    # rhotrop = rho0 * (T / T0_shift) ** 4.256848030018761
-    # dhstrat = np.maximum(0.0, h - 11000.0)
-    # rho = rhotrop * np.exp(-dhstrat / 6341.552161)
+    dT = np.maximum(-15, np.minimum(dT, 15))
+    T0_shift = T0 + dT
+    T = np.maximum(T0_shift + beta * h, 216.65 + dT)
+    rhotrop = rho0 * (T / T0_shift) ** 4.256848030018761
+    dhstrat = np.maximum(0.0, h - 11000.0)
+    rho = rhotrop * np.exp(-dhstrat / 6341.552161)
 
     # use exponential model to avoid discontinuity at tropopause
-    T = 85.46369268 * np.exp(-0.00017235 * h) + 213.31449979 + dT
-    rho = 1.31788377 * np.exp(-0.00011107 * h) - 0.03933069
+    # T = 85.46369268 * np.exp(-0.00017235 * h) + 213.31449979 + dT
+    # rho = 1.31788377 * np.exp(-0.00011107 * h) - 0.03933069
+
     p = rho * R * T
     return p, rho, T
 
