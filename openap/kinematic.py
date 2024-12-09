@@ -36,7 +36,7 @@ wrap_synonym = pd.read_csv(file_synonym)
 class WRAP(object):
     """Construct the kinematic model of the aicraft."""
 
-    def __init__(self, ac, **kwargs):
+    def __init__(self, ac, use_synonym=False, **kwargs):
         """Initialize WRAP object.
 
         Args:
@@ -47,7 +47,7 @@ class WRAP(object):
 
         self.ac = ac.lower()
 
-        self.use_synonym = kwargs.get("use_synonym", False)
+        self.use_synonym = use_synonym
 
         wrap_files = glob.glob(dir_wrap + "*.txt")
         ac_wrap_available = [s[-8:-4].lower() for s in wrap_files]
