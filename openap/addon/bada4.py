@@ -198,16 +198,22 @@ class Thrust(base.ThrustBase):
 
         # load parameters from xml
         bxml = load_bada4(ac, bada_path)
+        self.m_ref = float(bxml.findtext("./PFM/MREF"))
         self.a_ = [float(v.text) for v in bxml.findall("./PFM/TFM/CT/a")]
+        self.ti = [float(v.text) for v in bxml.findall("./PFM/TFM/LIDL/CT/ti")]
+
+        self.kink = dict()
         self.b_ = dict()
         self.c_ = dict()
-        for rating in ["MCRZ", "MCMB", "LIDL"]:
+
+        for rating in ["MCRZ", "MCMB"]:
+            self.kink[rating] = float(bxml.findtext(f"./PFM/TFM/{rating}/kink"))
             self.b_[rating] = [
-                float(t.text) for t in bxml.findall(f".//*/{rating}/flat_rating/b")
+                float(t.text) for t in bxml.findall(f"./PFM/TFM/{rating}/flat_rating/b")
             ]
 
             self.c_[rating] = [
-                float(t.text) for t in bxml.findall(f".//*/{rating}/temp_rating/c")
+                float(t.text) for t in bxml.findall(f"./PFM/TFM/{rating}/temp_rating/c")
             ]
 
     @ndarrayconvert
@@ -221,51 +227,44 @@ class Thrust(base.ThrustBase):
 
         k = 1.4
 
-        if rating == "LIDL":
-            ti = [float(v.text) for v in self.badatree.findall("./PFM/TFM/LIDL/CT/ti")]
-            ti_matrix = self.sci.reshape(ti, (3, 4))
+        delta = self.aero.pressure(h) / self.aero.p0
+        theta = self.aero.temperature(h) / self.aero.T0
 
-            delta = self.aero.pressure(h) / self.aero.p0
-            delta_powers = self.sci.array([delta**i for i in range(-1, 3)]).reshape(
-                4, -1
-            )
-            mach_powers = self.sci.array([mach**i for i in range(3)]).reshape(3, -1)
-            cT = self.sci.einsum("ij,jk,ik->k", ti_matrix, delta_powers, mach_powers)
+        if rating == "LIDL":
+            ti_matrix = self.sci.reshape(self.ti, (3, 4))
+
+            delta_pow = self.sci.array([delta**i for i in range(-1, 3)]).reshape(4, -1)
+            mach_pow = self.sci.array([mach**i for i in range(3)]).reshape(3, -1)
+            cT = self.sci.einsum("ij,jk,ik->k", ti_matrix, delta_pow, mach_pow)
 
         else:
-            kink = float(self.badatree.findtext(f".//*/{rating}/kink"))
-
-            if dT <= kink:
-                bc_ = self.b_[rating]
+            if dT <= self.kink[rating]:
+                b_matrix = self.sci.reshape(self.b_[rating], (6, 6))
+                mach_pow = self.sci.array([mach**i for i in range(6)]).reshape(6, -1)
+                ratio_pow = self.sci.array([delta**j for j in range(6)]).reshape(6, -1)
+                delta_T = self.sci.einsum("ij,jk,ik->k", b_matrix, mach_pow, ratio_pow)
             else:
-                theta = self.aero.temperature(h) / self.aero.T0
-                ratio = theta * (1 + (mach**2) * (k - 1) / 2)
-                bc_ = self.c_[rating]
+                c_matrix = self.sci.reshape(self.c_[rating], (9, 5))
+                mach_pow = self.sci.array([mach**i for i in range(5)]).reshape(5, -1)
+                theta_t = theta * (1 + (mach**2) * (k - 1) / 2)
+                ratio_pow = self.sci.array(
+                    [theta_t**j for j in range(5)] + [delta**j for j in range(1, 5)]
+                ).reshape(9, -1)
+                delta_T = self.sci.einsum("ij,jk,ik->k", c_matrix, mach_pow, ratio_pow)
 
             a_matrix = self.sci.reshape(self.a_, (6, 6))
-            bc_matrix = self.sci.reshape(bc_, (6, 6))
-
-            mach_powers = self.sci.array([mach**i for i in range(6)]).reshape(6, -1)
-            ratio_powers = self.sci.array([ratio**j for j in range(6)]).reshape(6, -1)
-
-            delta_T = self.sci.einsum(
-                "ij,jk,ik->k", bc_matrix, mach_powers, ratio_powers
-            )
-            delta_T_powers = self.sci.array([delta_T**j for j in range(6)]).reshape(
-                6, -1
-            )
-
-            cT = self.sci.einsum("ij,jk,ik->k", a_matrix, mach_powers, delta_T_powers)
+            mach_pow = self.sci.array([mach**i for i in range(6)]).reshape(6, -1)
+            delta_T_pow = self.sci.array([delta_T**j for j in range(6)]).reshape(6, -1)
+            cT = self.sci.einsum("ij,jk,ik->k", a_matrix, mach_pow, delta_T_pow)
 
         return cT
 
     @ndarrayconvert
-    def climb(self, mass, tas, alt, dT=0) -> float | ndarray:
+    def climb(self, tas, alt, dT=0) -> float | ndarray:
         """
         Compute the thrust force during the climb phase.
 
         Parameters:
-            mass (float | ndarray): The mass of the aircraft (kg).
             tas (float | ndarray): True airspeed (kts).
             alt (float | ndarray): Altitude (ft).
             dT (float | ndarray, optional): ISA temperature deviation (K). Default: 0.
@@ -279,15 +278,14 @@ class Thrust(base.ThrustBase):
 
         cT = self.cT(mach, h, "MCMB", dT)
 
-        return delta * mass * self.aero.g0 * cT
+        return delta * self.m_ref * self.aero.g0 * cT
 
     @ndarrayconvert
-    def crusie(self, mass, tas, alt, dT=0) -> float | ndarray:
+    def cruise(self, tas, alt, dT=0) -> float | ndarray:
         """
         Compute the thrust force during the cruise phase.
 
         Parameters:
-            mass (float | ndarray): The mass of the aircraft (kg).
             tas (float | ndarray): True airspeed (kts).
             alt (float | ndarray): Altitude (ft).
             dT (float | ndarray, optional): ISA temperature deviation (K). Default: 0.
@@ -301,22 +299,42 @@ class Thrust(base.ThrustBase):
 
         cT = self.cT(mach, h, "MCRZ", dT)
 
-        return delta * mass * self.aero.g0 * cT
+        return delta * self.m_ref * self.aero.g0 * cT
 
     @ndarrayconvert
-    def takeoff(self, mass, tas, alt=0, dT=0) -> float | ndarray:
+    def takeoff(self, tas, alt=0, dT=0) -> float | ndarray:
         """
         Compute the thrust force at takeoff
 
         Parameters:
-            mass (float | ndarray): The mass of the aircraft (kg).
             tas (float | ndarray): True airspeed (kts).
             alt (float | ndarray): Altitude (ft). Default: 0.
             dT (float | ndarray, optional): ISA temperature deviation (K). Default: 0.
         Returns:
             float | ndarray: The thrust force during the climb phase in Newtons.
         """
-        return self.climb(mass, tas, alt=alt, dT=dT)
+        return self.climb(tas, alt=alt, dT=dT)
+
+    @ndarrayconvert
+    def idle(self, tas, alt=0, dT=0) -> float | ndarray:
+        """
+        Compute the idle thrust
+
+        Parameters:
+            tas (float | ndarray): True airspeed (kts).
+            alt (float | ndarray): Altitude (ft). Default: 0.
+            dT (float | ndarray, optional): ISA temperature deviation (K). Default: 0.
+        Returns:
+            float | ndarray: The thrust force during the climb phase in Newtons.
+        """
+        h = alt * self.aero.ft
+        v = tas * self.aero.kts
+        mach = self.aero.tas2mach(v, h)
+        delta = self.aero.pressure(h) / self.aero.p0
+
+        cT = self.cT(mach, h, "LIDL", dT)
+
+        return delta * self.m_ref * self.aero.g0 * cT
 
 
 # %%
