@@ -1,11 +1,9 @@
-[tool.poetry]
+[project]
 name = "openap"
-version = "2.0"
+version = "2.1"
 description = "Open Aircraft Performance Model (OpenAP) in Python"
-homepage = "https://openap.dev"
-repository = "https://github.com/junzis/openap"
-authors = ["Junzi Sun <j.sun-1@tudelft.nl>"]
-license = "GNU Lesser General Public License v3 (LGPLv3)"
+authors = [{ name = "Junzi Sun", email = "j.sun-1@tudelft.nl" }]
+license = { text = "GNU LGPL v3" }
 readme = "README.md"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -16,22 +14,28 @@ classifiers = [
     "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Programming Language :: Python :: 3",
 ]
-packages = [{ include = "openap", from = "." }]
-include = ["LICENSE"]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.7",
+    "pandas>=1.2",
+    "pyyaml>=5.1",
+    "matplotlib>=3.1",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.9"
-numpy = ">=1.24"
-scipy = ">=1.7"
-pandas = ">=1.2"
-pyyaml = ">=5.1"
-matplotlib = ">=3.1"
+[project.urls]
+homepage = "https://openap.dev"
+repository = "https://github.com/junzis/openap"
+issues = "https://github.com/junzis/openap/issues"
 
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
+[tool.uv]
+dev-dependencies = [
+    "flake8>=5.0.0",
+    "black>=22.12.0",
+    "isort>=5.11.4",
+    # "mypy>=0.991",
+    # "pytest>=7.2.0",
+]
 
 [tool.ruff]
 target-version = "py311"
@@ -50,3 +54,7 @@ select = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["numpy", "pandas", "pyproj"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
