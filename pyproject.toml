@@ -1,6 +1,6 @@
 [project]
 name = "openap"
-version = "2.1"
+version = "2.2"
 description = "Open Aircraft Performance Model (OpenAP) in Python"
 authors = [{ name = "Junzi Sun", email = "j.sun-1@tudelft.nl" }]
 license = { text = "GNU LGPL v3" }
