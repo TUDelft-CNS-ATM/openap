@@ -13,6 +13,8 @@ from . import prop
 from .base import DragBase
 from .extra import ndarrayconvert
 
+warnings.simplefilter("once", UserWarning)
+
 
 class Drag(DragBase):
     """Compute the drag of an aircraft."""
@@ -59,8 +61,20 @@ class Drag(DragBase):
             syno = polar_synonym.query("orig==@self.ac")
             if self.use_synonym and syno.shape[0] > 0:
                 ac = syno.new.iloc[0]
+                warnings.warn(
+                    f"Drag polar: using synonym {ac} for {self.ac}",
+                    UserWarning,
+                    stacklevel=0,
+                )
+            elif self.use_synonym:
+                raise ValueError(
+                    f"Drag polar for {self.ac} not avaiable, and no synonym found."
+                )
             else:
-                raise ValueError(f"Drag polar for {self.ac} not avaiable.")
+                raise ValueError(
+                    f"Drag polar for {self.ac} not avaiable."
+                    "Try to set `use_synonym=True` to initialize the object."
+                )
 
         f = dir_dragpolar + ac + ".yml"
         with open(f, "r") as file:

@@ -15,10 +15,6 @@ from openap.extra.aero import fpm, kts
 from .base import FuelFlowBase
 
 
-def func_fuel(coef):
-    return lambda x: -coef * (x - 1) ** 2 + coef
-
-
 class FuelFlow(FuelFlowBase):
     """Fuel flow model based on ICAO emission databank."""
 
@@ -51,38 +47,46 @@ class FuelFlow(FuelFlowBase):
         if eng is None:
             eng = self.aircraft["engine"]["default"]
 
+        self.engine_type = eng.upper()
+
         self.engine = prop.engine(eng)
 
         self.thrust = self.Thrust(ac, eng, **kwargs)
         self.drag = self.Drag(ac, **kwargs)
         self.wrap = self.WRAP(ac, **kwargs)
 
-        self.params = self._load_fuel_params()
-        self.polyfuel = func_fuel(self.params["fuel_coef"])
+        self.func_fuel = self._load_fuel_model()
 
-    def _load_fuel_params(self) -> dict:
+    def _load_fuel_model(self) -> dict:
         curr_path = os.path.dirname(os.path.realpath(__file__))
-        dir_fuelmodel = os.path.join(curr_path, "data/fuel/")
-        file_synonym = os.path.join(curr_path, "data/fuel/_synonym.csv")
+        file_fuel_models = os.path.join(curr_path, "data/fuel/fuel_models.csv")
 
-        fuel_synonym = pd.read_csv(file_synonym)
+        fuel_models = pd.read_csv(file_fuel_models).assign(
+            typecode=lambda d: d.typecode.str.lower()
+        )
 
-        polar_files = glob.glob(dir_fuelmodel + "*.yml")
-        ac_polar_available = [pathlib.Path(s).stem for s in polar_files]
-
-        if self.ac in ac_polar_available:
+        if self.ac in fuel_models.typecode.values:
             ac = self.ac
         else:
-            syno = fuel_synonym.query("orig==@self.ac")
-            if self.use_synonym and syno.shape[0] > 0:
-                ac = syno.new.iloc[0]
-            else:
-                raise ValueError(f"Fuel parameters for {self.ac} not available.")
+            ac = "default"
 
-        f = dir_fuelmodel + ac + ".yml"
-        with open(f, "r") as file:
-            params = yaml.safe_load(file.read())
-        return params
+        params = fuel_models.query(f"typecode=='{ac}'").iloc[0].to_dict()
+
+        c1, c2, c3 = params["c1"], params["c2"], params["c3"]
+
+        scale = 1
+
+        if ac == "default":
+            scale = self.engine["ff_to"]
+        elif self.engine_type != params["engine_type"].upper():
+            ref_engine = prop.engine(params["engine_type"])
+            scale = self.engine["ff_to"] / ref_engine["ff_to"]
+
+        return (
+            lambda x: c1
+            - self.sci.exp(-c2 * (x * self.sci.exp(c3 * x) - self.sci.log(c1) / c2))
+            * scale
+        )
 
     @ndarrayconvert
     def at_thrust(self, acthr, alt=0, limit=True):
@@ -102,14 +106,14 @@ class FuelFlow(FuelFlowBase):
 
         ratio = acthr / (max_eng_thrust * n_eng)
 
-        # always limit the lowest ratio to 0.07 without creating a discontinuity
-        ratio = self.sci.log(1 + self.sci.exp(20 * (ratio - 0.07))) / 20 + 0.07
+        # always limit the lowest ratio to 0.02 without creating a discontinuity
+        ratio = self.sci.log(1 + self.sci.exp(50 * (ratio - 0.03))) / 50 + 0.03
 
         # upper limit the ratio to 1
         if limit:
             ratio = self.sci.where(ratio > 1, 1, ratio)
 
-        fuelflow = self.polyfuel(ratio)
+        fuelflow = self.func_fuel(ratio)
 
         return fuelflow
 
@@ -174,11 +178,11 @@ class FuelFlow(FuelFlowBase):
             T_max = self.thrust.climb(tas=tas, alt=alt, roc=0)
             T_idle = self.thrust.descent_idle(tas=tas, alt=alt)
 
-            # below idle thrust
-            T = self.sci.where(T < T_idle, T_idle, T)
+            # below idle thrust (with margin of 20%)
+            T = self.sci.where(T < T_idle * 0.8, T_idle * 0.8, T)
 
             # outside performance boundary (with margin of 20%)
-            T = self.sci.where(T > 1.2 * T_max, 1.2 * T_max, T)
+            T = self.sci.where(T > T_max * 1.2, T_max * 1.2, T)
 
         fuelflow = self.at_thrust(T, alt, limit=limit)
 
@@ -206,7 +210,7 @@ class FuelFlow(FuelFlowBase):
         plt.scatter(x, y, color="k")
 
         xx = self.sci.linspace(0, 1, 50)
-        yy = self.polyfuel(xx)
+        yy = self.func_fuel(xx)
         plt.plot(xx, yy, "--", color="gray")
 
         if plot:

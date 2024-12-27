@@ -33,14 +33,16 @@ class Thrust(ThrustBase):
         if eng is None:
             eng = aircraft["engine"]["default"]
 
-        engine = prop.engine(eng)
+        engine = prop.engine(eng.upper())
 
         eng_options = aircraft["engine"]["options"]
 
         if isinstance(eng_options, dict):
             eng_options = list(aircraft["engine"]["options"].values())
 
-        if (not force_engine) and (engine["name"] not in eng_options):
+        if (not force_engine) and not any(
+            opt.upper() in engine["name"].upper() for opt in eng_options
+        ):
             raise ValueError(
                 (
                     f"Engine {eng} and aircraft {ac} mismatch. "
@@ -220,7 +222,8 @@ class Thrust(ThrustBase):
         """Idle thrust during the descent.
 
         Note: The idle thrust at the descent is taken as 7% of the maximum
-        available thrust. This may (likely) differ from actual idle thrust.
+        available thrust. This is an approximation and most likely differ
+        from the actual idle thrust.
 
         Args:
             tas (float or ndarray): True airspeed (kt).

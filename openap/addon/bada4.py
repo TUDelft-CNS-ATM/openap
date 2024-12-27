@@ -80,7 +80,7 @@ class Drag(base.DragBase):
         self.mach_max = float(bxml.findtext(".//*/DPM_clean/M_max"))
         self.S = float(bxml.findtext("./AFCM/S"))
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def _cd_base(self, cl, mach):
         mm = (1 - mach**2) ** (-0.5)
 
@@ -103,7 +103,7 @@ class Drag(base.DragBase):
 
         return cd
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def _cd(self, cl, mach):
         """Compute the drag coefficient (CD)"""
 
@@ -122,7 +122,7 @@ class Drag(base.DragBase):
 
         return cd
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def _cl(self, mass, tas, alt, vs=0):
         v = tas * self.aero.kts
         h = alt * self.aero.ft
@@ -135,7 +135,7 @@ class Drag(base.DragBase):
 
         return cl, qS
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def clean(self, mass, tas, alt, vs=0) -> float | ndarray:
         """Compute drag at clean configuration.
 
@@ -216,7 +216,7 @@ class Thrust(base.ThrustBase):
                 float(t.text) for t in bxml.findall(f"./PFM/TFM/{rating}/temp_rating/c")
             ]
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def cT(self, mach, h, rating, dT=0) -> float | ndarray:
         """
         Compute the thrust coefficient, considering the altitude, Mach, and rating.
@@ -259,7 +259,7 @@ class Thrust(base.ThrustBase):
 
         return cT
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def climb(self, tas, alt, dT=0) -> float | ndarray:
         """
         Compute the thrust force during the climb phase.
@@ -280,7 +280,7 @@ class Thrust(base.ThrustBase):
 
         return delta * self.m_ref * self.aero.g0 * cT
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def cruise(self, tas, alt, dT=0) -> float | ndarray:
         """
         Compute the thrust force during the cruise phase.
@@ -301,7 +301,7 @@ class Thrust(base.ThrustBase):
 
         return delta * self.m_ref * self.aero.g0 * cT
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def takeoff(self, tas, alt=0, dT=0) -> float | ndarray:
         """
         Compute the thrust force at takeoff
@@ -315,7 +315,7 @@ class Thrust(base.ThrustBase):
         """
         return self.climb(tas, alt=alt, dT=dT)
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def idle(self, tas, alt=0, dT=0) -> float | ndarray:
         """
         Compute the idle thrust
@@ -378,7 +378,7 @@ class FuelFlow(base.FuelFlowBase):
         self.fi_ = [float(v.text) for v in bxml.findall("./PFM/TFM/LIDL/CF/fi")]
         self.lhv = float(bxml.findtext("./PFM/LHV"))
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def _calc_fuel(self, mass, delta, theta, cF):
         return (
             delta
@@ -390,7 +390,7 @@ class FuelFlow(base.FuelFlowBase):
             * cF
         )
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def idle(self, mass, tas, alt, **kwargs) -> float | ndarray:
         """Compute the fuel flow at idle conditions.
 
@@ -420,7 +420,7 @@ class FuelFlow(base.FuelFlowBase):
 
         return fuel_flow
 
-    @ndarrayconvert
+    @ndarrayconvert(column=True)
     def enroute(self, mass, tas, alt, vs=0, **kwargs) -> float | ndarray:
         """Compute the fuel flow at not-idle conditions.
 

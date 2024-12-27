@@ -2,11 +2,15 @@
 
 import glob
 import os
+import warnings
 from functools import lru_cache
+
+import yaml
 
 import numpy as np
 import pandas as pd
-import yaml
+
+warnings.simplefilter("once", UserWarning)
 
 curr_path = os.path.dirname(os.path.realpath(__file__))
 dir_aircraft = os.path.join(curr_path, "data/aircraft/")
@@ -53,8 +57,18 @@ def aircraft(ac, use_synonym=False, **kwargs):
         if use_synonym and syno.shape[0] > 0:
             new_ac = syno.new.iloc[0]
             files = glob.glob(dir_aircraft + new_ac + ".yml")
+            warnings.warn(
+                f"Aircraft: using synonym {new_ac} for {ac}",
+                UserWarning,
+                stacklevel=0,
+            )
+        elif use_synonym:
+            raise ValueError(f"Aircraft {ac} not available, and no synonym found.")
         else:
-            raise ValueError(f"Aircraft {ac} not available.")
+            raise ValueError(
+                f"Aircraft {ac} not available. "
+                "Try to set `use_synonym=True` to initialize the object."
+            )
 
     f = files[0]
     with open(f, "r") as file:
@@ -87,9 +101,9 @@ def aircraft_engine_options(ac):
     """
     acdict = aircraft(ac)
 
-    if type(acdict["engine"]["options"]) == dict:
+    if isinstance(acdict["engine"]["options"], dict):
         eng_options = list(acdict["engine"]["options"].values())
-    elif type(acdict["engine"]["options"]) == list:
+    elif isinstance(acdict["engine"]["options"], list):
         eng_options = list(acdict["engine"]["options"])
 
     return eng_options

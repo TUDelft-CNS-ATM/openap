@@ -47,7 +47,7 @@ class WRAP(object):
 
         self.ac = ac.lower()
 
-        self.use_synonym = kwargs.get("use_synonym", False)
+        self.use_synonym = kwargs.get("use_synonym", True)
 
         wrap_files = glob.glob(dir_wrap + "*.txt")
         ac_wrap_available = [s[-8:-4].lower() for s in wrap_files]

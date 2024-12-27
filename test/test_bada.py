@@ -51,12 +51,6 @@ drag_estimate_openap = drag_openap.clean(
     flight["ALTI_STD_FT"],
 )
 
-plt.plot(flight["FLIGHT_TIME"], drag_estimate_bada, label="BADA4 drag")
-plt.plot(flight["FLIGHT_TIME"], drag_estimate_openap, label="OpenAP drag")
-plt.legend()
-plt.ylim(0)
-plt.show()
-
 fuel_estimate_bada = fuel_bada.enroute(
     flight["MASS_KG"],
     # mass_assume,
@@ -75,11 +69,22 @@ fuel_estimate_openap = fuel_openap.enroute(
 )
 
 
-plt.plot(flight["FLIGHT_TIME"], flight["FUEL_FLOW_KGH"] * 2, label="QAR fuel")
-plt.plot(flight["FLIGHT_TIME"], fuel_estimate_bada * 3600, label="BADA4 fuel")
-plt.plot(flight["FLIGHT_TIME"], fuel_estimate_openap * 3600, label="OpenAP fuel")
+# %%
+
+plt.plot(flight["FLIGHT_TIME"], drag_estimate_bada, label="BADA4 drag")
+plt.plot(flight["FLIGHT_TIME"], drag_estimate_openap, label="OpenAP drag")
+plt.legend()
+plt.ylim(0)
+plt.show()
+
+
+plt.plot(flight["FLIGHT_TIME"], flight["FUEL_FLOW_KGH"] * 2, label="QAR fuel", lw=1)
+plt.plot(flight["FLIGHT_TIME"], fuel_estimate_bada * 3600, label="BADA4 fuel", lw=1)
+plt.plot(flight["FLIGHT_TIME"], fuel_estimate_openap * 3600, label="OpenAP fuel", lw=1)
 plt.ylim(0)
 # plt.ylim(2000, 4000)
 
 plt.legend()
 plt.show()
+
+# %%
