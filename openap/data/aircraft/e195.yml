@@ -38,6 +38,7 @@ limits:
 cruise:
   height: 11000
   mach: 0.78
+  range: 4300
 
 engine:
   type: turbofan

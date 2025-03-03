@@ -37,6 +37,7 @@ flaps:
 cruise:
   height: 12000
   mach: 0.85
+  range: 13000
 
 engine:
   type: turbofan
