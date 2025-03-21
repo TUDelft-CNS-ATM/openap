@@ -1,6 +1,7 @@
 # %%
-import numpy as np
 from scipy import optimize
+
+import numpy as np
 
 # %%
 gas_constant_water_vapor = 461.51
@@ -57,6 +58,14 @@ def relative_humidity(specific_humidity, pressure, temperature, to="ice"):
         * pressure
         * (gas_constant_water_vapor / gas_constant_dry_air)
         / saturation_pressure
+    )
+
+
+def rhw2rhi(relative_humidity_water, temperature):
+    return (
+        relative_humidity_water
+        * saturation_pressure_over_water(temperature)
+        / saturation_pressure_over_ice(temperature)
     )
 
 
